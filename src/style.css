@@ -1,0 +1,333 @@
+/* ============================================================
+   STYLE — thème sombre "bar", interface mobile verticale.
+   Les couleurs sont définies en variables pour être modifiées
+   facilement plus tard.
+   ============================================================ */
+
+:root {
+  --fond: #1a1410;
+  --panneau: #251c16;
+  --panneau-clair: #32271e;
+  --ambre: #f0a500;
+  --ambre-clair: #ffd166;
+  --texte: #f3e9dd;
+  --texte-doux: #b9a890;
+  --vert: #6bbf59;
+  --rouge: #e25b5b;
+  --bordure: #3d2f24;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  background: #0d0a08;
+  color: var(--texte);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Cadre "téléphone" pour tester sur ordinateur */
+#phone {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#app {
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+  max-height: 932px;
+  background: var(--fond);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+@media (min-width: 460px) {
+  #app {
+    border-radius: 28px;
+    height: 92vh;
+    border: 1px solid var(--bordure);
+  }
+}
+
+.ecran {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+}
+
+/* ---- Accueil ---- */
+.accueil {
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+.logo {
+  font-size: 2.4rem;
+  color: var(--ambre-clair);
+}
+.sous-titre {
+  color: var(--texte-doux);
+  margin-bottom: 12px;
+}
+.accueil h2 {
+  font-size: 0.95rem;
+  color: var(--ambre);
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.options {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.opt {
+  flex: 1;
+  background: var(--panneau);
+  border: 1px solid var(--bordure);
+  color: var(--texte);
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.opt small {
+  color: var(--texte-doux);
+  font-size: 0.7rem;
+}
+.opt.actif {
+  border-color: var(--ambre);
+  background: var(--panneau-clair);
+  box-shadow: 0 0 0 2px var(--ambre) inset;
+}
+
+/* ---- Boutons principaux ---- */
+.principal,
+.secondaire {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+}
+.principal {
+  background: var(--ambre);
+  color: #2a1a05;
+}
+.principal:disabled {
+  background: var(--panneau-clair);
+  color: var(--texte-doux);
+  cursor: not-allowed;
+}
+.secondaire {
+  background: var(--panneau-clair);
+  color: var(--ambre-clair);
+  border: 1px solid var(--bordure);
+}
+
+/* ---- Barre de stats ---- */
+.stats {
+  display: flex;
+  justify-content: space-between;
+  background: var(--panneau);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.stats .lbl {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--texte-doux);
+  letter-spacing: 1px;
+}
+.stats .val {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ambre-clair);
+}
+
+/* ---- Zone événement ---- */
+.jeu {
+  gap: 12px;
+}
+.evenement {
+  flex: 1;
+  background: var(--panneau);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+.retour {
+  font-size: 0.8rem;
+  color: var(--ambre-clair);
+  background: rgba(240, 165, 0, 0.1);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.grand-portrait {
+  font-size: 4.5rem;
+  line-height: 1;
+}
+.titre-ev {
+  color: var(--ambre-clair);
+  font-size: 1.3rem;
+}
+.texte-ev {
+  color: var(--texte);
+  line-height: 1.5;
+}
+.choix-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+.choix {
+  background: var(--panneau-clair);
+  border: 1px solid var(--bordure);
+  color: var(--texte);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.12s;
+}
+.choix:hover {
+  border-color: var(--ambre);
+  background: #3d2f24;
+}
+
+/* ---- Bandeau salariés ---- */
+.salaries {
+  display: flex;
+  gap: 8px;
+  justify-content: space-around;
+  background: var(--panneau);
+  border-radius: 12px;
+  padding: 8px;
+}
+.salarie {
+  text-align: center;
+  flex: 1;
+}
+.salarie.off {
+  opacity: 0.4;
+}
+.portrait {
+  font-size: 1.6rem;
+}
+.coeurs {
+  font-size: 0.7rem;
+}
+.salarie .nom {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.salarie .role {
+  font-size: 0.62rem;
+  color: var(--texte-doux);
+}
+.parti {
+  font-size: 0.7rem;
+  color: var(--rouge);
+}
+
+/* ---- Bandeau du bas ---- */
+.bas {
+  display: flex;
+  justify-content: space-around;
+  background: var(--panneau);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+/* ---- Bilan ---- */
+.bilan {
+  flex: 1;
+  background: var(--panneau);
+  border-radius: 16px;
+  padding: 18px;
+  overflow-y: auto;
+}
+.bilan h2 {
+  color: var(--ambre-clair);
+  margin-bottom: 12px;
+}
+.bilan-ligne {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+.bilan-ligne.total {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ambre-clair);
+  margin-top: 4px;
+}
+.bilan-sep {
+  border-top: 1px solid var(--bordure);
+  margin: 8px 0;
+}
+.bilan .salaries,
+.bilan .bas {
+  margin-top: 14px;
+}
+.pos {
+  color: var(--vert);
+}
+.neg {
+  color: var(--rouge);
+}
+.info {
+  text-align: center;
+  color: var(--texte-doux);
+  margin-top: 12px;
+}
+
+/* ---- Fin de partie ---- */
+.fin {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+}
+.fin.win h1 {
+  color: var(--vert);
+}
+.fin.lose h1 {
+  color: var(--rouge);
+}
+.fin h1 {
+  font-size: 2.4rem;
+}
+.raison {
+  color: var(--texte-doux);
+}
+.score {
+  font-size: 1.1rem;
+}
