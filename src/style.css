@@ -1111,20 +1111,28 @@ body {
   letter-spacing: 1px;
 }
 
-/* ---- Planning repos (chips Lun→Dim) ---- */
+/* ---- Planning repos (chips Lun→Dim) ----
+   Label au-dessus des 7 chips (pas à côté) : sur un petit écran, label +
+   7 chips sur une seule ligne dépassait la largeur de la carte. */
 .sc-planning {
   margin-top: 8px;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.sc-planning .stat-lbl {
+  width: auto;
 }
 .jour-chips {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
 }
 .jour-chip {
   width: 28px;
   height: 28px;
+  flex-shrink: 0;
   border-radius: 8px;
   border: 1px solid var(--bordure);
   background: var(--panneau-clair);

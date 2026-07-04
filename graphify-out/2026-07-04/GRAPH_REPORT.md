@@ -1,11 +1,11 @@
 # Graph Report - Bar Survivor  (2026-07-04)
 
 ## Corpus Check
-- 24 files · ~28,974 words
+- 24 files · ~29,055 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 282 nodes · 660 edges · 21 communities (12 shown, 9 thin omitted)
+- 283 nodes · 663 edges · 21 communities (12 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -70,8 +70,8 @@
 ## Communities (21 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.18
-Nodes (17): CATEGORIES_STOCK, EMPRUNT_MAX, trait(), Employee, ecranAccueil(), badgeTrait(), bandeauBas(), echap() (+9 more)
+Cohesion: 0.17
+Nodes (18): CATEGORIES_STOCK, EMPRUNT_MAX, trait(), Employee, ecranAccueil(), badgeTrait(), bandeauBas(), echap() (+10 more)
 
 ### Community 1 - "UI & ecrans (rendu)"
 Cohesion: 0.29
