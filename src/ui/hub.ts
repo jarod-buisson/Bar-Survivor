@@ -9,7 +9,7 @@ import { barreStats, echap } from "./components";
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
-const TUILES = [
+const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean }[] = [
   { id: "salaries", emoji: "👥", label: "Salariés" },
   { id: "cv", emoji: "📄", label: "CV" },
   { id: "stock", emoji: "📦", label: "Fournisseur" },
@@ -18,11 +18,18 @@ const TUILES = [
   { id: "travaux", emoji: "🏗", label: "Travaux" },
   { id: "banque", emoji: "🏦", label: "Banque" },
   { id: "historique", emoji: "📜", label: "Historique" },
-  { id: "calendrier", emoji: "📅", label: "Calendrier" },
+  { id: "calendrier", emoji: "📅", label: "Calendrier", bientotDispo: true },
 ];
 
 export function ecranHub(s: GameState): string {
   const tuiles = TUILES.map((t) => {
+    if (t.bientotDispo) {
+      return `
+        <button class="tuile desactivee" disabled>
+          <span class="tuile-emoji">${t.emoji}</span>
+          <span class="tuile-label">Bientôt dispo</span>
+        </button>`;
+    }
     const statut = statutNotif(s, t.id);
     return `
       <button class="tuile" data-action="ouvrirMenu" data-value="${t.id}">
