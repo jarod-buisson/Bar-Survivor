@@ -122,12 +122,13 @@ export function facteurMachines(
   return machines.reduce((f, m) => f * (1 - poidsMachine(m.id) * (1 - rendement(m))), 1);
 }
 
-/** Probabilité de tomber en panne sur la semaine, selon les HP. */
+/** Probabilité de tomber en panne sur la semaine, selon les HP.
+ *  HP ≥ 50 : jamais de panne — aligné sur le seuil visuel (barre orange à 50 %),
+ *  pour qu'une machine encore "verte" à l'écran ne casse jamais par surprise. */
 export function probaPanne(hp: number): number {
   if (hp < 25) return 1 / 5;
   if (hp < 50) return 1 / 10;
-  if (hp < 75) return 1 / 15;
-  return 0; // HP >= 75 : pas de panne
+  return 0; // HP >= 50 : pas de panne
 }
 
 /** Usure hebdomadaire : chaque machine en marche perd des HP à SON rythme, avec
