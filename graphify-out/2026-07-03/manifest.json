@@ -1,0 +1,127 @@
+{
+  "package.json": {
+    "mtime": 1782811253.6102061,
+    "ast_hash": "3e42dab690eb05822eb33c0fd06c38e9",
+    "semantic_hash": "3e42dab690eb05822eb33c0fd06c38e9"
+  },
+  "src/game/content.ts": {
+    "mtime": 1783100257.9714046,
+    "ast_hash": "6680e3d6ef38533fd15884f622fa9b37",
+    "semantic_hash": ""
+  },
+  "src/game/engine.ts": {
+    "mtime": 1783100270.0456927,
+    "ast_hash": "7cf50d237a03bab08fe90b250020df07",
+    "semantic_hash": ""
+  },
+  "src/game/types.ts": {
+    "mtime": 1783100286.9793417,
+    "ast_hash": "f11272dd0215d4ac090e3bfc8135fdd4",
+    "semantic_hash": ""
+  },
+  "src/main.ts": {
+    "mtime": 1783081531.1745284,
+    "ast_hash": "b799a877a9ca234a42d8590a43d58e57",
+    "semantic_hash": ""
+  },
+  "tsconfig.json": {
+    "mtime": 1782810936.952357,
+    "ast_hash": "6df6fc0f53d542d4a1718135a8a8ace4",
+    "semantic_hash": "6df6fc0f53d542d4a1718135a8a8ace4"
+  },
+  "vite.config.ts": {
+    "mtime": 1782810940.9128807,
+    "ast_hash": "595efd2088693761d3017b23a8c17f54",
+    "semantic_hash": "595efd2088693761d3017b23a8c17f54"
+  },
+  "CLAUDE.md": {
+    "mtime": 1783100459.4026725,
+    "ast_hash": "c2e6e8d4477b3ae833f3ebb80c4c5699",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1782811640.0527084,
+    "ast_hash": "77bb654a68b809a43e7c4ae1dcbd5c58",
+    "semantic_hash": "77bb654a68b809a43e7c4ae1dcbd5c58"
+  },
+  "index.html": {
+    "mtime": 1782810946.327299,
+    "ast_hash": "cdecc7b188c7c86ce723faa6a33da139",
+    "semantic_hash": "cdecc7b188c7c86ce723faa6a33da139"
+  },
+  "src/game/machines.ts": {
+    "mtime": 1782983350.8003092,
+    "ast_hash": "6d18d1fae7e5a47e2938fc5e85e19000",
+    "semantic_hash": ""
+  },
+  "src/ui/accueil.ts": {
+    "mtime": 1782916930.9097476,
+    "ast_hash": "bcd12c5dd60af8398e5da9320a9b2cf8",
+    "semantic_hash": ""
+  },
+  "src/ui/components.ts": {
+    "mtime": 1783027598.2797463,
+    "ast_hash": "91d643ed1bb8f57d388ddfdd09e4ccbb",
+    "semantic_hash": ""
+  },
+  "src/ui/evenement.ts": {
+    "mtime": 1783079437.7924745,
+    "ast_hash": "51cf5892166c0ef58d5b6d5a65eb92df",
+    "semantic_hash": ""
+  },
+  "src/ui/fin.ts": {
+    "mtime": 1782916958.3427258,
+    "ast_hash": "01306972e65b75da226fa2dbfe8e5342",
+    "semantic_hash": ""
+  },
+  "src/ui/hub.ts": {
+    "mtime": 1783071316.602222,
+    "ast_hash": "cc11ff0f6a0c44c9c0e857f531aa7eb2",
+    "semantic_hash": ""
+  },
+  "src/ui/index.ts": {
+    "mtime": 1782917861.6668806,
+    "ast_hash": "c2f03fe1b5811ebb169ff155cbb6fd0b",
+    "semantic_hash": ""
+  },
+  "src/ui/menus.ts": {
+    "mtime": 1783100342.0871115,
+    "ast_hash": "02b0d42dcf034d16d9fefef77cd9283f",
+    "semantic_hash": ""
+  },
+  "src/ui/onboarding.ts": {
+    "mtime": 1782946883.9351156,
+    "ast_hash": "d8d5723394857424bf5007d4925f6e23",
+    "semantic_hash": ""
+  },
+  "src/ui/recap.ts": {
+    "mtime": 1783100361.3645298,
+    "ast_hash": "ab7058658abcc349916c9022f0788973",
+    "semantic_hash": ""
+  },
+  "src/ui/semaine.ts": {
+    "mtime": 1782945388.1176796,
+    "ast_hash": "58e21a49976b22801ef79ed9531a5b09",
+    "semantic_hash": ""
+  },
+  "src/ui/tooltip.ts": {
+    "mtime": 1782828156.6432726,
+    "ast_hash": "a77e5f56752fe464ba272e9ba59fbb55",
+    "semantic_hash": ""
+  },
+  "src/ui/alerte.ts": {
+    "mtime": 1782984395.0029314,
+    "ast_hash": "00f29fa13b96b88fb2ee7b6d9401cd50",
+    "semantic_hash": ""
+  },
+  "src/game/traits.ts": {
+    "mtime": 1783079335.309609,
+    "ast_hash": "bc16615afed5082f0e8110fe5039870d",
+    "semantic_hash": ""
+  },
+  "sim/simulation.ts": {
+    "mtime": 1783090913.0579734,
+    "ast_hash": "948880cd1b95d2a670879540fddfa500",
+    "semantic_hash": ""
+  }
+}

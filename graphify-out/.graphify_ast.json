@@ -1,0 +1,5543 @@
+{
+  "nodes": [
+    {
+      "id": "package",
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_name",
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_private",
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_version",
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_type",
+      "label": "type",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_description",
+      "label": "description",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts",
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_dev",
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_build",
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_scripts_preview",
+      "label": "preview",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies",
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_typescript",
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_devdependencies_vite",
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_allowscripts",
+      "label": "allowScripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "package_allowscripts_esbuild_0_25_12",
+      "label": "esbuild@0.25.12",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content",
+      "label": "content.ts",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_rand",
+      "label": "rand()",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_categoriestock",
+      "label": "CategorieStock",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L21",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_categories_stock",
+      "label": "CATEGORIES_STOCK",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L30",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_stockspleins",
+      "label": "stocksPleins()",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_equipededepart",
+      "label": "equipeDeDepart()",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L50",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_modelecandidat",
+      "label": "ModeleCandidat",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L72",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_roster",
+      "label": "ROSTER",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L80",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_generercandidats",
+      "label": "genererCandidats()",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L93",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_content_evenements",
+      "label": "EVENEMENTS",
+      "file_type": "code",
+      "source_file": "src/game/content.ts",
+      "source_location": "L116",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine",
+      "label": "engine.ts",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_budget_initial",
+      "label": "BUDGET_INITIAL",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L41",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_evenements_par_semaine",
+      "label": "EVENEMENTS_PAR_SEMAINE",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L47",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_affluence_jour",
+      "label": "AFFLUENCE_JOUR",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L75",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_offre_clientele",
+      "label": "OFFRE_CLIENTELE",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L78",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_offre_panier",
+      "label": "OFFRE_PANIER",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L79",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_jours",
+      "label": "JOURS",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L84",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_borne",
+      "label": "borne()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L88",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_actifs",
+      "label": "actifs()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L92",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_creerpartie",
+      "label": "creerPartie()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L98",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_embaucher",
+      "label": "embaucher()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L128",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_refusercandidat",
+      "label": "refuserCandidat()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L135",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_efficaciteactuelle",
+      "label": "efficaciteActuelle()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L142",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_facteurnotoriete",
+      "label": "facteurNotoriete()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L154",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_facteurproprete",
+      "label": "facteurProprete()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L160",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_paiementdette",
+      "label": "paiementDette()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L170",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_tirerevenement",
+      "label": "tirerEvenement()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L181",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_appliquereffet",
+      "label": "appliquerEffet()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L192",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_gererdemissions",
+      "label": "gererDemissions()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L223",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_appliquerchoix",
+      "label": "appliquerChoix()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L232",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_simulersemaine",
+      "label": "simulerSemaine()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L247",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_coutcommande",
+      "label": "coutCommande()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L429",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_commanderstocks",
+      "label": "commanderStocks()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L443",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_preparersemainesuivante",
+      "label": "preparerSemaineSuivante()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L461",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_verifiergameover",
+      "label": "verifierGameOver()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L483",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_menus",
+      "label": "MENUS",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L497",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_statutnotif",
+      "label": "statutNotif()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L499",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_aingenieur",
+      "label": "aIngenieur()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L523",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_repareringenieur",
+      "label": "reparerIngenieur()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L528",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_reparerpro",
+      "label": "reparerPro()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L540",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_ameliorationsdebloquees",
+      "label": "ameliorationsDebloquees()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L551",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_ameliorermachine",
+      "label": "ameliorerMachine()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L555",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_optionpret",
+      "label": "OptionPret",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L568",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_pretsdisponibles",
+      "label": "pretsDisponibles()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L575",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_souscrirepret",
+      "label": "souscrirePret()",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L585",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces",
+      "label": "forces.ts",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_forces",
+      "label": "FORCES",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_faiblesses",
+      "label": "FAIBLESSES",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L64",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_par_id",
+      "label": "PAR_ID",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L110",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_trait",
+      "label": "trait()",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L114",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_piocher",
+      "label": "piocher()",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L118",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_forces_tirertraits",
+      "label": "tirerTraits()",
+      "file_type": "code",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L126",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines",
+      "label": "machines.ts",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_cout_reparation",
+      "label": "COUT_REPARATION",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_usure_par_machine",
+      "label": "USURE_PAR_MACHINE",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_bonus_par_niveau",
+      "label": "BONUS_PAR_NIVEAU",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L37",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_prix_amelioration",
+      "label": "PRIX_AMELIORATION",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L46",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_machinesdedepart",
+      "label": "machinesDeDepart()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L56",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_facteurusure",
+      "label": "facteurUsure()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L78",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_contributionefficacite",
+      "label": "contributionEfficacite()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L86",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_probapanne",
+      "label": "probaPanne()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L92",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_usermachines",
+      "label": "userMachines()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L101",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_coutreparation",
+      "label": "coutReparation()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L114",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_coutamelioration",
+      "label": "coutAmelioration()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L119",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_appliqueramelioration",
+      "label": "appliquerAmelioration()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L125",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_machines_reparermachine",
+      "label": "reparerMachine()",
+      "file_type": "code",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L131",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types",
+      "label": "types.ts",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_difficulty",
+      "label": "Difficulty",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_offertype",
+      "label": "OfferType",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_phase",
+      "label": "Phase",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_trait",
+      "label": "Trait",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L26",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_employee",
+      "label": "Employee",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L35",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_stockcategorie",
+      "label": "StockCategorie",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L52",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_stocks",
+      "label": "Stocks",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L55",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_machine",
+      "label": "Machine",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L58",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_pret",
+      "label": "Pret",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L69",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_effect",
+      "label": "Effect",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L81",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_choice",
+      "label": "Choice",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L94",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_gameevent",
+      "label": "GameEvent",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L102",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_jourca",
+      "label": "JourCA",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L114",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_salaireligne",
+      "label": "SalaireLigne",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L126",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_weeklyrecap",
+      "label": "WeeklyRecap",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L132",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_gamestate",
+      "label": "GameState",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L153",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_types_statut",
+      "label": "Statut",
+      "file_type": "code",
+      "source_file": "src/game/types.ts",
+      "source_location": "L195",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main",
+      "label": "main.ts",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main_rendre",
+      "label": "rendre()",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L46",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main_lancerroulettesibesoin",
+      "label": "lancerRouletteSiBesoin()",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L80",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main_lancersemaine",
+      "label": "lancerSemaine()",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L90",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main_avancerjour",
+      "label": "avancerJour()",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L99",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_main_majcoutcommande",
+      "label": "majCoutCommande()",
+      "file_type": "code",
+      "source_file": "src/main.ts",
+      "source_location": "L203",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_accueil",
+      "label": "accueil.ts",
+      "file_type": "code",
+      "source_file": "src/ui/accueil.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_accueil_ecranaccueil",
+      "label": "ecranAccueil()",
+      "file_type": "code",
+      "source_file": "src/ui/accueil.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_alerte",
+      "label": "alerte.ts",
+      "file_type": "code",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_alerte_ecranalerte",
+      "label": "ecranAlerte()",
+      "file_type": "code",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components",
+      "label": "components.ts",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_eur",
+      "label": "eur()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_coeurs",
+      "label": "coeurs()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_jauge",
+      "label": "jauge()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_badgetrait",
+      "label": "badgeTrait()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_badgestraits",
+      "label": "badgesTraits()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_barrestats",
+      "label": "barreStats()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L39",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_bandeausalaries",
+      "label": "bandeauSalaries()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L50",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_components_bandeaubas",
+      "label": "bandeauBas()",
+      "file_type": "code",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L67",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_evenement",
+      "label": "evenement.ts",
+      "file_type": "code",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_evenement_ecranevenement",
+      "label": "ecranEvenement()",
+      "file_type": "code",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_fin",
+      "label": "fin.ts",
+      "file_type": "code",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_fin_ecranfin",
+      "label": "ecranFin()",
+      "file_type": "code",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_hub",
+      "label": "hub.ts",
+      "file_type": "code",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_hub_tuiles",
+      "label": "TUILES",
+      "file_type": "code",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_hub_ecranhub",
+      "label": "ecranHub()",
+      "file_type": "code",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_index",
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus",
+      "label": "menus.ts",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_entete",
+      "label": "entete()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_statbar",
+      "label": "statBar()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_classehp",
+      "label": "classeHp()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L34",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menusalaries",
+      "label": "menuSalaries()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L43",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menufournisseur",
+      "label": "menuFournisseur()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L68",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menureparations",
+      "label": "menuReparations()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L123",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menubanque",
+      "label": "menuBanque()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L154",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menuhistorique",
+      "label": "menuHistorique()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L178",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_menucalendrier",
+      "label": "menuCalendrier()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L198",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_menus_ecranmenu",
+      "label": "ecranMenu()",
+      "file_type": "code",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L212",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_onboarding",
+      "label": "onboarding.ts",
+      "file_type": "code",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_onboarding_salariedebase",
+      "label": "salarieDeBase()",
+      "file_type": "code",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_onboarding_ecranpresentation",
+      "label": "ecranPresentation()",
+      "file_type": "code",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_onboarding_ecranembauche",
+      "label": "ecranEmbauche()",
+      "file_type": "code",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_recap",
+      "label": "recap.ts",
+      "file_type": "code",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_recap_ecranrecap",
+      "label": "ecranRecap()",
+      "file_type": "code",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_roulette",
+      "label": "roulette.ts",
+      "file_type": "code",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_roulette_reelhtml",
+      "label": "reelHtml()",
+      "file_type": "code",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_roulette_spin",
+      "label": "spin()",
+      "file_type": "code",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_roulette_animerroulette",
+      "label": "animerRoulette()",
+      "file_type": "code",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L58",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_semaine",
+      "label": "semaine.ts",
+      "file_type": "code",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_semaine_jours",
+      "label": "JOURS",
+      "file_type": "code",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_semaine_ecransemaine",
+      "label": "ecranSemaine()",
+      "file_type": "code",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_tooltip",
+      "label": "tooltip.ts",
+      "file_type": "code",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_tooltip_boite",
+      "label": "boite()",
+      "file_type": "code",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_tooltip_afficher",
+      "label": "afficher()",
+      "file_type": "code",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_tooltip_cacher",
+      "label": "cacher()",
+      "file_type": "code",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L41",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_ui_tooltip_inittooltips",
+      "label": "initTooltips()",
+      "file_type": "code",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L46",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig",
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_target",
+      "label": "target",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_usedefineforclassfields",
+      "label": "useDefineForClassFields",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_module",
+      "label": "module",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_lib",
+      "label": "lib",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_skiplibcheck",
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_moduleresolution",
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_allowimportingtsextensions",
+      "label": "allowImportingTsExtensions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_isolatedmodules",
+      "label": "isolatedModules",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_moduledetection",
+      "label": "moduleDetection",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_noemit",
+      "label": "noEmit",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_strict",
+      "label": "strict",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_nounusedlocals",
+      "label": "noUnusedLocals",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_nounusedparameters",
+      "label": "noUnusedParameters",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_compileroptions_nofallthroughcasesinswitch",
+      "label": "noFallthroughCasesInSwitch",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "tsconfig_include",
+      "label": "include",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "vite_config",
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_game_engine_dette_totale",
+      "label": "DETTE_TOTALE",
+      "file_type": "code",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L167",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "package",
+      "target": "package_name",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_private",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_version",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_type",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_description",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_scripts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_dev",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_build",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_preview",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "package",
+      "target": "package_devdependencies",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_typescript",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_typescript",
+      "target": "typescript",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_vite",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "package_devdependencies_vite",
+      "target": "vite",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "package",
+      "target": "package_allowscripts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "package_allowscripts",
+      "target": "package_allowscripts_esbuild_0_25_12",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_types_gameevent",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_types_stockcategorie",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_forces",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_forces_tirertraits",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_rand",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_categoriestock",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_categories_stock",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_stockspleins",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_equipededepart",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_modelecandidat",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_roster",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_generercandidats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content",
+      "target": "src_game_content_evenements",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_choice",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_difficulty",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_effect",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_jourca",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_offertype",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_statut",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_stockcategorie",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_types_weeklyrecap",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content_categories_stock",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content_evenements",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content_equipededepart",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content_generercandidats",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_content_stockspleins",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "users_jarod_documents_bar_survivor_src_game_machines_niveau_max",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_appliqueramelioration",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_contributionefficacite",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_coutamelioration",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_coutreparation",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_machinesdedepart",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_probapanne",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_reparermachine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_machines_usermachines",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_budget_initial",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_evenements_par_semaine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_affluence_jour",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_offre_clientele",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_offre_panier",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L79",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_jours",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_borne",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_actifs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_creerpartie",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_embaucher",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_refusercandidat",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_efficaciteactuelle",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_facteurnotoriete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_facteurproprete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_paiementdette",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_tirerevenement",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L181",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_appliquereffet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_gererdemissions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L223",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_appliquerchoix",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L232",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_simulersemaine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L247",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_coutcommande",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L429",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_commanderstocks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L443",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_preparersemainesuivante",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L461",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_verifiergameover",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L483",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_menus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L497",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_statutnotif",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L499",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_aingenieur",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L523",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_repareringenieur",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L528",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_reparerpro",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L540",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_ameliorationsdebloquees",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L551",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_ameliorermachine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L555",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_optionpret",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L568",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_pretsdisponibles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L575",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine",
+      "target": "src_game_engine_souscrirepret",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L585",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_efficaciteactuelle",
+      "target": "src_game_engine_actifs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_appliquereffet",
+      "target": "src_game_engine_borne",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L194",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_appliquereffet",
+      "target": "src_game_engine_actifs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_appliquerchoix",
+      "target": "src_game_engine_appliquereffet",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_appliquerchoix",
+      "target": "src_game_engine_gererdemissions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L241",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_actifs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_facteurnotoriete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L267",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_facteurproprete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L268",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_borne",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L337",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_paiementdette",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L366",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_engine_verifiergameover",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L423",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_commanderstocks",
+      "target": "src_game_engine_coutcommande",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L447",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_preparersemainesuivante",
+      "target": "src_game_engine_appliquereffet",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L468",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_preparersemainesuivante",
+      "target": "src_game_engine_gererdemissions",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L477",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_preparersemainesuivante",
+      "target": "src_game_engine_verifiergameover",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L478",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_verifiergameover",
+      "target": "src_game_engine_actifs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L489",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_statutnotif",
+      "target": "src_game_engine_actifs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L502",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_repareringenieur",
+      "target": "src_game_engine_aingenieur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L530",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_ameliorermachine",
+      "target": "src_game_engine_ameliorationsdebloquees",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L556",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_souscrirepret",
+      "target": "src_game_engine_pretsdisponibles",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/engine.ts",
+      "source_location": "L587",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_types_trait",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_forces",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_faiblesses",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_par_id",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_trait",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_piocher",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces",
+      "target": "src_game_forces_tirertraits",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_forces_tirertraits",
+      "target": "src_game_forces_piocher",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/forces.ts",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_types_machine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_cout_reparation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_usure_par_machine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_bonus_par_niveau",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_prix_amelioration",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_machinesdedepart",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_facteurusure",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_contributionefficacite",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_probapanne",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_usermachines",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_coutreparation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_coutamelioration",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L119",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_appliqueramelioration",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines",
+      "target": "src_game_machines_reparermachine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L131",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_machines_contributionefficacite",
+      "target": "src_game_machines_facteurusure",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/machines.ts",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_difficulty",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_offertype",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_phase",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_trait",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_employee",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_stockcategorie",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_stocks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_machine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_pret",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_effect",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_choice",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_gameevent",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_jourca",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_salaireligne",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_weeklyrecap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_gamestate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L153",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_types",
+      "target": "src_game_types_statut",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/types.ts",
+      "source_location": "L195",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_style_css",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_types_stockcategorie",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_ameliorermachine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_commanderstocks",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_creerpartie",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_embaucher",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_preparersemainesuivante",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_refusercandidat",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_repareringenieur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_reparerpro",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_game_engine_simulersemaine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_index",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_animerroulette",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranaccueil",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranalerte",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranembauche",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranfin",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranhub",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranmenu",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranpresentation",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecranrecap",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_ecransemaine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_inittooltips",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "users_jarod_documents_bar_survivor_src_ui_index_salariedebase",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_main_rendre",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_main_lancerroulettesibesoin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_main_lancersemaine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_main_avancerjour",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_main_majcoutcommande",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L203",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_main_lancerroulettesibesoin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_lancersemaine",
+      "target": "src_main_rendre",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_lancersemaine",
+      "target": "src_main_avancerjour",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_accueil",
+      "target": "src_ui_accueil_ecranaccueil",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/accueil.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte",
+      "target": "src_ui_components_eur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte",
+      "target": "src_ui_alerte_ecranalerte",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_content",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_content_categories_stock",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_forces",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_game_forces_trait",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_eur",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_coeurs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_jauge",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_badgetrait",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_badgestraits",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_barrestats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_bandeausalaries",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components",
+      "target": "src_ui_components_bandeaubas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components_barrestats",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components_bandeaubas",
+      "target": "src_ui_components_jauge",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/components.ts",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_ui_components_bandeaubas",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_ui_components_bandeausalaries",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_ui_components_barrestats",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement",
+      "target": "src_ui_evenement_ecranevenement",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin",
+      "target": "src_ui_components_eur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin",
+      "target": "src_ui_fin_ecranfin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_game_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_game_engine_efficaciteactuelle",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_game_engine_statutnotif",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_ui_components_barrestats",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_ui_hub_tuiles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub",
+      "target": "src_ui_hub_ecranhub",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_accueil",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_accueil_ecranaccueil",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_onboarding",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_onboarding_ecranpresentation",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_onboarding_ecranembauche",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_onboarding_salariedebase",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_roulette",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_roulette_animerroulette",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_semaine",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_semaine_ecransemaine",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_evenement",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_evenement_ecranevenement",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_recap",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_recap_ecranrecap",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_alerte",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_alerte_ecranalerte",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_fin",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_fin_ecranfin",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_hub",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_hub_ecranhub",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_menus",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_menus_ecranmenu",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_tooltip",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_tooltip_inittooltips",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_types_machine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_engine_dette_totale",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_engine_aingenieur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_engine_ameliorationsdebloquees",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_engine_paiementdette",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_content",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_content_categories_stock",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_machines",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "users_jarod_documents_bar_survivor_src_game_machines_niveau_max",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_machines_coutamelioration",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_game_machines_coutreparation",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_components_badgestraits",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_components_eur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_entete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_statbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_classehp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menusalaries",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menufournisseur",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menureparations",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menubanque",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menuhistorique",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L178",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_menucalendrier",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus",
+      "target": "src_ui_menus_ecranmenu",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menusalaries",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menufournisseur",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menureparations",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L149",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menubanque",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L169",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menuhistorique",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L193",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menucalendrier",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L203",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menusalaries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menufournisseur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L219",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menureparations",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menubanque",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L225",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menuhistorique",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_menucalendrier",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L231",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_ecranmenu",
+      "target": "src_ui_menus_entete",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L234",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_components_badgestraits",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_components_eur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_roulette",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_roulette_reelhtml",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_onboarding_salariedebase",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_onboarding_ecranpresentation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding",
+      "target": "src_ui_onboarding_ecranembauche",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding_ecranpresentation",
+      "target": "src_ui_onboarding_salariedebase",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap",
+      "target": "src_ui_components",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap",
+      "target": "src_ui_components_eur",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap",
+      "target": "src_ui_recap_ecranrecap",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_types_employee",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_forces",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_forces_faiblesses",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_forces_forces",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_game_forces_trait",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_ui_roulette_reelhtml",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_ui_roulette_spin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette",
+      "target": "src_ui_roulette_animerroulette",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette_animerroulette",
+      "target": "src_ui_roulette_spin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_semaine",
+      "target": "src_game_types",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_semaine",
+      "target": "src_game_types_gamestate",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_semaine",
+      "target": "src_ui_semaine_jours",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_semaine",
+      "target": "src_ui_semaine_ecransemaine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/semaine.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_tooltip",
+      "target": "src_ui_tooltip_boite",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_tooltip",
+      "target": "src_ui_tooltip_afficher",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_tooltip",
+      "target": "src_ui_tooltip_cacher",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_tooltip",
+      "target": "src_ui_tooltip_inittooltips",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_tooltip_afficher",
+      "target": "src_ui_tooltip_boite",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/tooltip.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig",
+      "target": "tsconfig_compileroptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_target",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_usedefineforclassfields",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_module",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_lib",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions_lib",
+      "target": "ref_es2020",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "tsconfig_compileroptions_lib",
+      "target": "ref_dom",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "tsconfig_compileroptions_lib",
+      "target": "ref_dom_iterable",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_skiplibcheck",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_moduleresolution",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_allowimportingtsextensions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_isolatedmodules",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_moduledetection",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_noemit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_strict",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_nounusedlocals",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_nounusedparameters",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_compileroptions",
+      "target": "tsconfig_compileroptions_nofallthroughcasesinswitch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig",
+      "target": "tsconfig_include",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "tsconfig_include",
+      "target": "ref_src",
+      "relation": "extends",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "context": "import"
+    },
+    {
+      "source": "vite_config",
+      "target": "vite",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_accueil",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_onboarding",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_roulette",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_semaine",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_evenement",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_recap",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_alerte",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_fin",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_hub",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_menus",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_index",
+      "target": "src_ui_tooltip",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/index.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_roulette_animerroulette",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_accueil_ecranaccueil",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_alerte_ecranalerte",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_onboarding_ecranembauche",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_fin_ecranfin",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_hub_ecranhub",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_menus_ecranmenu",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_onboarding_ecranpresentation",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_recap_ecranrecap",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_semaine_ecransemaine",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_tooltip_inittooltips",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main",
+      "target": "src_ui_onboarding_salariedebase",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_accueil_ecranaccueil",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_onboarding_ecranpresentation",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_onboarding_ecranembauche",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_semaine_ecransemaine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_recap_ecranrecap",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_alerte_ecranalerte",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_menus_ecranmenu",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_hub_ecranhub",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_rendre",
+      "target": "src_ui_fin_ecranfin",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_lancerroulettesibesoin",
+      "target": "src_ui_roulette_animerroulette",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_lancerroulettesibesoin",
+      "target": "src_ui_onboarding_salariedebase",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "src_main_avancerjour",
+      "target": "src_game_engine_simulersemaine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.ts",
+      "source_location": "L105",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menusalaries",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menusalaries",
+      "target": "src_ui_components_badgestraits",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menufournisseur",
+      "target": "src_game_engine_ameliorationsdebloquees",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menufournisseur",
+      "target": "src_game_machines_coutamelioration",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menufournisseur",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menureparations",
+      "target": "src_game_engine_aingenieur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menureparations",
+      "target": "src_game_machines_coutreparation",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L129",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menureparations",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menubanque",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L164",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menubanque",
+      "target": "src_game_engine_paiementdette",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_menus_menuhistorique",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/menus.ts",
+      "source_location": "L187",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_roulette_spin",
+      "target": "src_game_forces_trait",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/ui/roulette.ts",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content_categoriestock",
+      "target": "src_game_types_stockcategorie",
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/game/content.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_content_equipededepart",
+      "target": "src_game_forces_tirertraits",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/content.ts",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creerpartie",
+      "target": "src_game_content_stockspleins",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creerpartie",
+      "target": "src_game_content_equipededepart",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creerpartie",
+      "target": "src_game_content_generercandidats",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_creerpartie",
+      "target": "src_game_machines_machinesdedepart",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_machines_probapanne",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L261",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_machines_contributionefficacite",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L290",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_simulersemaine",
+      "target": "src_game_machines_usermachines",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L335",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_repareringenieur",
+      "target": "src_game_machines_reparermachine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L533",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_reparerpro",
+      "target": "src_game_machines_coutreparation",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L543",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_reparerpro",
+      "target": "src_game_machines_reparermachine",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L546",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_ameliorermachine",
+      "target": "src_game_machines_coutamelioration",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L559",
+      "weight": 1.0
+    },
+    {
+      "source": "src_game_engine_ameliorermachine",
+      "target": "src_game_machines_appliqueramelioration",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/game/engine.ts",
+      "source_location": "L562",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_alerte_ecranalerte",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/alerte.ts",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_components_badgetrait",
+      "target": "src_game_forces_trait",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/components.ts",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement_ecranevenement",
+      "target": "src_ui_components_barrestats",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement_ecranevenement",
+      "target": "src_ui_components_bandeausalaries",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_evenement_ecranevenement",
+      "target": "src_ui_components_bandeaubas",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/evenement.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_fin_ecranfin",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/fin.ts",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub_ecranhub",
+      "target": "src_game_engine_efficaciteactuelle",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_hub_ecranhub",
+      "target": "src_ui_components_barrestats",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/hub.ts",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding_ecranpresentation",
+      "target": "src_ui_roulette_reelhtml",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_onboarding_ecranembauche",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/onboarding.ts",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_ui_recap_ecranrecap",
+      "target": "src_ui_components_eur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/ui/recap.ts",
+      "source_location": "L47",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

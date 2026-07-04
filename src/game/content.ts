@@ -1,214 +1,915 @@
 // ============================================================
-//  CONTENU DU JEU — salariés de départ + événements
-//  C'est ici qu'on ajoutera du contenu au fur et à mesure.
-//  Tout est "data-driven" : pour créer un événement, il suffit
-//  d'ajouter un objet dans la liste EVENEMENTS, sans toucher au moteur.
+//  CONTENU DU JEU — salariés + candidats + événements.
 // ============================================================
 
-import type { Employee, GameEvent } from "./types";
+import type { Choice, CV, Employee, GameEvent, GameState, StockCategorie } from "./types";
+import { aTrait, tirerTraits } from "./traits";
 
-/** Crée l'équipe de départ. Maurice est toujours là (contrat irrévocable). */
+function rand(min: number, max: number): number {
+  return Math.floor(min + Math.random() * (max - min + 1));
+}
+
+/** Planning de repos vierge : travaille les 7 jours (Lun→Dim). */
+function aucunRepos(): boolean[] {
+  return [false, false, false, false, false, false, false];
+}
+
+// ---- Catégories de stock (GDD §12) ----
+// Une seule source de vérité : ordre = volume de vente décroissant.
+//   conso  = points de stock consommés PAR client servi (bière = le plus vendu)
+//   prix   = coût € pour réassortir 1 point de cette catégorie
+//   poids  = importance : plus il est élevé, plus une rupture plombe la notoriété
+export interface CategorieStock {
+  id: StockCategorie;
+  nom: string;
+  emoji: string;
+  conso: number;
+  prix: number;
+  poids: number;
+}
+
+export const CATEGORIES_STOCK: CategorieStock[] = [
+  { id: "bieres", nom: "Bières", emoji: "🍺", conso: 0.06, prix: 8, poids: 5 },
+  { id: "cocktails", nom: "Cocktails", emoji: "🍸", conso: 0.045, prix: 12, poids: 4 },
+  { id: "repas", nom: "Repas", emoji: "🍽️", conso: 0.035, prix: 15, poids: 3 },
+  { id: "softs", nom: "Softs", emoji: "🥤", conso: 0.022, prix: 6, poids: 2 },
+  { id: "chaudes", nom: "Boissons chaudes", emoji: "☕", conso: 0.015, prix: 5, poids: 1 },
+  { id: "vin", nom: "Vin", emoji: "🍷", conso: 0.012, prix: 10, poids: 1 },
+];
+
+/** Toutes les jauges de stock au maximum (état de départ). */
+export function stocksPleins(): Record<StockCategorie, number> {
+  return Object.fromEntries(CATEGORIES_STOCK.map((c) => [c.id, 100])) as Record<
+    StockCategorie,
+    number
+  >;
+}
+
+// ---- Le salarié de base : Antho ----
+
+/** L'équipe de départ : Antho seul (barman obligatoire, contrat irrévocable). */
 export function equipeDeDepart(): Employee[] {
+  const traits = tirerTraits();
   return [
     {
-      id: "maurice",
-      nom: "Maurice",
-      role: "Barman senior",
+      id: "antho",
+      nom: "Antho",
       emoji: "🧔",
       salaire: 900,
       moral: 60,
       competence: 80,
-      tolerance: 50,
-      loyaute: 70,
+      fatigue: 0,
+      semaineEmbauche: 1,
+      reposJours: aucunRepos(),
+      joursSansRepos: 0,
+      reposConsecutifs: 0,
+      forces: traits.forces,
+      faiblesses: traits.faiblesses,
       irrevocable: true,
-    },
-    {
-      id: "camille",
-      nom: "Camille",
-      role: "Serveuse",
-      emoji: "👩",
-      salaire: 650,
-      moral: 70,
-      competence: 65,
-      tolerance: 55,
-      loyaute: 60,
-    },
-    {
-      id: "benji",
-      nom: "Benji",
-      role: "Videur",
-      emoji: "💂",
-      salaire: 850,
-      moral: 55,
-      competence: 70,
-      tolerance: 60,
-      loyaute: 65,
     },
   ];
 }
 
-/**
- * Banque d'événements. Le moteur en tire un au hasard parmi ceux
- * dont la `condition` est remplie (ou sans condition).
- */
+// ---- Le vivier de candidats à l'embauche (roster du GDD §6) ----
+
+interface ModeleCandidat {
+  id: string;
+  nom: string;
+  emoji: string;
+}
+
+const ROSTER: ModeleCandidat[] = [
+  { id: "camille", nom: "Camille", emoji: "👩" },
+  { id: "benji", nom: "Benji", emoji: "💂" },
+  { id: "driss", nom: "Driss", emoji: "👨‍🍳" },
+  { id: "nadia", nom: "Nadia", emoji: "💁" },
+  { id: "paulo", nom: "Paulo", emoji: "📦" },
+  { id: "sophie", nom: "Sophie", emoji: "🧮" },
+  { id: "rayan", nom: "Rayan", emoji: "🧑" },
+  { id: "marco", nom: "Marco", emoji: "🕴" },
+  { id: "lea", nom: "Léa", emoji: "👧" },
+];
+
+// Le salaire demandé suit la compétence tirée au sort (± marge de négociation),
+// arrondi à la dizaine. Comp 45 ≈ 315 €, comp 60 ≈ 420 €, comp 80 ≈ 560 € —
+// fourchette volontairement basse (un salarié apporte peu de capacité, EFF_SALARIE).
+const SALAIRE_PAR_COMP = 7; // €/semaine par point de compétence
+const SALAIRE_NEGO = 0.12; // ±12 % d'aléa de négociation
+function salairePourCompetence(competence: number): number {
+  const brut = competence * SALAIRE_PAR_COMP * (1 + (Math.random() * 2 - 1) * SALAIRE_NEGO);
+  return Math.max(300, Math.round(brut / 10) * 10);
+}
+
+/** Génère `n` candidats aléatoires distincts. */
+export function genererCandidats(n: number, dejaPresents: string[] = []): Employee[] {
+  const dispo = ROSTER.filter((m) => !dejaPresents.includes(m.id));
+  const melange = [...dispo].sort(() => Math.random() - 0.5).slice(0, n);
+  return melange.map((m) => {
+    const traits = tirerTraits();
+    const competence = rand(45, 80);
+    return {
+      id: m.id,
+      nom: m.nom,
+      emoji: m.emoji,
+      salaire: salairePourCompetence(competence),
+      moral: rand(60, 75),
+      competence,
+      fatigue: 0,
+      semaineEmbauche: 1, // écrasée à l'embauche réelle (engine)
+      reposJours: aucunRepos(),
+      joursSansRepos: 0,
+      reposConsecutifs: 0,
+      forces: traits.forces,
+      faiblesses: traits.faiblesses,
+    };
+  });
+}
+
+// ---- Profils de CV (case CV du hub) ----
+// Candidats qui peuvent arriver sous forme de CV au fil des semaines.
+// Traits PAS encore attribués (étape suivante) : ici, juste les profils.
+
+interface ProfilCV {
+  id: string;
+  nom: string;
+  emoji: string;
+}
+
+const CV_PROFILS: ProfilCV[] = [
+  { id: "nate", nom: "Nate", emoji: "🧑" },
+  { id: "robs", nom: "Rob's", emoji: "💂" },
+  { id: "maxou", nom: "Maxou", emoji: "🧔" },
+  { id: "coco", nom: "Coco", emoji: "👩" },
+  { id: "marco", nom: "Marc'O", emoji: "👨‍🍳" },
+  { id: "jaja", nom: "JaJa", emoji: "🧑‍🔧" },
+  { id: "loulou", nom: "LouLou", emoji: "👱‍♀️" },
+  { id: "ananis", nom: "Ananis", emoji: "👩‍🍳" },
+  { id: "coco_h", nom: "Coco", emoji: "🧑‍🦱" },
+  { id: "harmo", nom: "Harmo", emoji: "🧑‍🎤" },
+  { id: "vix", nom: "Vix", emoji: "👩‍🎤" },
+  { id: "pasco", nom: "Pasco", emoji: "🕴" },
+];
+
+/** Transforme un profil de CV en salarié : compétence tirée au sort à la
+ *  génération du CV, salaire demandé dérivé de cette compétence. */
+function profilVersEmploye(p: ProfilCV): Employee {
+  const traits = tirerTraits();
+  const competence = rand(45, 80);
+  return {
+    id: p.id,
+    nom: p.nom,
+    emoji: p.emoji,
+    salaire: salairePourCompetence(competence),
+    moral: 70,
+    competence,
+    fatigue: 0,
+    semaineEmbauche: 1, // écrasée à l'embauche réelle (engine)
+    reposJours: aucunRepos(),
+    joursSansRepos: 0,
+    reposConsecutifs: 0,
+    forces: traits.forces,
+    faiblesses: traits.faiblesses,
+  };
+}
+
+/** Génère un CV pour un profil pas déjà présent dans la boîte (ou null si épuisé). */
+export function genererCV(dejaPresents: string[] = []): CV | null {
+  const dispo = CV_PROFILS.filter((p) => !dejaPresents.includes(p.id));
+  if (dispo.length === 0) return null;
+  const p = dispo[Math.floor(Math.random() * dispo.length)];
+  return {
+    profil: profilVersEmploye(p),
+    faiblessesMasquees: Math.random() < 0.4, // ~40 % des CV cachent leurs faiblesses
+  };
+}
+
+// ---- Banque d'événements (chantier C) ----
+// Pop-ups « Aujourd'hui… » pendant la semaine. Certains sont de simples
+// constats (1 bouton), d'autres des choix risqués (Effect.tirage), et
+// certains dépendent des traits de l'équipe (Musclé, Mafieux, Ingénieur).
+
+/** Un salarié actif possède ce trait ? (condition d'événement) */
+function equipeA(s: GameState, id: string): boolean {
+  return s.employes.some((e) => !e.demissionne && aTrait(e, id));
+}
+
+/** Ancienneté minimale (en semaines) avant qu'un salarié ose demander une augmentation. */
+const ANCIENNETE_AUGMENTATION = 8;
+
+/** Le salarié le plus ancien qui mérite une augmentation (jamais eue, ou pas récente). */
+function salarieEligibleAugmentation(s: GameState): Employee | undefined {
+  return s.employes
+    .filter(
+      (e) =>
+        !e.demissionne &&
+        s.semaine - e.semaineEmbauche >= ANCIENNETE_AUGMENTATION &&
+        (e.semaineAugmentation === undefined ||
+          s.semaine - e.semaineAugmentation >= ANCIENNETE_AUGMENTATION),
+    )
+    .sort((a, b) => a.semaineEmbauche - b.semaineEmbauche)[0];
+}
+
+/** Un salarié actif au hasard (pour les événements qui visent n'importe qui). */
+function salarieAuHasard(s: GameState): Employee | undefined {
+  const a = s.employes.filter((e) => !e.demissionne);
+  return a[Math.floor(Math.random() * a.length)];
+}
+
+/** Fatigue au-delà de laquelle un salarié réclame des vacances. */
+const SEUIL_VACANCES = 50;
+
+/** Le salarié le plus fatigué qui réclame des vacances (fatigue > 50, pas déjà en congés). */
+function salarieEpuise(s: GameState): Employee | undefined {
+  return s.employes
+    .filter((e) => !e.demissionne && e.vacances === undefined && e.fatigue > SEUIL_VACANCES)
+    .sort((a, b) => b.fatigue - a.fatigue)[0];
+}
+
 export const EVENEMENTS: GameEvent[] = [
-  {
-    id: "maurice_picole",
-    cibleId: "maurice",
-    titre: "Maurice a picolé",
-    texte: "Ce matin, Maurice sent l'alcool à plein nez. Le service du soir approche.",
-    choix: [
-      {
-        label: "Le laisser travailler",
-        effet: { moralEquipe: -10 },
-        note: "Risque d'incident, mais le service est assuré.",
-      },
-      {
-        label: "Le renvoyer chez lui",
-        effet: { moralCible: -20, budget: -600 },
-        note: "Service du soir affaibli : CA en baisse.",
-      },
-    ],
-  },
-  {
-    id: "augmentation_camille",
-    cibleId: "camille",
-    titre: "Augmentation ou démission",
-    texte: "Camille : « Soit tu m'augmentes de 100 €, soit je rends mon tablier. »",
-    choix: [
-      {
-        label: "Accepter (+100 €/sem)",
-        effet: { salaireCible: 100, moralCible: 20 },
-        note: "Camille est ravie. Charge salariale en hausse.",
-      },
-      {
-        label: "Refuser",
-        effet: { moralCible: -25 },
-        note: "Elle l'a très mal pris...",
-      },
-    ],
-  },
+  // ---- Bagarres (activent la force Musclé) ----
   {
     id: "bagarre",
-    titre: "Bagarre au bar",
-    texte: "Deux clients se chauffent au fond de la salle. La tension monte.",
-    condition: (s) => s.difficulte !== "facile",
+    titre: "Ça chauffe au comptoir !",
+    texte:
+      "Aujourd'hui, Lowen et Polo, deux habitués, en viennent aux mains pour une histoire de tournée. Les autres clients reculent, un tabouret vole…",
+    condition: (s) => !equipeA(s, "muscle"),
     choix: [
       {
-        label: "Envoyer Benji",
-        effet: { moralCible: 0 },
-        note: "Incident maîtrisé proprement.",
-        // Note : si Benji a démissionné, le moteur appliquera la pénalité ci-dessous.
+        label: "T'interposer toi-même",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            succes: { notoriete: 2, note: "🥊 Tu as calmé la bagarre avec autorité. Les clients applaudissent !" },
+            echec: { budget: -350, notoriete: -3, note: "🥊 Tu as pris un coup et deux tables sont cassées (-350 €)." },
+          },
+        },
       },
       {
-        label: "Ignorer",
-        effet: { budget: -800, notoriete: -10 },
-        note: "La bagarre éclate : dégâts et mauvaise presse.",
+        label: "Appeler la police",
+        effet: { notoriete: -2, note: "🚔 La police a embarqué tout le monde. Ambiance plombée pour la soirée." },
       },
-    ],
-  },
-  {
-    id: "verres_offerts",
-    cibleId: "maurice",
-    titre: "Les verres de trop",
-    texte: "Maurice a encore offert des tournées à ses habitués. 180 € envolés ce soir.",
-    choix: [
       {
         label: "Laisser faire",
-        effet: { moralCible: 5, budget: -180 },
-        note: "Les habitués adorent Maurice.",
-      },
-      {
-        label: "Interdire",
-        effet: { moralCible: -20 },
-        note: "Maurice fait la tête. Risque de vol.",
+        effet: { budget: -500, notoriete: -5, note: "💥 La bagarre a dégénéré : verre brisé, clients enfuis (-500 €)." },
       },
     ],
   },
   {
-    id: "jalousie_benji",
-    cibleId: "benji",
-    titre: "Jalousie salariale",
-    texte: "Benji a découvert qu'un collègue gagne plus que lui. Il exige une revalorisation.",
-    choix: [
-      {
-        label: "Aligner le salaire (+100 €/sem)",
-        effet: { salaireCible: 100, moralCible: 15 },
-        note: "Benji est apaisé.",
-      },
-      {
-        label: "Refuser",
-        effet: { moralCible: -25 },
-        note: "Rancune : risque de vol ou de départ.",
-      },
-    ],
-  },
-  {
-    id: "panne_lave_verre",
-    titre: "Panne machine",
-    texte: "Le lave-verre vient de rendre l'âme en plein service du soir.",
-    choix: [
-      {
-        label: "Appeler un technicien (-400 €)",
-        effet: { budget: -400 },
-        note: "Réparé dès demain, service normal.",
-      },
-      {
-        label: "Ne rien faire",
-        effet: { notoriete: -5 },
-        differe: { budget: -200 },
-        note: "Efficacité réduite jusqu'au remplacement.",
-      },
-    ],
-  },
-  {
-    id: "article_presse",
-    titre: "Article de presse",
-    texte: "Un journaliste local a adoré votre bar et publie un article élogieux !",
-    choix: [
-      {
-        label: "Savourer le moment",
-        effet: { notoriete: 10, budget: 800, moralEquipe: 5 },
-        note: "Excellente publicité : notoriété et CA en hausse.",
-      },
-    ],
-  },
-  {
-    id: "pot_equipe",
-    titre: "Pot d'équipe ?",
-    texte: "L'équipe est fatiguée. Organiser un pot pourrait remonter le moral général (300 €).",
-    choix: [
-      {
-        label: "Organiser le pot (-300 €)",
-        effet: { budget: -300, moralEquipe: 15 },
-        note: "Ambiance au beau fixe !",
-      },
-      {
-        label: "Pas maintenant",
-        effet: {},
-        note: "On serre les dents.",
-      },
-    ],
-  },
-  {
-    id: "rachat_investisseur",
-    titre: "Proposition de rachat",
+    id: "bagarre_evitee",
+    titre: "Ça allait chauffer…",
     texte:
-      "Un investisseur en costume veut racheter votre bar. Une sortie en or... mais la partie s'arrête.",
-    unique: true,
-    condition: (s) => s.semaine >= 8 && s.notoriete >= 50,
+      "Lowen et Polo montent le ton, les poings se serrent — mais ton videur musclé pose une main sur chaque épaule. Tout le monde se rassoit.",
+    condition: (s) => equipeA(s, "muscle"),
     choix: [
       {
-        label: "Accepter le rachat",
-        effet: {},
-        note: "Tu t'en es sorti !",
-        // Le moteur détecte cet id pour déclencher la VICTOIRE.
+        label: "Offrir une tournée pour détendre",
+        effet: { notoriete: 3, stock: { bieres: -5 }, note: "💪 Bagarre évitée avec classe. Le quartier en parle." },
       },
       {
-        label: "Refuser, le bar c'est ma vie",
-        effet: { notoriete: 5 },
-        note: "L'aventure continue.",
+        label: "En rester là",
+        effet: { notoriete: 1, note: "💪 Bagarre étouffée dans l'œuf. Soirée sauvée." },
       },
     ],
+  },
+
+  // ---- Le « milieu » (active la force Mafieux) ----
+  {
+    id: "racket",
+    titre: "Le syndicat des bars",
+    texte:
+      "Aujourd'hui, Momo, un homme en costume trop large, propose une « assurance tranquillité » pour ton établissement. Son sourire ne rassure pas.",
+    condition: (s) => !equipeA(s, "mafieux"),
+    choix: [
+      {
+        label: "Payer 600 € pour être tranquille",
+        effet: { budget: -600, note: "🤝 Tu as payé. Le mois sera calme… paraît-il." },
+      },
+      {
+        label: "Refuser poliment",
+        effet: {
+          tirage: {
+            proba: 0.35,
+            risque: true, // la zone = la menace de représailles
+            succes: { casseMachineAleatoire: true, note: "💢 Représailles nocturnes : une machine a été sabotée." },
+            echec: { note: "😮‍💨 Aucune représaille… cette fois." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "racket_mafieux",
+    titre: "Le syndicat des bars",
+    texte:
+      "Momo entre, costume trop large… puis reconnaît ton salarié bien connecté. Le ton change immédiatement : « fallait le dire que t'étais de la famille ! »",
+    condition: (s) => equipeA(s, "mafieux"),
+    choix: [
+      {
+        label: "Payer le « tarif ami » (200 €)",
+        effet: { budget: -200, notoriete: 2, note: "🤝 Protection au rabais. Le quartier sait que ton bar est intouchable." },
+      },
+      {
+        label: "Décliner, entre gens de confiance",
+        effet: { note: "🤝 Poignée de main, sourires. Personne ne touchera à ton bar." },
+      },
+    ],
+  },
+
+  // ---- Farfelus & vie de quartier ----
+  {
+    id: "influenceur",
+    titre: "Un influenceur en tournée",
+    texte:
+      "Aujourd'hui, Mister G, influenceur food (2 millions d'abonnés, lunettes ridicules), s'installe et filme tout. Il « adorerait goûter un peu tout ».",
+    unique: true,
+    choix: [
+      {
+        label: "Tournée générale offerte (pour la caméra)",
+        effet: {
+          stock: { bieres: -8, cocktails: -8 },
+          tirage: {
+            proba: 0.75,
+            aide: "ambianceur",
+            succes: { notoriete: 9, note: "📱 Sa story cartonne : le bar est plein à craquer de curieux !" },
+            echec: { notoriete: -2, note: "📱 Il a trouvé la bière « tiède » en story. Aïe." },
+          },
+        },
+      },
+      {
+        label: "Le traiter comme tout le monde",
+        effet: {
+          tirage: {
+            proba: 0.3,
+            aide: "ambianceur",
+            succes: { notoriete: 4, note: "📱 Il a adoré l'authenticité ! Bonne pub gratuite." },
+            echec: { note: "📱 Il est reparti sans poster. Tant pis." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "hygiene_ok",
+    titre: "Contrôle d'hygiène surprise",
+    texte:
+      "Aujourd'hui, une inspectrice de l'hygiène débarque sans prévenir, gants blancs et regard d'acier. Elle inspecte chaque recoin…",
+    condition: (s) => s.proprete >= 50,
+    choix: [
+      {
+        label: "La laisser faire, tout est en ordre",
+        effet: { notoriete: 3, note: "🧾 Rapport impeccable ! De quoi rassurer la clientèle." },
+      },
+    ],
+  },
+  {
+    id: "hygiene_ko",
+    titre: "Contrôle d'hygiène surprise",
+    texte:
+      "Aujourd'hui, une inspectrice de l'hygiène débarque sans prévenir… et ton bar n'est PAS présentable. Elle fronce déjà les sourcils.",
+    condition: (s) => s.proprete < 50,
+    choix: [
+      {
+        label: "Assumer et payer l'amende",
+        effet: { budget: -800, note: "🧾 Amende salée (-800 €), mais l'affaire s'arrête là." },
+      },
+      {
+        label: "Glisser discrètement un billet",
+        effet: {
+          budget: -400,
+          tirage: {
+            proba: 0.6,
+            aide: "mafieux",
+            succes: { note: "🤫 Elle a « oublié » son rapport dans le taxi." },
+            echec: { budget: -1200, notoriete: -4, note: "🚨 Tentative de corruption ! Amende doublée et réputation entachée." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "rat",
+    titre: "Un invité indésirable",
+    texte:
+      "Aujourd'hui, un rat obèse traverse tranquillement la salle en plein service, sous les yeux d'une tablée entière.",
+    condition: (s) => s.proprete < 60, // un bar bien tenu n'a pas de rats
+    choix: [
+      {
+        label: "Appeler le dératiseur (350 €)",
+        effet: { budget: -350, proprete: 5, note: "🐀 Dératisation express. On n'en parle plus." },
+      },
+      {
+        label: "« C'est Rémy, notre mascotte ! »",
+        effet: {
+          tirage: {
+            proba: 0.4,
+            aide: "ambianceur",
+            succes: { notoriete: 3, note: "🐀 Les clients ont ri. Rémy a son hashtag." },
+            echec: { notoriete: -5, note: "🐀 Photo du rat sur les réseaux. Catastrophe d'image." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "loterie",
+    titre: "Le ticket de Gégé",
+    texte:
+      "Aujourd'hui, Gégé, pilier de comptoir, te propose son ticket à gratter « porte-bonheur » contre 50 €. « J'te jure patron, j'le sens bien çui-là. »",
+    choix: [
+      {
+        label: "Acheter le ticket (50 €)",
+        effet: {
+          budget: -50,
+          tirage: {
+            proba: 0.12,
+            succes: { budget: 2000, note: "🎫 INCROYABLE. Le ticket de Gégé était gagnant : +2 000 € !" },
+            echec: { note: "🎫 Perdu, évidemment. Gégé est déjà reparti commander." },
+          },
+        },
+      },
+      {
+        label: "Décliner en souriant",
+        effet: { note: "🎫 Gégé a gratté son ticket au comptoir. Perdu. Comme toujours." },
+      },
+    ],
+  },
+  {
+    id: "coupure_courant",
+    titre: "Le quartier dans le noir",
+    texte:
+      "Aujourd'hui, coupure de courant générale en pleine soirée. Frigos à l'arrêt, tireuse muette, clients dans le noir…",
+    choix: [
+      {
+        label: "Soirée aux bougies, service à l'ancienne",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            aide: "ambianceur",
+            succes: { notoriete: 4, budget: -200, note: "🕯 Soirée aux bougies mémorable ! Les clients ont adoré (-200 € de pertes quand même)." },
+            echec: { budget: -600, note: "🕯 Sans musique ni pression, la salle s'est vidée (-600 €)." },
+          },
+        },
+      },
+      {
+        label: "Fermer pour la soirée",
+        effet: { budget: -400, note: "🔌 Soirée perdue (-400 €), mais au moins personne n'est reparti fâché." },
+      },
+    ],
+  },
+  {
+    id: "don_asso",
+    titre: "Le partenariat Amblam",
+    texte:
+      "Aujourd'hui, le représentant d'Amblam, l'asso du quartier, te propose un marché : une carte de réduction pour ses adhérents pendant un mois. « Tu y perds un peu chaque semaine… mais Amblam rend toujours le double à la fin. »",
+    // Répercussion sur 4 semaines : CA amputé (AMBLAM.taux), puis le cumul
+    // du manque à gagner est rendu ×2 la 5e semaine (voir engine.ts).
+    condition: (s) => !s.partenariatAmblam,
+    choix: [
+      {
+        label: "Signer le partenariat (4 semaines)",
+        effet: {
+          partenariatAmblam: true,
+          notoriete: 2,
+          note: "🤝 Cartes Amblam distribuées : ton CA va souffrir un mois… puis Amblam rendra le double du manque à gagner.",
+        },
+      },
+      {
+        label: "Décliner poliment",
+        effet: { notoriete: -1, note: "🤝 Le représentant Amblam repart déçu. Le quartier en entend parler." },
+      },
+    ],
+  },
+  {
+    id: "karaoke",
+    titre: "Karaoké sauvage",
+    texte:
+      "Aujourd'hui, une bande d'anciens du quartier improvise un karaoké avec une enceinte portable. Le volume monte, les clients hésitent entre rire et fuir.",
+    choix: [
+      {
+        label: "Brancher la sono et assumer",
+        effet: { notoriete: 4, stock: { bieres: -6, softs: -4 }, fatigueEquipe: 5, note: "🎤 Soirée d'anthologie ! Épuisante, mais le quartier en parle encore." },
+      },
+      {
+        label: "Couper court poliment",
+        effet: { notoriete: -2, note: "🎤 Les chanteurs sont partis vexés finir la soirée ailleurs." },
+      },
+    ],
+  },
+  {
+    id: "anniversaire",
+    titre: "Privatisation surprise",
+    texte:
+      "Aujourd'hui, un client veut privatiser le bar dimanche soir pour les 40 ans de sa femme. Il paie bien, mais ton équipe devra mettre les bouchées doubles.",
+    choix: [
+      {
+        label: "Accepter (+700 €)",
+        effet: { budget: 700, fatigueEquipe: 8, note: "🎂 Fête réussie, gros pourboire… et équipe sur les rotules." },
+      },
+      {
+        label: "Refuser, le dimanche c'est sacré",
+        effet: { note: "🎂 Il ira au bar d'en face. Tant pis pour les 700 €." },
+      },
+    ],
+  },
+  {
+    id: "critique",
+    titre: "Le critique incognito",
+    texte:
+      "Aujourd'hui, un homme seul prend des notes derrière son demi. Ce carnet en cuir… c'est le critique du journal local, aucun doute.",
+    unique: true,
+    choix: [
+      {
+        label: "Le bichonner discrètement",
+        effet: {
+          stock: { repas: -5, vin: -5 },
+          tirage: {
+            proba: 0.7,
+            aide: "commercial",
+            succes: { notoriete: 7, note: "📰 Article élogieux : « une pépite de quartier » !" },
+            echec: { notoriete: -2, note: "📰 Il a trouvé le service « trop insistant ». Raté." },
+          },
+        },
+      },
+      {
+        label: "Le servir comme tout le monde",
+        effet: {
+          tirage: {
+            proba: 0.45,
+            aide: "commercial",
+            succes: { notoriete: 5, note: "📰 Il a salué « l'authenticité sans chichi ». Belle pub !" },
+            echec: { notoriete: -3, note: "📰 Article tiède : « un bar comme un autre ». Dommage." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "fuite_eau",
+    titre: "Fuite dans la cave !",
+    texte:
+      "Aujourd'hui, une canalisation lâche dans la cave. L'eau monte doucement vers les stocks…",
+    condition: (s) => !equipeA(s, "ingenieur"),
+    choix: [
+      {
+        label: "Appeler un plombier (400 €)",
+        effet: { budget: -400, note: "🔧 Fuite colmatée proprement. La cave est sauvée." },
+      },
+      {
+        label: "Bricoler ça toi-même",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            succes: { note: "🔧 Du chatterton et de la volonté : ça tient ! Zéro euro dépensé." },
+            echec: { budget: -300, stock: { bieres: -12, repas: -8 }, note: "💦 Ta rustine a lâché dans la nuit : stocks noyés (-300 € de dégâts)." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "fuite_eau_ing",
+    titre: "Fuite dans la cave !",
+    texte:
+      "Aujourd'hui, une canalisation lâche dans la cave… mais ton ingénieur est déjà dessus, clé à molette en main, avant même que tu finisses ta phrase.",
+    condition: (s) => equipeA(s, "ingenieur"),
+    choix: [
+      {
+        label: "Le laisser opérer",
+        effet: { notoriete: 1, note: "🔧 Fuite réparée en vingt minutes, gratuitement. Ce salarié vaut de l'or." },
+      },
+    ],
+  },
+  {
+    id: "chien_star",
+    unique: true, // on n'adopte pas une mascotte deux fois
+    titre: "Le chien du quartier",
+    texte:
+      "Aujourd'hui, un gros chien débonnaire — « V-NOME » gravé sur sa vieille médaille — s'installe devant l'entrée et accueille chaque client en remuant la queue. Les gens s'arrêtent pour le caresser.",
+    choix: [
+      {
+        label: "L'adopter comme mascotte (gamelle et panier : 100 €)",
+        effet: { budget: -100, notoriete: 4, moralEquipe: 4, note: "🐕 « Le bar de V-NOME » — les clients viennent exprès pour lui." },
+      },
+      {
+        label: "Le chasser gentiment",
+        effet: { note: "🐕 Il est parti s'installer devant la boulangerie. Elle ne le regrettera pas." },
+      },
+    ],
+  },
+
+  // ---- Le quotidien du comptoir ----
+  {
+    id: "vomi",
+    titre: "Accident au fond de la salle",
+    texte:
+      "Aujourd'hui, un client a repeint le carrelage des toilettes après un verre de trop. Tout le monde regarde ailleurs : qui va y aller ?",
+    // Un bouton par salarié actif : celui qui nettoie finit la semaine plus fatigué.
+    genererChoix: (s) => {
+      const boutons: Choice[] = s.employes
+        .filter((e) => !e.demissionne)
+        .map((e) => ({
+          label: `Envoyer ${e.nom} ${e.emoji}`,
+          cibleId: e.id,
+          effet: {
+            fatigueCible: 15,
+            note: `🤢 ${e.nom} a nettoyé les toilettes en apnée. Héroïque, mais épuisant.`,
+          },
+        }));
+      boutons.push({
+        label: "Condamner les toilettes ce soir",
+        effet: {
+          proprete: -10,
+          notoriete: -2,
+          note: "🤢 Toilettes fermées « pour travaux ». L'odeur s'est installée, les clients ont écourté.",
+        },
+      });
+      return boutons;
+    },
+    choix: [], // remplacés au tirage par genererChoix
+  },
+  {
+    id: "sdf_monnaie",
+    titre: "De la monnaie ?",
+    texte:
+      "Aujourd'hui, Fredo, le SDF du coin, pousse la porte pour la troisième fois de la semaine : « Chef, tu peux me faire de la monnaie ? » L'équipe lève les yeux au ciel.",
+    choix: [
+      {
+        label: "Faire la monnaie, comme d'habitude",
+        effet: {
+          tirage: {
+            proba: 0.4,
+            risque: true, // la zone = l'équipe qui sature
+            aide: "ambianceur", // il garde l'équipe de bonne humeur
+            succes: {
+              moralEquipe: -5,
+              note: "🪙 L'équipe sature : « on n'est pas une banque, patron. » Le moral en prend un coup.",
+            },
+            echec: {
+              notoriete: 2,
+              note: "🪙 Un comptoir ouvert à tous : le quartier apprécie, ça se sait.",
+            },
+          },
+        },
+      },
+      {
+        label: "Refuser, cette fois",
+        effet: {
+          notoriete: -1,
+          note: "🪙 Il est reparti en traînant les pieds. Deux habitués ont froncé les sourcils.",
+        },
+      },
+    ],
+  },
+  {
+    id: "habitue_prix",
+    titre: "Le prix d'ami",
+    texte:
+      "Aujourd'hui, Mr RV — fidèle au poste depuis l'ouverture, toujours le même tabouret — se lance enfin : « Patron, ça fait des semaines que je viens… tu m'fais un prix d'ami ? »",
+    condition: (s) => s.semaine >= 5, // il faut être « depuis le début » pour oser demander
+    unique: true,
+    choix: [
+      {
+        label: "Accorder le prix d'ami",
+        effet: {
+          poseDrapeau: { cle: "prix_ami", valeur: true },
+          notoriete: 4,
+          note: "🍻 Mr RV rayonne et le raconte à tout le quartier. (Ton panier moyen baisse un peu, pour toujours.)",
+        },
+      },
+      {
+        label: "Refuser gentiment",
+        effet: {
+          notoriete: -3,
+          note: "🍻 Mr RV encaisse le refus. Il vient un peu moins souvent, et ça jase au comptoir.",
+        },
+      },
+    ],
+  },
+
+  // ---- La presse & le quartier ----
+  {
+    id: "client_mystere_ok",
+    titre: "Le client mystère",
+    texte:
+      "Aujourd'hui, tu reconnais le chroniqueur du journal local, attablé discrètement depuis une heure, carnet à la main. Son article sort demain… et ton bar est impeccable.",
+    condition: (s) => s.proprete >= 60,
+    choix: [
+      {
+        label: "Lire l'article au matin",
+        effet: { notoriete: 5, note: "📰 « Une adresse tenue avec soin » — le journal recommande ton bar !" },
+      },
+    ],
+  },
+  {
+    id: "client_mystere_ko",
+    titre: "Le client mystère",
+    texte:
+      "Aujourd'hui, tu reconnais le chroniqueur du journal local, attablé discrètement, carnet à la main. Son regard traîne sur les tables collantes… Son article sort demain.",
+    condition: (s) => s.proprete < 60,
+    choix: [
+      {
+        label: "Encaisser l'article",
+        effet: { notoriete: -4, note: "📰 « On y va pour l'ambiance, pas pour l'hygiène » — aïe." },
+      },
+      {
+        label: "Payer un encart publicitaire pour limiter la casse (250 €)",
+        effet: { budget: -250, notoriete: -1, note: "📰 L'article pique, mais ta pub en dernière page rattrape un peu le coup." },
+      },
+    ],
+  },
+  {
+    id: "soiree_etudiante",
+    titre: "L'invasion étudiante",
+    texte:
+      "Aujourd'hui, le BDE Médecine débarque après les partiels : trente carabins assoiffés qui chantent déjà sur le trottoir.",
+    choix: [
+      {
+        label: "Ouvrir grand les portes",
+        effet: {
+          budget: 400,
+          notoriete: 2,
+          fatigueEquipe: 8,
+          stock: { bieres: -8, cocktails: -5, softs: -3 },
+          note: "🎓 Soirée marathon : caisse pleine (+400 €), équipe rincée, stocks au tapis.",
+        },
+        // Une chance sur deux que la soirée dérape : le vomi s'invite le même soir.
+        enchaine: {
+          id: "vomi",
+          proba: 0.5,
+          texte:
+            "Le BDE Médecine a trop bu : un carabin a repeint le carrelage des toilettes. Tout le monde regarde ailleurs : qui va y aller ?",
+        },
+      },
+      {
+        label: "Limiter l'entrée « aux habitués »",
+        effet: { notoriete: -2, note: "🎓 Les étudiants sont partis ailleurs. Les jeunes du quartier s'en souviendront." },
+      },
+    ],
+  },
+  {
+    id: "match_foot",
+    titre: "Soir de match",
+    texte:
+      "Aujourd'hui, c'est LE match de la saison et ton bar n'a pas l'abonnement sport. Les clients scrutent l'écran éteint avec espoir.",
+    choix: [
+      {
+        label: "Payer l'abonnement au bar d'à côté du satellite (150 €)",
+        effet: { budget: -150, notoriete: 3, fatigueEquipe: 4, note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi." },
+      },
+      {
+        label: "« Ici on discute, on ne regarde pas la télé »",
+        effet: { notoriete: -1, note: "⚽ La moitié de la salle a migré chez le concurrent au coup d'envoi." },
+      },
+    ],
+  },
+
+  // ---- Fournisseurs & voisinage ----
+  {
+    id: "brasseur_lot",
+    titre: "L'affaire du fournisseur",
+    texte:
+      "Aujourd'hui, ton fournisseur t'appelle : une commande annulée lui reste sur les bras. « Je te fais le lot à moitié prix, mais c'est maintenant. »",
+    condition: (s) => s.budget >= 300,
+    choix: [
+      {
+        label: "Acheter le lot (300 €)",
+        effet: { budget: -300, stock: { bieres: 75 }, note: "🍺 La cave est pleine pour un bon moment. Belle affaire." },
+      },
+      {
+        label: "Décliner",
+        effet: { note: "🍺 Il l'a vendu au bar d'en face. Tant pis." },
+      },
+    ],
+  },
+  {
+    id: "voisin_grincheux",
+    titre: "Le voisin du dessus",
+    texte:
+      "Aujourd'hui, le voisin du dessus descend en furie : « Chaque soir ce boucan ! J'appelle la mairie si ça continue ! »",
+    condition: (s) => !s.drapeaux["isolation_bar"],
+    // Tant que rien n'est fait, il redescend (presque) chaque mois : l'isolation
+    // est un GROS chèque qui achète la paix définitive, l'ignorer une roulette
+    // récurrente — le dilemme doit rester ouvert selon le budget du moment.
+    cooldown: 4,
+    choix: [
+      {
+        label: "Faire isoler le plafond (2 500 €)",
+        effet: {
+          budget: -2500,
+          poseDrapeau: { cle: "isolation_bar", valeur: true },
+          note: "🔇 Plafond isolé : le voisin ne reviendra plus jamais se plaindre. La paix, ça se paie.",
+        },
+      },
+      {
+        label: "L'ignorer poliment",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            risque: true, // la zone = l'amende de la mairie
+            aide: "mafieux", // des contacts à la mairie pour étouffer l'amende
+            succes: {
+              budget: -1500,
+              notoriete: -3,
+              note: "🔇 Amende de la mairie pour nuisances sonores (-1 500 €) — et l'entrefilet dans le journal local fait mauvais genre.",
+            },
+            echec: { note: "🔇 Pas de suite… pour l'instant. Mais il te fusille du regard chaque matin — il reviendra." },
+          },
+        },
+      },
+    ],
+  },
+
+  // ---- La vie de l'équipe ----
+  {
+    id: "serveur_viral",
+    titre: "La vidéo qui tourne",
+    texte:
+      "Aujourd'hui, une vidéo de {nom} en plein service explose sur les réseaux — des dizaines de milliers de vues. Des curieux poussent la porte « pour voir la star », qui en profite : « Patron, une petite augmentation pour la célébrité du quartier ? »",
+    choisirCible: (s) => salarieAuHasard(s)?.id,
+    genererChoix: (s, cibleId) => {
+      const e = s.employes.find((x) => x.id === cibleId);
+      const hausse = e ? Math.max(30, Math.round((e.salaire * 0.05) / 10) * 10) : 30;
+      return [
+        {
+          label: `Accorder +${hausse} €/semaine à la star`,
+          cibleId,
+          effet: {
+            notoriete: 6,
+            augmentationCible: hausse,
+            moralCible: 8,
+            note: `🎬 {nom} rayonne derrière le comptoir (+${hausse} €/sem). Les curieux continuent d'affluer.`,
+          },
+        },
+        {
+          label: "« La gloire, ça ne se paie pas »",
+          cibleId,
+          effet: {
+            notoriete: 6,
+            moralCible: -10,
+            note: "🎬 Les curieux affluent, mais {nom} sert avec un sourire un peu forcé.",
+          },
+        },
+      ];
+    },
+    choix: [], // remplacés au tirage
+  },
+  {
+    id: "demande_vacances",
+    titre: "Besoin de souffler",
+    texte:
+      "Aujourd'hui, {nom} s'accoude au comptoir, les traits tirés : « Patron, je suis au bout du rouleau. Il me faudrait une vraie semaine pour souffler. »",
+    priorite: true, // passe devant les autres événements : la fatigue n'attend pas
+    cooldown: 1, // peut revenir chaque semaine (un autre salarié, ou le même s'il insiste)
+    condition: (s) => salarieEpuise(s) !== undefined,
+    choisirCible: (s) => salarieEpuise(s)?.id,
+    choix: [
+      {
+        label: "Accorder une semaine de vacances",
+        effet: {
+          vacancesCible: true,
+          moralCible: 8,
+          note: "🏖 {nom} pose ses sept jours la semaine prochaine. Il reviendra à neuf.",
+        },
+      },
+      {
+        label: "« Tiens encore un peu, on a besoin de toi »",
+        effet: {
+          moralCible: -15,
+          note: "🏖 {nom} serre les dents. Sa fatigue s'accumule… et sa rancune aussi.",
+        },
+      },
+    ],
+  },
+  {
+    id: "demande_augmentation",
+    titre: "Un mot en privé",
+    texte:
+      "Aujourd'hui, {nom} te prend à part après le service : « Ça fait un moment que je suis là, patron. J'aimerais qu'on parle de mon salaire. »",
+    condition: (s) => salarieEligibleAugmentation(s) !== undefined,
+    choisirCible: (s) => salarieEligibleAugmentation(s)?.id,
+    genererChoix: (s, cibleId) => {
+      const e = s.employes.find((x) => x.id === cibleId);
+      const hausse = e ? Math.max(30, Math.round((e.salaire * 0.1) / 10) * 10) : 30;
+      return [
+        {
+          label: `Accorder +${hausse} €/semaine`,
+          cibleId,
+          effet: {
+            augmentationCible: hausse,
+            moralCible: 10,
+            note: `💶 {nom} repart regonflé (+${hausse} €/sem sur la fiche de paie).`,
+          },
+        },
+        {
+          label: "Refuser pour l'instant",
+          cibleId,
+          effet: {
+            moralCible: -12,
+            note: "💶 {nom} hoche la tête, déçu. Son entrain n'est plus tout à fait le même.",
+          },
+        },
+      ];
+    },
+    choix: [], // remplacés au tirage
   },
 ];
