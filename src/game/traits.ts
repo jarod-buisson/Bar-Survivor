@@ -314,6 +314,21 @@ export const FAIBLESSES: Trait[] = [
   },
 ];
 
+/** Paires force/faiblesse incohérentes (v0.9) : jamais tirées ensemble sur le
+ *  même salarié — soit des miroirs mécaniques opposés (Bricoleur/Maladroit),
+ *  soit une contradiction de caractère (Musclé/Trouillard). */
+const INCOMPATIBLES: [string, string][] = [
+  ["muscle", "trouillard"],
+  ["bricoleur", "maladroit"],
+  ["zen", "casse_couille"],
+  ["econome", "genereux"],
+  ["efficacite", "lent"],
+  ["ingenieur", "maladroit"],
+  ["zen", "dangereux"],
+  ["zen", "rancunier"],
+  ["infatigable", "fragile"],
+];
+
 /** Poids de tirage par rareté. Aplati en v0.6 : toutes les forces sont
  *  équiprobables (les forces utiles aux événements sortaient trop rarement).
  *  Seul le Voleur reste `legendaire` : caché et punitif, il doit rester rare. */
@@ -371,8 +386,14 @@ function piocherPondere(pool: Trait[]): Trait {
  * Renvoie les ids (à stocker sur l'Employee lors du branchement).
  */
 export function tirerTraits(): { forces: string[]; faiblesses: string[] } {
+  const force = piocherPondere(FORCES);
+  // Exclut les faiblesses incohérentes avec la force déjà tirée (voir INCOMPATIBLES).
+  const exclues = INCOMPATIBLES.filter(([f]) => f === force.id).map(([, w]) => w);
+  const poolFaiblesses = exclues.length
+    ? FAIBLESSES.filter((t) => !exclues.includes(t.id))
+    : FAIBLESSES;
   return {
-    forces: [piocherPondere(FORCES).id],
-    faiblesses: [piocherPondere(FAIBLESSES).id],
+    forces: [force.id],
+    faiblesses: [piocherPondere(poolFaiblesses).id],
   };
 }
