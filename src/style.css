@@ -27,6 +27,7 @@
 html,
 body {
   height: 100%;
+  height: 100dvh; /* évite que la barre d'adresse mobile coupe le bas de l'écran */
   background: #0d0a08;
   color: var(--texte);
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -66,11 +67,16 @@ body {
   flex-direction: column;
   height: 100%;
   padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ---- Accueil ---- */
 .accueil {
-  justify-content: center;
+  /* "safe center" : centré quand ça tient, replié en haut (scrollable) sinon —
+     un center classique rogne le haut du contenu qui déborde au lieu de
+     laisser défiler jusqu'en haut. */
+  justify-content: safe center;
   gap: 10px;
   text-align: center;
 }
@@ -189,6 +195,7 @@ body {
   height: 20px;
   display: flex;
   align-items: center;
+  touch-action: none; /* le drag pilote la valeur nous-mêmes (main.ts) : sans ça, le doigt scrolle la page au lieu de tirer le curseur */
 }
 /* rail gris de fond */
 .four-slider-wrap::before {

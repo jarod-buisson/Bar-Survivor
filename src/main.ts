@@ -402,6 +402,52 @@ app.addEventListener("input", (e) => {
   if (el.classList.contains("four-slider")) majCoutCommande();
 });
 
+// ---- Curseurs (fournisseur + emprunt) : drag tactile sur tout le rail ----
+// Un <input type=range> restylé (-webkit-appearance:none) suit mal le doigt
+// sur mobile : on pilote la valeur nous-mêmes au pointermove, comme le drag
+// des jetons d'aide plus bas — même stratégie, même raison (tactile fiable).
+let dragSlider: HTMLInputElement | null = null;
+
+function valeurDepuisPointer(input: HTMLInputElement, wrap: HTMLElement, clientX: number): number {
+  const rect = wrap.getBoundingClientRect();
+  const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+  const min = Number(input.min) || 0;
+  const max = Number(input.max) || 100;
+  const step = Number(input.step) || 1;
+  const brut = min + ratio * (max - min);
+  return Math.min(max, Math.max(min, Math.round(brut / step) * step));
+}
+
+function appliquerValeurSlider(input: HTMLInputElement, v: number): void {
+  if (String(v) === input.value) return;
+  input.value = String(v);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+app.addEventListener("pointerdown", (e) => {
+  const wrap = (e.target as HTMLElement).closest(".four-slider-wrap") as HTMLElement | null;
+  if (!wrap) return;
+  const input = wrap.querySelector<HTMLInputElement>(".four-slider");
+  if (!input) return;
+  e.preventDefault();
+  dragSlider = input;
+  appliquerValeurSlider(input, valeurDepuisPointer(input, wrap, e.clientX));
+});
+
+window.addEventListener("pointermove", (e) => {
+  if (!dragSlider) return;
+  const wrap = dragSlider.closest(".four-slider-wrap") as HTMLElement | null;
+  if (!wrap) return;
+  appliquerValeurSlider(dragSlider, valeurDepuisPointer(dragSlider, wrap, e.clientX));
+});
+
+window.addEventListener("pointerup", () => {
+  dragSlider = null;
+});
+window.addEventListener("pointercancel", () => {
+  dragSlider = null;
+});
+
 // ---- Aide au tirage : drag & drop d'un jeton salarié sur un choix ----
 // Pointer events : fonctionne au doigt (mobile) comme à la souris. Le jeton
 // suit le pointeur (clone flottant) ; lâché sur un choix compatible → aide
