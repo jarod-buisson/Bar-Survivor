@@ -432,7 +432,16 @@ function severiteEvenement(semaine: number): number {
 function intensifierEffetNegatif(effet: Effect, semaine: number): Effect {
   const s = severiteEvenement(semaine);
   if (s === 1) return effet;
+  // Points/€ additifs : arrondis ici (sinon la sévérité produit des jauges à
+  // virgule affichées ensuite, ex. notoriété "40,000001 %").
   const pire = (v: number | undefined, mauvaisSiNegatif: boolean): number | undefined => {
+    if (v === undefined) return v;
+    const estMauvais = mauvaisSiNegatif ? v < 0 : v > 0;
+    return estMauvais ? Math.round(v * s) : v;
+  };
+  // Ratios (%) : jamais arrondis ici, leurs consommateurs arrondissent déjà
+  // le résultat final (ex. Math.round(budget * budgetPourcentage)).
+  const pireRatio = (v: number | undefined, mauvaisSiNegatif: boolean): number | undefined => {
     if (v === undefined) return v;
     const estMauvais = mauvaisSiNegatif ? v < 0 : v > 0;
     return estMauvais ? v * s : v;
@@ -445,11 +454,11 @@ function intensifierEffetNegatif(effet: Effect, semaine: number): Effect {
   return {
     ...effet,
     budget: pire(effet.budget, true),
-    budgetPourcentage: pire(effet.budgetPourcentage, true),
+    budgetPourcentage: pireRatio(effet.budgetPourcentage, true),
     notoriete: pire(effet.notoriete, true),
     proprete: pire(effet.proprete, true),
     moralEquipe: pire(effet.moralEquipe, true),
-    moralEquipePourcent: pire(effet.moralEquipePourcent, true),
+    moralEquipePourcent: pireRatio(effet.moralEquipePourcent, true),
     moralCible: pire(effet.moralCible, true),
     fatigueEquipe: pire(effet.fatigueEquipe, false),
     fatigueCible: pire(effet.fatigueCible, false),
@@ -1288,8 +1297,7 @@ export function simulerSemaine(state: GameState): void {
 
 // ---- Commander des stocks chez le fournisseur ----
 
-/** Coût pour remonter chaque catégorie à sa cible (positions des curseurs). */
-export function coutCommande(
+function totalCommandeBrut(
   state: GameState,
   cibles: Partial<Record<StockCategorie, number>>,
 ): number {
@@ -1299,9 +1307,25 @@ export function coutCommande(
     if (cible === undefined) continue;
     total += Math.max(0, cible - state.stocks[c.id]) * c.prix;
   }
+  return total;
+}
+
+/** Coût AVANT remise Négociant — sert à afficher le prix barré côté UI. */
+export function coutCommandeBrut(
+  state: GameState,
+  cibles: Partial<Record<StockCategorie, number>>,
+): number {
+  return Math.round(totalCommandeBrut(state, cibles));
+}
+
+/** Coût pour remonter chaque catégorie à sa cible (positions des curseurs). */
+export function coutCommande(
+  state: GameState,
+  cibles: Partial<Record<StockCategorie, number>>,
+): number {
   // 📦 Négociant : remise sur toutes les commandes tant qu'il est dans l'équipe.
   const remise = 1 + actifs(state).reduce((t, e) => t + bonusPassif(e, "achat"), 0);
-  return Math.round(total * Math.max(0.5, remise));
+  return Math.round(totalCommandeBrut(state, cibles) * Math.max(0.5, remise));
 }
 
 /** Passe la commande : applique les cibles atteignables si le budget suffit. */

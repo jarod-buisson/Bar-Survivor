@@ -60,8 +60,8 @@ export function barreStats(s: GameState): string {
   return `
     <div class="stats">
       <div><span class="lbl">BUDGET</span><span class="val">${eur(s.budget)}</span></div>
-      <div data-tip="Indice d'efficacité : capacité de service de l'équipe et des machines (0-100)."><span class="lbl">⚙ EFFICACITÉ</span><span class="val">${efficaciteActuelle(s)}</span></div>
-      <div><span class="lbl">NOTORIÉTÉ</span><span class="val">${s.notoriete}%</span></div>
+      <div data-tip="Indice d'efficacité : capacité de service de l'équipe et des machines (0-100)."><span class="lbl">⚙ EFFICACITÉ</span><span class="val">${Math.round(efficaciteActuelle(s))}%</span></div>
+      <div><span class="lbl">NOTORIÉTÉ</span><span class="val">${Math.round(s.notoriete)}%</span></div>
       <div data-tip="Clients max par soir (taille du local). Agrandis le bar via la case Travaux."><span class="lbl">🪑 CAPACITÉ</span><span class="val">${capaciteLocale(s)}</span></div>
       <div><span class="lbl">SEMAINE</span><span class="val">${s.semaine}</span></div>
     </div>

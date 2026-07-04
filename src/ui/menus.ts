@@ -224,7 +224,7 @@ function menuReparations(s: GameState): string {
         actions = `<span class="ok-txt">en marche</span>`;
       }
       const etatTxt =
-        m.etat === "panne" ? `<span class="neg">en panne</span>` : `<span class="hint-small">HP ${m.hp}</span>`;
+        m.etat === "panne" ? `<span class="neg">en panne</span>` : `<span class="hint-small">${Math.round(m.hp)}%</span>`;
       return `
         <div class="machine-carte">
           <div class="machine-tete"><span>${m.emoji} ${m.nom}</span>${etatTxt}</div>

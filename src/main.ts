@@ -16,6 +16,8 @@ import {
   appliquerChoix,
   bonusChanceux,
   commanderStocks,
+  coutCommande,
+  coutCommandeBrut,
   creerPartie,
   definirEmprunt,
   definirNomBar,
@@ -368,22 +370,26 @@ app.addEventListener("click", (e) => {
   rendre();
 });
 
-/** Recalcule en direct le coût de la commande fournisseur au glissement des curseurs. */
+/** Recalcule en direct le coût de la commande fournisseur au glissement des curseurs.
+ *  📦 Négociant présent : prix normal barré + prix réellement payé (remisé). */
 function majCoutCommande(): void {
   if (!state) return;
-  let total = 0;
+  const cibles: Partial<Record<StockCategorie, number>> = {};
   app.querySelectorAll<HTMLInputElement>(".four-slider").forEach((el) => {
     const base = Number(el.dataset.base);
     if (Number(el.value) < base) el.value = String(base); // pas de commande négative
     const wrap = el.closest(".four-slider-wrap") as HTMLElement | null;
     if (wrap) wrap.style.setProperty("--fill", `${el.value}%`);
-    total += (Number(el.value) - base) * Number(el.dataset.prix);
+    cibles[el.dataset.cat as StockCategorie] = Number(el.value);
     const valLbl = app.querySelector(`[data-cat-val="${el.dataset.cat}"]`);
     if (valLbl) valLbl.textContent = `${el.value}%`;
   });
-  total = Math.round(total);
+  const brut = coutCommandeBrut(state, cibles);
+  const total = coutCommande(state, cibles);
   const coutEl = document.getElementById("cout-commande");
-  if (coutEl) coutEl.textContent = `${total} €`;
+  if (coutEl) {
+    coutEl.innerHTML = total < brut ? `<s>${eur(brut)}</s> ${eur(total)}` : eur(total);
+  }
   const btn = document.getElementById("btn-commander") as HTMLButtonElement | null;
   if (btn) btn.disabled = total <= 0 || total > state.budget;
 }
