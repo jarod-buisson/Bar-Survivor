@@ -218,11 +218,40 @@ function salarieAuHasard(s: GameState): Employee | undefined {
 /** Fatigue au-delà de laquelle un salarié réclame des vacances. */
 const SEUIL_VACANCES = 50;
 
-/** Le salarié le plus fatigué qui réclame des vacances (fatigue > 50, pas déjà en congés). */
+/** Le salarié le plus fatigué qui réclame des vacances (fatigue > 50, pas déjà en congés,
+ *  pas déjà engagé dans une escalade de refus — voir salarieVacancesMenace/Proces). */
 function salarieEpuise(s: GameState): Employee | undefined {
   return s.employes
-    .filter((e) => !e.demissionne && e.vacances === undefined && e.fatigue > SEUIL_VACANCES)
+    .filter(
+      (e) =>
+        !e.demissionne &&
+        e.vacances === undefined &&
+        e.fatigue > SEUIL_VACANCES &&
+        (e.vacancesRefus ?? 0) === 0,
+    )
     .sort((a, b) => b.fatigue - a.fatigue)[0];
+}
+
+/** Refusé une fois : revient la semaine suivante menacer d'un procès. */
+export function salarieVacancesMenace(s: GameState): Employee | undefined {
+  return s.employes.find(
+    (e) =>
+      !e.demissionne &&
+      e.vacances === undefined &&
+      (e.vacancesRefus ?? 0) === 1 &&
+      s.semaine > (e.vacancesRefusSemaine ?? 0),
+  );
+}
+
+/** Refusé une seconde fois : le procès est enclenché la semaine suivante. */
+export function salarieVacancesProces(s: GameState): Employee | undefined {
+  return s.employes.find(
+    (e) =>
+      !e.demissionne &&
+      e.vacances === undefined &&
+      (e.vacancesRefus ?? 0) >= 2 &&
+      s.semaine > (e.vacancesRefusSemaine ?? 0),
+  );
 }
 
 export const EVENEMENTS: GameEvent[] = [
@@ -730,6 +759,7 @@ export const EVENEMENTS: GameEvent[] = [
           notoriete: 2,
           fatigueEquipe: 8,
           stock: { bieres: -8, cocktails: -5, softs: -3 },
+          grosseSoiree: true,
           note: "🎓 Soirée marathon : caisse pleine (+400 €), équipe rincée, stocks au tapis.",
         },
         // Une chance sur deux que la soirée dérape : le vomi s'invite le même soir.
@@ -754,11 +784,62 @@ export const EVENEMENTS: GameEvent[] = [
     choix: [
       {
         label: "Payer l'abonnement au bar d'à côté du satellite (150 €)",
-        effet: { budget: -150, notoriete: 3, fatigueEquipe: 4, note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi." },
+        effet: {
+          budget: -150,
+          notoriete: 3,
+          fatigueEquipe: 4,
+          grosseSoiree: true,
+          note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi.",
+        },
       },
       {
         label: "« Ici on discute, on ne regarde pas la télé »",
         effet: { notoriete: -1, note: "⚽ La moitié de la salle a migré chez le concurrent au coup d'envoi." },
+      },
+    ],
+  },
+  {
+    id: "police_avertissement",
+    titre: "La police à la porte",
+    texte:
+      "Le lendemain de la soirée, deux agents passent au bar : plusieurs voisins se sont plaints du bruit jusqu'à point d'heure. « On vous met juste en garde, cette fois. »",
+    priorite: true,
+    cooldown: 1,
+    condition: (s) => s.policeEnAttente === "avertissement" && s.semaine > (s.policeEnAttenteSemaine ?? 0),
+    choix: [
+      {
+        label: "Prendre note",
+        effet: {
+          resoudPoliceAvertissement: true,
+          note: "🚨 Premier avertissement : la prochaine grosse soirée, ce sera plus sérieux.",
+        },
+      },
+    ],
+  },
+  {
+    id: "police_proces",
+    titre: "Convocation au tribunal",
+    texte:
+      "Cette fois, c'est plus grave : nouvelle plainte pour tapage, et la mairie parle de fermeture administrative. Une audience est fixée.",
+    priorite: true,
+    cooldown: 1,
+    condition: (s) => s.policeEnAttente === "proces" && s.semaine > (s.policeEnAttenteSemaine ?? 0),
+    choix: [
+      {
+        label: "Se présenter à l'audience",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            succes: {
+              declencherAmendePolice: { pourcentage: 0.3, fermeture: false },
+              note: "⚖️ Le bar reste ouvert. Amende salée : 30 % du CA de la semaine.",
+            },
+            echec: {
+              declencherAmendePolice: { pourcentage: 0.3, fermeture: true },
+              note: "⚖️ Amende (30 % du CA) ET fermeture administrative : porte close toute la semaine prochaine.",
+            },
+          },
+        },
       },
     ],
   },
@@ -875,7 +956,66 @@ export const EVENEMENTS: GameEvent[] = [
         label: "« Tiens encore un peu, on a besoin de toi »",
         effet: {
           moralCible: -15,
+          ajusterVacancesRefus: 1,
           note: "🏖 {nom} serre les dents. Sa fatigue s'accumule… et sa rancune aussi.",
+        },
+      },
+    ],
+  },
+  {
+    id: "vacances_menace",
+    titre: "Menace de procès",
+    texte:
+      "Aujourd'hui, {nom} revient à la charge, plus froid que la dernière fois : « Patron, la loi m'accorde des congés. Si ça continue comme ça, j'appelle un avocat. »",
+    priorite: true,
+    cooldown: 1,
+    condition: (s) => salarieVacancesMenace(s) !== undefined,
+    choisirCible: (s) => salarieVacancesMenace(s)?.id,
+    choix: [
+      {
+        label: "Accorder les vacances, cette fois",
+        effet: {
+          vacancesCible: true,
+          moralCible: 10,
+          note: "🏖 {nom} part se reposer, menace désamorcée de justesse.",
+        },
+      },
+      {
+        label: "Refuser encore",
+        effet: {
+          moralCible: -15,
+          ajusterVacancesRefus: 1,
+          note: "⚖️ {nom} : « Très bien. On se reverra devant le juge. »",
+        },
+      },
+    ],
+  },
+  {
+    id: "proces_vacances",
+    titre: "Le procès",
+    texte:
+      "Aujourd'hui, {nom} met sa menace à exécution : convocation aux prud'hommes pour refus de congés. Il faut y aller.",
+    priorite: true,
+    cooldown: 1,
+    condition: (s) => salarieVacancesProces(s) !== undefined,
+    choisirCible: (s) => salarieVacancesProces(s)?.id,
+    choix: [
+      {
+        label: "Aller au tribunal",
+        effet: {
+          tirage: {
+            proba: 0.5,
+            succes: {
+              moralEquipePourcent: -0.2,
+              demissionCible: true,
+              note: "⚖️ Tu gagnes : pas un centime perdu. Mais {nom} claque la porte, écœuré — et le reste de l'équipe encaisse le choc (moral -20 %).",
+            },
+            echec: {
+              budgetPourcentage: -0.5,
+              demissionCible: true,
+              note: "⚖️ Tu perds : {nom} part... avec la moitié de la caisse en dédommagement.",
+            },
+          },
         },
       },
     ],

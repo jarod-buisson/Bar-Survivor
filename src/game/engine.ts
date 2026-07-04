@@ -23,6 +23,8 @@ import {
   equipeDeDepart,
   genererCV,
   genererCandidats,
+  salarieVacancesMenace,
+  salarieVacancesProces,
   stocksPleins,
 } from "./content";
 import {
@@ -70,7 +72,7 @@ const CV_MAX = 4; // nombre max de CV en attente dans la case CV
 const CV_SEMAINE_DEBUT = 4; // les CV commencent à arriver à partir de cette semaine
 
 // ---- Fatigue, repos & fermeture (chantier A) ----
-const FATIGUE_JOUR_TRAVAIL = 5; // fatigue gagnée par jour travaillé
+const FATIGUE_JOUR_TRAVAIL = 4.5; // fatigue gagnée par jour travaillé (5j+2j repos ≈ +6/sem net, contre +9 avant)
 const FATIGUE_JOUR_REPOS = 8; // fatigue récupérée par jour de repos
 // Équilibre voulu : 5j travail + 2j repos = +9 de fatigue/sem (elle monte, lentement).
 // Seule une vraie coupure (vacances : 7j de repos = -56) remet un salarié à neuf.
@@ -120,6 +122,17 @@ const PANIER_BASE = 15.3; // ticket moyen € AVANT bonus de compétence (voir P
 // pondéré par sa fatigue. Antho seul ≈ ×1.05 (≈ l'ancien panier de 16 €) — neutre en
 // début de partie ; une équipe de 3 ≈ +9 % : embaucher rapporte aussi hors saturation.
 export const PANIER_COMP = 0.06;
+// Plafond de la Σ compétence/100 des présents (v0.9) : au-delà de l'équipe qui
+// sature le LOCAL ACTUEL, un salarié de plus n'apporte plus RIEN au panier (juste
+// de la fiabilité de planning). Sans ce plafond, empiler des salariés restait
+// rentable à l'infini via le panier seul. Le plafond grandit PROPORTIONNELLEMENT
+// au local : 2.4 (~3-4 salariés) au local de départ (150), jusqu'à ~5.3 (~9-10
+// salariés) au local maxé (330) — les Travaux justifient une équipe plus grosse,
+// le cap ne doit pas figer la partie à "jamais plus de 3 salariés".
+const COMP_PRESENTE_MAX_BASE = 2.4;
+function compPresenteMax(state: GameState): number {
+  return COMP_PRESENTE_MAX_BASE * (capaciteLocale(state) / CAPACITE_LOCAL[0]);
+}
 // Un bar réputé fait payer un peu plus cher (et vend plus de cocktails) :
 // chaque point de notoriété AU-DESSUS de 50 monte le panier, jusqu'à ×1.2 à 100.
 // C'est LE moteur de bénéfices du late game — la réputation doit payer.
@@ -279,8 +292,10 @@ export function toggleRepos(state: GameState, id: string, jour: number): void {
   e.reposJours[jour] = !e.reposJours[jour];
 }
 
-/** Les 7 jours de la semaine à venir : true = bar OUVERT (au moins un salarié bosse). */
+/** Les 7 jours de la semaine à venir : true = bar OUVERT (au moins un salarié bosse).
+ *  Fermeture administrative (police) : bar fermé tous les jours, quoi qu'il arrive. */
 export function joursOuverture(state: GameState): boolean[] {
+  if (state.barFerme) return Array(7).fill(false);
   return Array.from({ length: 7 }, (_, j) =>
     actifs(state).some((e) => !e.reposJours[j]),
   );
@@ -352,13 +367,18 @@ export function coutTravaux(state: GameState): number | undefined {
 }
 
 /** Lance les travaux d'agrandissement si le budget le permet. */
+/** Lance les Travaux : payés cash, mais le chantier ferme le bar la semaine qui
+ *  vient (0 CA, salaires/charges/loyer/dette quand même dus) — comme une
+ *  fermeture administrative. Le nouveau local est actif dès la réouverture. */
 export function agrandirBar(state: GameState): boolean {
   const cout = coutTravaux(state);
   if (cout === undefined || state.budget < cout) return false;
   state.budget -= cout;
   state.niveauLocal += 1;
+  state.barFerme = true;
+  state.barFermeRaison = "travaux";
   state.journal.push(
-    `🏗 Travaux terminés : le bar peut maintenant accueillir ${capaciteLocale(state)} clients par soir !`,
+    `🏗 Travaux lancés : chantier cette semaine, le bar ferme le temps des travaux. Réouverture avec ${capaciteLocale(state)} clients par soir !`,
   );
   return true;
 }
@@ -381,12 +401,61 @@ function facteurProprete(p: number): number {
 
 /** Échéance hebdomadaire de l'emprunt initial, selon la semaine. */
 // Remboursement PROPORTIONNEL (v0.7) : chaque semaine, on rembourse un
-// pourcentage du CA réalisé. Auto-équilibrant : une grosse semaine accélère le
-// remboursement, une semaine creuse ne t'étrangle pas (CA nul = échéance nulle).
-// À 15 % et ~10-15 k de CA/sem, les 100 000 € tombent vers la semaine ~55-65.
-export const TAUX_DETTE_CA = 0.15;
+// pourcentage du CA réalisé (avant charges/salaires). Auto-équilibrant : une
+// grosse semaine accélère le remboursement, une semaine creuse ne t'étrangle
+// pas (CA nul = échéance nulle). PROGRESSIF (v0.9) : le taux grimpe avec
+// l'ancienneté de la dette pour éviter qu'elle traîne indéfiniment.
+export const PALIERS_DETTE_CA: { semaineMax: number; taux: number }[] = [
+  { semaineMax: 10, taux: 0.15 },
+  { semaineMax: 20, taux: 0.2 },
+  { semaineMax: Infinity, taux: 0.35 },
+];
+
+export function tauxDette(semaine: number): number {
+  return PALIERS_DETTE_CA.find((p) => semaine <= p.semaineMax)!.taux;
+}
 
 // ---- Événements ----
+
+// Courbe de difficulté (v0.9) : les BONS choix rapportent pareil à toutes les
+// semaines, mais les MAUVAIS choix (budget perdu, moral qui chute, notoriété/
+// propreté qui baisse, fatigue qui grimpe, pari perdu…) s'aggravent avec le
+// temps — semaines 1-10 inchangées ("facile"), 11-20 ×1.3, 21+ ×1.6.
+function severiteEvenement(semaine: number): number {
+  if (semaine <= 10) return 1;
+  if (semaine <= 20) return 1.3;
+  return 1.6;
+}
+
+/** N'amplifie QUE la part négative d'un effet — les bons choix restent aussi
+ *  généreux qu'en début de partie ; seuls les mauvais s'aggravent avec la semaine. */
+function intensifierEffetNegatif(effet: Effect, semaine: number): Effect {
+  const s = severiteEvenement(semaine);
+  if (s === 1) return effet;
+  const pire = (v: number | undefined, mauvaisSiNegatif: boolean): number | undefined => {
+    if (v === undefined) return v;
+    const estMauvais = mauvaisSiNegatif ? v < 0 : v > 0;
+    return estMauvais ? v * s : v;
+  };
+  const stock = effet.stock
+    ? (Object.fromEntries(
+        Object.entries(effet.stock).map(([k, v]) => [k, pire(v as number, true)]),
+      ) as Effect["stock"])
+    : effet.stock;
+  return {
+    ...effet,
+    budget: pire(effet.budget, true),
+    budgetPourcentage: pire(effet.budgetPourcentage, true),
+    notoriete: pire(effet.notoriete, true),
+    proprete: pire(effet.proprete, true),
+    moralEquipe: pire(effet.moralEquipe, true),
+    moralEquipePourcent: pire(effet.moralEquipePourcent, true),
+    moralCible: pire(effet.moralCible, true),
+    fatigueEquipe: pire(effet.fatigueEquipe, false),
+    fatigueCible: pire(effet.fatigueCible, false),
+    stock,
+  };
+}
 
 /** Proba effective d'un pari : boostée par l'aide glissée et/ou les Chanceux
  *  présents ce soir-là (`bonusChance`). Toujours bornée 5-95 %. */
@@ -476,12 +545,30 @@ function appliquerEffet(
   cibleId?: string,
   tirageForce?: boolean,
 ): void {
+  effet = intensifierEffetNegatif(effet, state.semaine);
   if (effet.budget) state.budget += effet.budget;
+  if (effet.budgetPourcentage) state.budget += Math.round(state.budget * effet.budgetPourcentage);
   if (effet.notoriete) state.notoriete = borne(state.notoriete + effet.notoriete);
   if (effet.proprete) state.proprete = borne(state.proprete + effet.proprete);
 
   if (effet.moralEquipe) {
     for (const e of actifs(state)) e.moral = borne(e.moral + effet.moralEquipe);
+  }
+  if (effet.moralEquipePourcent) {
+    for (const e of actifs(state)) e.moral = borne(Math.round(e.moral * (1 + effet.moralEquipePourcent)));
+  }
+  if (effet.grosseSoiree) {
+    state.policeEnAttente = state.policeAvertissementFait ? "proces" : "avertissement";
+    state.policeEnAttenteSemaine = state.semaine;
+  }
+  if (effet.resoudPoliceAvertissement) {
+    state.policeEnAttente = undefined;
+    state.policeAvertissementFait = true;
+  }
+  if (effet.declencherAmendePolice) {
+    state.amendePoliceEnAttente = effet.declencherAmendePolice;
+    state.policeEnAttente = undefined;
+    state.policeAvertissementFait = false; // le cycle se relance : prochaine grosse soirée = nouvel avertissement
   }
   if (effet.fatigueEquipe) {
     for (const e of actifs(state)) e.fatigue = borne(e.fatigue + effet.fatigueEquipe);
@@ -502,7 +589,15 @@ function appliquerEffet(
       cible.salaire += effet.augmentationCible;
       cible.semaineAugmentation = state.semaine;
     }
-    if (effet.vacancesCible) cible.vacances = "posees"; // départ à la semaine prochaine
+    if (effet.vacancesCible) {
+      cible.vacances = "posees"; // départ à la semaine prochaine
+      cible.vacancesRefus = 0; // la menace est désamorcée
+    }
+    if (effet.ajusterVacancesRefus) {
+      cible.vacancesRefus = (cible.vacancesRefus ?? 0) + effet.ajusterVacancesRefus;
+      cible.vacancesRefusSemaine = state.semaine;
+    }
+    if (effet.demissionCible) cible.demissionne = true;
   }
   if (effet.stock) {
     for (const [cat, val] of Object.entries(effet.stock) as [StockCategorie, number][]) {
@@ -545,7 +640,14 @@ export function planifierEvenements(state: GameState): void {
   for (let d = 1; d <= 7; d++) if (ouverts[d - 1]) joursDispo.push(d);
   // Rythme doux (v0.6) : 0, 1 ou 2 pop-ups par semaine, tirés au hasard
   // (équiprobable, ~1/sem en moyenne). Des semaines calmes sont voulues.
-  const nb = Math.min(Math.floor(Math.random() * 3), joursDispo.length);
+  let nb = Math.min(Math.floor(Math.random() * 3), joursDispo.length);
+  // Un événement FORCÉ en attente (police, procès vacances) garantit au moins
+  // un jour de pop-up cette semaine — il n'attend pas le tirage aléatoire.
+  const forcePret =
+    (state.policeEnAttente && state.semaine > (state.policeEnAttenteSemaine ?? 0)) ||
+    salarieVacancesMenace(state) !== undefined ||
+    salarieVacancesProces(state) !== undefined;
+  if (forcePret) nb = Math.max(nb, Math.min(1, joursDispo.length));
   for (let i = 0; i < nb; i++) {
     const idx = Math.floor(Math.random() * joursDispo.length);
     state.joursEvenements.push(joursDispo.splice(idx, 1)[0]);
@@ -812,7 +914,7 @@ export function simulerSemaine(state: GameState): void {
     const panier =
       PANIER_BASE *
       panierOffre *
-      (1 + compPresente * PANIER_COMP) *
+      (1 + Math.min(compPresente, compPresenteMax(state)) * PANIER_COMP) *
       (1 + (Math.max(0, state.notoriete - 50) / 100) * PANIER_NOTOR) *
       (1 + (Math.random() * 2 - 1) * PANIER_VARIA) *
       (1 + bonusCA) *
@@ -888,7 +990,13 @@ export function simulerSemaine(state: GameState): void {
     0.5,
     1 + equipeSemaine.reduce((s, e) => s + bonusPassif(e, "conso"), 0),
   );
-  userMachines(state.machines, joursOuvertsNb, facteurUsureTraits);
+  // 🔧 Un bar qui tourne proche de sa capacité max use son parc plus vite qu'un
+  // bar peu fréquenté (jusqu'à +30 %) — un levier pour qu'une grosse équipe qui
+  // sature le local tous les soirs ait encore intérêt à investir dans les machines.
+  const clientsMoyenParSoir = joursOuvertsNb > 0 ? clientsTotal / joursOuvertsNb : 0;
+  const chargeService = capaciteLocale(state) > 0 ? clientsMoyenParSoir / capaciteLocale(state) : 0;
+  const facteurUsureCharge = Math.min(1.3, Math.max(0.7, 0.7 + 0.6 * chargeService));
+  userMachines(state.machines, joursOuvertsNb, facteurUsureTraits * facteurUsureCharge);
   for (const c of CATEGORIES_STOCK) {
     const varia = 1 + (Math.random() * 2 - 1) * CONSO_VARIA; // ±CONSO_VARIA
     state.stocks[c.id] = borne(state.stocks[c.id] - clientsTotal * c.conso * varia * facteurConso);
@@ -970,7 +1078,9 @@ export function simulerSemaine(state: GameState): void {
   // ---- Fatigue & moral des salariés (fin de semaine) ----
   // Travailler fatigue ; au-delà de 5 jours = heures sup (le moral trinque) ;
   // le repos récupère fatigue ET moral. Un salarié épuisé peut claquer la porte.
+  // Fermeture administrative : personne ne travaille ni ne se repose vraiment, on gèle les deux jauges.
   for (const e of actifs(state)) {
+    if (state.barFerme) continue;
     const repos = e.reposJours.filter(Boolean).length;
     const travailles = 7 - repos;
     // 🔋 Infatigable : accumule la fatigue moins vite (bonus négatif).
@@ -1079,17 +1189,32 @@ export function simulerSemaine(state: GameState): void {
   const loyer = state.loyer;
   const charges = CHARGES;
 
-  // Emprunt initial : on rembourse un pourcentage du CA de la semaine
-  // (s'arrête quand tout est remboursé).
+  // Emprunt initial : on rembourse un pourcentage du CA de la semaine, taux
+  // progressif selon l'ancienneté de la dette (s'arrête quand tout est remboursé).
   let detteRemboursement = 0;
   if (state.detteRestant > 0) {
-    detteRemboursement = Math.min(Math.round(caTotal * TAUX_DETTE_CA), state.detteRestant);
+    detteRemboursement = Math.min(Math.round(caTotal * tauxDette(state.semaine)), state.detteRestant);
     state.detteRestant -= detteRemboursement;
   }
   // Dette à zéro (remboursée… ou emprunt de départ à 0 €) → écran de victoire.
   if (state.detteRestant <= 0 && state.semaineVictoire === undefined) {
     state.detteJusteSoldee = true;
     state.semaineVictoire = state.semaine;
+  }
+
+  // 🚨 Amende policière (procès pour tapage) : résolue maintenant que le CA de
+  // la semaine est connu. La fermeture éventuelle prend effet la semaine prochaine.
+  if (state.amendePoliceEnAttente) {
+    const amende = Math.round(caTotal * state.amendePoliceEnAttente.pourcentage);
+    state.budget -= amende;
+    state.evenementsBudget -= amende;
+    notes.push(`🚨 Amende de la mairie : ${amende} € (${Math.round(state.amendePoliceEnAttente.pourcentage * 100)} % du CA de la semaine).`);
+    if (state.amendePoliceEnAttente.fermeture) {
+      state.barFermeProchaine = true;
+      state.barFermeRaison = "police";
+      notes.push(`🚔 Fermeture administrative : le bar restera porte close la semaine prochaine.`);
+    }
+    state.amendePoliceEnAttente = undefined;
   }
 
   // Prêt bancaire optionnel.
@@ -1222,6 +1347,10 @@ export function menagePro(state: GameState): boolean {
 export function preparerSemaineSuivante(state: GameState): void {
   state.semaine += 1;
   state.reparTentees = [];
+
+  // 🚔 Fermeture administrative décidée la semaine passée (procès policier perdu).
+  state.barFerme = state.barFermeProchaine ?? false;
+  state.barFermeProchaine = false;
 
   // Vacances accordées : le salarié pose ses 7 jours cette semaine, puis
   // reprend son planning normal (tout travaillé) la semaine d'après.

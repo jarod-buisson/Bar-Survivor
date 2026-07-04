@@ -23,11 +23,11 @@ const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean
 
 export function ecranHub(s: GameState): string {
   const tuiles = TUILES.map((t) => {
-    if (t.bientotDispo) {
+    if (t.bientotDispo || s.barFerme) {
       return `
         <button class="tuile desactivee" disabled>
           <span class="tuile-emoji">${t.emoji}</span>
-          <span class="tuile-label">Bientôt dispo</span>
+          <span class="tuile-label">${s.barFerme ? (s.barFermeRaison === "travaux" ? "Chantier" : "Fermé") : "Bientôt dispo"}</span>
         </button>`;
     }
     const statut = statutNotif(s, t.id);
@@ -44,8 +44,11 @@ export function ecranHub(s: GameState): string {
   // Résumé des fermetures prévues (planning des repos, menu Salariés).
   const ouverts = joursOuverture(s);
   const fermes = JOURS.filter((_, i) => !ouverts[i]);
-  const fermetureInfo =
-    fermes.length === 0
+  const fermetureInfo = s.barFerme
+    ? s.barFermeRaison === "travaux"
+      ? `<p class="hint-small neg">🏗 Chantier en cours cette semaine : porte close, aucune gestion possible. Salaires et charges restent dus.</p>`
+      : `<p class="hint-small neg">🚔 Fermeture administrative cette semaine : porte close, aucune gestion possible. Salaires et charges restent dus.</p>`
+    : fermes.length === 0
       ? `<p class="hint-small">🍺 Bar ouvert 7j/7 — pense au repos de ton équipe.</p>`
       : `<p class="hint-small ${fermes.length > 2 ? "neg" : ""}">🚪 Fermé : ${fermes.join(", ")}${fermes.length > 2 ? " — au-delà de 2 jours, la notoriété baisse !" : ""}</p>`;
 

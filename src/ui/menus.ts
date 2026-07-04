@@ -6,7 +6,6 @@
 import type { CV, Employee, GameState, Machine } from "../game/types";
 import {
   MENAGE,
-  TAUX_DETTE_CA,
   aIngenieur,
   ameliorationsDebloquees,
   capaciteBar,
@@ -14,6 +13,7 @@ import {
   coutLicenciement,
   coutMenagePro,
   coutTravaux,
+  tauxDette,
 } from "../game/engine";
 import { CATEGORIES_STOCK } from "../game/content";
 import { NIVEAU_MAX, bonusRendementPct, coutAmelioration, coutReparation } from "../game/machines";
@@ -302,8 +302,8 @@ function menuBanque(s: GameState): string {
         <div>Dette restante : <strong>${eur(restant)}</strong></div>
         <div class="jauge-barre" style="margin:8px 0"><span class="jauge-fill" style="width:${pct}%"></span></div>
         <div class="hint-small">Remboursé ${eur(rembourse)} / ${eur(total)}</div>
-        <div>Remboursement : <strong>${Math.round(TAUX_DETTE_CA * 100)} % du CA de chaque semaine</strong></div>
-        <div class="hint-small">Plus le bar tourne, plus la dette fond — une semaine creuse coûte peu.</div>
+        <div>Remboursement : <strong>${Math.round(tauxDette(s.semaine) * 100)} % du CA de chaque semaine</strong></div>
+        <div class="hint-small">Plus le bar tourne, plus la dette fond — une semaine creuse coûte peu. Le taux grimpe avec le temps : 15 % (sem. 1-10), 20 % (11-20), 35 % au-delà.</div>
         ${s.dernierBilan ? `<div class="hint-small">Semaine dernière : ${eur(s.dernierBilan.detteRemboursement)} remboursés.</div>` : ""}`;
   return `
     ${entete("🏦 Banque")}

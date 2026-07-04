@@ -75,7 +75,7 @@ Phases dans `types.ts`. Pop-ups de fin de semaine : `recapPopup` (bilan chiffré
 - **Barre de stats** (`barreStats`, tous les écrans) : budget · ⚙ efficacité · notoriété · 🪑 capacité (= `capaciteLocale`, monte avec les Travaux) · semaine — l'ancienne jauge d'efficacité du hub est supprimée.
 - **Pastilles du hub** : rouge/orange/vert + **gris** = « rien à faire ici » (CV vide, propreté ≥ 90).
 - **Historique dépliable** : chaque ligne de semaine est un `<details>` natif (chevron ▸, pas de re-render) qui déplie le bilan complet via `bilanDetail(b)` (recap.ts) — même corps que le pop-up de récap, partagé.
-- **Transitions** : fondu 130 ms entre écrans via l'API View Transitions (`rendre` compare une clé `phase:menu:étapeOnboarding` et n'anime que les vrais changements d'écran — les cartes de l'onboarding fondent entre elles ; re-rendus internes instantanés ; fallback sans l'API = instantané).
+- **Transitions** : fondu 130 ms entre écrans via l'API View Transitions (`rendre` compare une clé `phase:menu:étapeOnboarding` et n'anime que les vrais changements d'écran — les cartes de l'onboarding fondent entre elles ; re-rendus internes instantanés ; fallback sans l'API = instantané). **Scroll préservé** sur ces re-rendus internes (`rendre` sauvegarde/restaure le `scrollTop` de `.ecran`) — sinon `app.innerHTML` recrée le conteneur et ramène la page en haut (ex. toggle repos sur un salarié tout en bas de la liste).
 
 ### Pistes non encore faites (backlog)
 Événements saisonniers ; sauvegarde ; pixel art/son ; empaquetage Capacitor. (Stats retirées car inutilisées : `tolerance` v0.5, `loyaute` v0.7 ; `competence` branchée sur le panier en v0.8.)

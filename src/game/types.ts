@@ -35,6 +35,8 @@ export interface Employee {
   semaineAugmentation?: number; // semaine de la dernière augmentation accordée
   vacances?: "posees" | "encours"; // posées = accordées (départ semaine prochaine), encours = en vacances
   reposAvantVacances?: boolean[]; // planning de repos à restaurer au retour de vacances
+  vacancesRefus?: number; // 0 = jamais refusé, 1 = refusé une fois (revient menacer), 2+ = procès enclenché
+  vacancesRefusSemaine?: number; // semaine du dernier refus (évite qu'un refus déclenche la suite la même semaine)
   maladie?: boolean; // trait Fragile : malade cette semaine → 2 jours d'arrêt imposés la suivante
   reposJours: boolean[]; // 7 cases (Lun→Dim) : true = jour de repos planifié
   joursSansRepos: number; // jours travaillés enchaînés sans 2 jours de repos consécutifs
@@ -151,6 +153,13 @@ export interface Effect {
   salaireCible?: number; // modifie le salaire du salarié concerné (ex: augmentation)
   augmentationCible?: number; // augmentation €/sem du salarié concerné (mémorise la semaine)
   vacancesCible?: boolean; // accorde une semaine de vacances au salarié concerné (semaine suivante)
+  ajusterVacancesRefus?: number; // modifie le compteur de refus de vacances du salarié concerné (escalade vers le procès)
+  demissionCible?: boolean; // fait démissionner immédiatement le salarié concerné (procès perdu ou gagné)
+  moralEquipePourcent?: number; // moral de TOUTE l'équipe modifié en % de sa valeur actuelle (ex: -0.20 = -20 %)
+  budgetPourcentage?: number; // budget modifié en % de sa valeur actuelle (ex: -0.5 = perd la moitié de la caisse)
+  grosseSoiree?: boolean; // marque un choix "grosse soirée" acceptée : déclenche la venue de la police la semaine suivante
+  resoudPoliceAvertissement?: boolean; // referme l'avertissement policier en cours (remet le compteur à zéro)
+  declencherAmendePolice?: { pourcentage: number; fermeture: boolean }; // amende (% du CA de la semaine) + fermeture éventuelle la semaine suivante, résolue en fin de semaine
   stock?: Partial<Record<StockCategorie, number>>; // ajustements de stock par catégorie
   poseDrapeau?: { cle: string; valeur: number | boolean }; // mémorise un choix (cohérence)
   casseMachineAleatoire?: boolean; // casse une machine encore en état
@@ -296,6 +305,16 @@ export interface GameState {
   modeInfini: boolean; // après victoire : la partie continue, la pression monte
   reparTentees: string[]; // ids de machines déjà tentées par l'ingénieur cette semaine
   drapeaux: Record<string, number | boolean>; // mémoire des choix (cohérence)
+
+  /** Police (tapage suite à une grosse soirée) : "avertissement" = 1er passage sans frais,
+   *  "proces" = 2e passage, tirage 50/50 (amende, éventuellement fermeture). */
+  policeEnAttente?: "avertissement" | "proces";
+  policeEnAttenteSemaine?: number; // semaine où la grosse soirée a eu lieu (la police ne passe qu'à partir de la semaine suivante)
+  policeAvertissementFait?: boolean; // true = le 1er avertissement a déjà eu lieu (prochaine grosse soirée = procès direct)
+  amendePoliceEnAttente?: { pourcentage: number; fermeture: boolean }; // amende à appliquer en fin de semaine (résolue une fois le CA connu)
+  barFerme?: boolean; // fermeture en cours (police OU travaux) : aucun client, aucune gestion possible, salaires/charges dus quand même
+  barFermeRaison?: "police" | "travaux"; // pourquoi le bar est fermé cette semaine (affichage du hub)
+  barFermeProchaine?: boolean; // fermeture décidée (procès policier perdu), prend effet la semaine suivante
 
   menuOuvert?: string; // dans le hub : id du menu ouvert (ou rien = grille)
 
