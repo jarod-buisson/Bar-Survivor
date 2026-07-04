@@ -50,6 +50,7 @@ export function bilanDetail(b: WeeklyRecap): string {
         ${b.refusesTotal > 0 ? `<div class="info neg">🚫 ${b.refusesTotal} clients refusés faute de place cette semaine</div>` : ""}
         ${b.notorDelta !== 0 ? `<div class="info ${b.notorDelta < 0 ? "neg" : "pos"}">📣 Réputation ${b.notorDelta > 0 ? "+" : ""}${b.notorDelta} cette semaine</div>` : ""}
         ${b.notes.map((n) => `<div class="info">${n}</div>`).join("")}
+        ${b.amblamPerte > 0 ? ligne("🤝 Partenariat Amblam", -b.amblamPerte) : ""}
         ${ligne("Coût matières (boissons)", -b.matieres)}
 
         <div class="bloc-titre">Salaires</div>

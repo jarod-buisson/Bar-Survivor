@@ -806,6 +806,7 @@ export function simulerSemaine(state: GameState): void {
 
   // Cumul Amblam en début de semaine : sert à chiffrer la perte de LA semaine.
   const amblamCumuleAvant = state.partenariatAmblam?.cumule ?? 0;
+  let amblamPerteSemaine = 0; // affichée en ligne dédiée au récap (voir bilan)
 
   const jours: JourCA[] = [];
   let caTotal = 0;
@@ -958,6 +959,7 @@ export function simulerSemaine(state: GameState): void {
   if (state.partenariatAmblam) {
     const p = state.partenariatAmblam;
     const perteSemaine = p.cumule - amblamCumuleAvant;
+    amblamPerteSemaine = perteSemaine;
     p.semainesRestantes -= 1;
     if (p.semainesRestantes > 0) {
       notes.push(
@@ -1262,6 +1264,7 @@ export function simulerSemaine(state: GameState): void {
     matieres,
     ruptures: ruptures.map((c) => c.nom),
     notorDelta,
+    amblamPerte: amblamPerteSemaine,
     notes,
     salairesDetail,
     salaires,

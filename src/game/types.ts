@@ -233,6 +233,7 @@ export interface WeeklyRecap {
   matieres: number; // coût des matières (boissons vendues), déduit du CA
   ruptures: string[]; // catégories à sec au début de la semaine (noms)
   notorDelta: number; // variation de réputation cette semaine (+/-)
+  amblamPerte: number; // manque à gagner Amblam cette semaine (0 si pas de partenariat), DÉJÀ déduit du CA
   notes: string[]; // événements humains de la semaine (repos, fatigue, démissions…)
   salairesDetail: SalaireLigne[]; // salaire par salarié
   salaires: number; // total
