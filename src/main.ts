@@ -75,10 +75,17 @@ function rendre(): void {
   const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
   const change = cle !== dernierEcran;
   dernierEcran = cle;
+  // Re-rendu du même écran (toggle, slider...) : on garde la position de scroll,
+  // sinon app.innerHTML recrée le conteneur et le fait sauter en haut.
+  const scrollActuel = change ? 0 : (app.querySelector(".ecran")?.scrollTop ?? 0);
   if (change && doc.startViewTransition) {
     doc.startViewTransition(() => rendreBrut());
   } else {
     rendreBrut();
+  }
+  if (!change && scrollActuel) {
+    const ecran = app.querySelector(".ecran");
+    if (ecran) ecran.scrollTop = scrollActuel;
   }
 }
 
