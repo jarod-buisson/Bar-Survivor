@@ -369,6 +369,17 @@ body {
   margin: 0;
 }
 
+/* ---- Négociation avec l'Olmo (curseur de contre-offre) ---- */
+.negociation-olmo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  background: var(--panneau-clair);
+  border-radius: 10px;
+  padding: 14px;
+}
+
 /* ---- Tirage de chance : la pinte parfaite ---- */
 .pinte-zone {
   display: flex;

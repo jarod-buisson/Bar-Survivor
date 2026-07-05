@@ -116,15 +116,16 @@ export const FORCES: Trait[] = [
     effet: { cible: "tirage", valeur: 0.05 },
   },
   {
-    id: "pourboires",
-    nom: "Aimant à pourboires",
-    emoji: "🤑",
+    id: "grosses_sommes",
+    nom: "Aimant aux grosses sommes",
+    emoji: "💰",
     type: "force",
     rarete: "commun",
-    // Chaque soir travaillé : `chance` de ramasser 40 à `valeur` € (ligne
-    // « Événements & imprévus » du bilan + note au récap).
-    description: "Chaque soir travaillé, ~25 % de chances de ramasser 40-120 € de pourboires.",
-    effet: { cible: "pourboire", valeur: 120, chance: 0.25 },
+    // Une fois par semaine : ramène une grosse enveloppe, 5 à 25 % du CA de la
+    // semaine (table de proba dans engine.ts, GROSSES_SOMMES_TABLE — rare au-delà
+    // de 15 %). `valeur` documente juste le plafond, pas lu directement.
+    description: "Une fois par semaine, ramène une grosse enveloppe : 5 à 25 % du CA (rare au-delà de 15 %).",
+    effet: { cible: "pourboire", valeur: 0.25 },
   },
   {
     id: "zen",

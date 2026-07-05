@@ -194,6 +194,15 @@ const EFF_SALARIE = 10; // points d'indice apportés par un salarié lambda en p
 const ALEA_SERVICE = 0.08; // ±8 % d'aléa sur l'indice d'efficacité, chaque service
 const SEMAINE_AMELIORATIONS = 5; // améliorations débloquées à partir de cette semaine
 const COUT_AUTO_STOCK = 8_000; // prix de la machine "auto-stock" (case Fournisseur)
+// 💰 Aimant aux grosses sommes : une fois par semaine, ramène une grosse enveloppe —
+// rare au-delà de 15 % du CA (table de proba cumulative, du plus fréquent au plus rare).
+const GROSSES_SOMMES_TABLE: { proba: number; pct: number }[] = [
+  { proba: 0.4, pct: 0.05 },
+  { proba: 0.3, pct: 0.15 },
+  { proba: 0.2, pct: 0.2 },
+  { proba: 0.1, pct: 0.25 },
+];
+const BUDGET_HAUT_SEUIL = 20_000; // Mr Breton : seuil de budget "haut" (condition : 4 semaines d'affilée, voir content.ts)
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
@@ -236,6 +245,9 @@ export function creerPartie(difficulte: Difficulty, offre: OfferType): GameState
     niveauLocal: 0,
     joursEvenements: [],
     boostsJour: {},
+    doubleFatigueFin: [],
+    demissionsForceesFin: [],
+    semainesBudgetHaut: 0,
     autoStockAchete: false,
     autoStockActif: false,
     detteRestant: DETTE_INITIALE,
@@ -573,7 +585,7 @@ export function declencherEvenement(state: GameState, id: string, texte?: string
   state.phase = "evenement";
 }
 
-function appliquerEffet(
+export function appliquerEffet(
   state: GameState,
   effet: Effect,
   cibleId?: string,
@@ -620,6 +632,29 @@ function appliquerEffet(
         capaciteMult: actuel.capaciteMult * (effet.capaciteSoir ?? 1),
         caMult: actuel.caMult + (effet.caSoirPourcent ?? 0),
       };
+    }
+  }
+  // 🌿 Ayms : les présents du soir carburent, mais paieront ça en fatigue doublée
+  // en fin de semaine (voir simulerSemaine).
+  if (effet.fumetteAyms && state.jourAnim >= 1 && state.jourAnim <= 7) {
+    const jourIdx = state.jourAnim - 1;
+    for (const e of actifs(state)) {
+      if (!e.reposJours[jourIdx] && !state.doubleFatigueFin.includes(e.id)) {
+        state.doubleFatigueFin.push(e.id);
+      }
+    }
+  }
+  // 😬 Lanela : les présents du soir (sauf l'irrévocable) démissionneront en fin
+  // de semaine ; l'irrévocable (Antho) encaisse un coup de moral immédiat.
+  if (effet.soireeLanela && state.jourAnim >= 1 && state.jourAnim <= 7) {
+    const jourIdx = state.jourAnim - 1;
+    for (const e of actifs(state)) {
+      if (e.reposJours[jourIdx]) continue;
+      if (e.irrevocable) {
+        e.moral = borne(e.moral - 12);
+      } else if (!state.demissionsForceesFin.includes(e.id)) {
+        state.demissionsForceesFin.push(e.id);
+      }
     }
   }
   const cible = cibleId
@@ -681,6 +716,14 @@ function appliquerEffet(
 export function planifierEvenements(state: GameState): void {
   state.joursEvenements = [];
   state.boostsJour = {};
+  state.doubleFatigueFin = [];
+  state.demissionsForceesFin = [];
+  // 🏍️ Mr Breton : série de semaines consécutives avec un budget confortable.
+  state.semainesBudgetHaut = state.budget > BUDGET_HAUT_SEUIL ? state.semainesBudgetHaut + 1 : 0;
+  // 🚨 Blanchiment en cours : 20 % de chance CHAQUE semaine que ça se fasse griller.
+  if (state.drapeaux["blanchiment_actif"] && Math.random() < 0.2) {
+    state.drapeaux["sem_blanchiment_police"] = true;
+  }
   // Instantané pour le bilan : la variation de réputation affichée couvre TOUTE
   // la semaine, y compris les événements appliqués en direct pendant l'animation.
   state.notorieteDebutSemaine = state.notoriete;
@@ -876,14 +919,12 @@ export function simulerSemaine(state: GameState): void {
   let refusesTotal = 0;
   let demandeTotal = 0;
 
-  // Traits à tirage PAR SOIR : ivresse (alcoolique), ambiance (notoriété),
-  // pourboires (cash). Le Mentor booste les collègues présents le même soir.
+  // Traits à tirage PAR SOIR : ivresse (alcoolique), ambiance (notoriété).
+  // Le Mentor booste les collègues présents le même soir.
   const alco = trait("alcoolique")!.effet;
   const ambiance = trait("ambianceur")!.effet;
-  const tips = trait("pourboires")!.effet;
   const mentorEffet = trait("mentor")!.effet;
   const soirsIvres = new Map<string, number>(); // employeId -> nb de soirs ivres
-  const pourboiresPar = new Map<string, number>(); // employeId -> € ramassés
   let notorAmbiance = 0; // points de notoriété gagnés par les ambianceurs
 
   for (let d = 1; d <= 7; d++) {
@@ -936,11 +977,6 @@ export function simulerSemaine(state: GameState): void {
       // 🎉 Ambianceur : chance de faire parler du bar ce soir.
       if (aTrait(e, "ambianceur") && Math.random() < (ambiance.chance ?? 0)) {
         notorAmbiance += ambiance.valeur;
-      }
-      // 🤑 Aimant à pourboires : peut ramasser du cash ce soir.
-      if (aTrait(e, "pourboires") && Math.random() < (tips.chance ?? 0)) {
-        const tip = Math.round(40 + Math.random() * (tips.valeur - 40));
-        pourboiresPar.set(e.id, (pourboiresPar.get(e.id) ?? 0) + tip);
       }
     }
     const pannesCeSoir: string[] = [];
@@ -1094,12 +1130,26 @@ export function simulerSemaine(state: GameState): void {
     if (e) notes.push(`🍺 ${e.nom} a servi ivre ${nb} soir${nb > 1 ? "s" : ""} cette semaine.`);
   }
 
-  // 🤑 Pourboires : encaissés en direct, comptés dans « Événements & imprévus ».
-  for (const [id, montant] of pourboiresPar) {
-    const e = state.employes.find((x) => x.id === id);
+  // 💰 Aimant aux grosses sommes : une fois par semaine, ramène une grosse
+  // enveloppe (5 à 25 % du CA de la semaine, rare au-delà de 15 %).
+  for (const e of equipeSemaine) {
+    if (!aTrait(e, "grosses_sommes")) continue;
+    const r = Math.random();
+    let cumul = 0;
+    let pct = GROSSES_SOMMES_TABLE[0].pct;
+    for (const palier of GROSSES_SOMMES_TABLE) {
+      cumul += palier.proba;
+      if (r < cumul) {
+        pct = palier.pct;
+        break;
+      }
+    }
+    const montant = Math.round(caTotal * pct);
     state.budget += montant;
     state.evenementsBudget += montant;
-    if (e) notes.push(`🤑 ${e.nom} a ramassé ${montant} € de pourboires cette semaine.`);
+    notes.push(
+      `💰 ${e.nom} a ramené une grosse enveloppe : ${montant} € (${Math.round(pct * 100)} % du CA de la semaine).`,
+    );
   }
 
   // Réputation vivante : monte quand on sert (presque) tout le monde dans un bar
@@ -1174,6 +1224,17 @@ export function simulerSemaine(state: GameState): void {
     }
   }
 
+  // 🌿 Contrecoup d'Ayms : double la fatigue des salariés qui avaient goûté à
+  // sa "récréation" cette semaine.
+  if (state.doubleFatigueFin.length > 0) {
+    for (const id of state.doubleFatigueFin) {
+      const e = state.employes.find((x) => x.id === id && !x.demissionne);
+      if (e) e.fatigue = borne(e.fatigue * 2);
+    }
+    notes.push(`🌿 Contrecoup de la "récréation" d'Ayms : la fatigue de l'équipe concernée double.`);
+    state.doubleFatigueFin = [];
+  }
+
   // 🤒 Fragile : peut tomber malade → 2 jours d'arrêt imposés la semaine
   // prochaine (posés sur lundi-mardi dans preparerSemaineSuivante).
   const grippe = trait("fragile")!.effet;
@@ -1204,6 +1265,39 @@ export function simulerSemaine(state: GameState): void {
     if (e.moral <= 0 || (aBout && Math.random() < PROBA_DEMISSION)) {
       e.demissionne = true;
       notes.push(`💔 ${e.nom} a démissionné, épuisé et démoralisé.`);
+    }
+  }
+
+  // 😬 Lanela : cette soirée était de trop pour ceux qui l'ont vécue.
+  if (state.demissionsForceesFin.length > 0) {
+    for (const id of state.demissionsForceesFin) {
+      const e = state.employes.find((x) => x.id === id && !x.demissionne);
+      if (e) {
+        e.demissionne = true;
+        notes.push(
+          `💔 ${e.nom} : « cette soirée où Lanela est venue était de trop ! Je préfère ne plus jamais revenir travailler ici. »`,
+        );
+      }
+    }
+    state.demissionsForceesFin = [];
+  }
+
+  // 🏍️ Mr Breton passe récupérer sa part promise.
+  if (state.drapeaux["sem_breton_rancon"]) {
+    const perte = Math.round(state.budget * 0.5);
+    state.budget -= perte;
+    state.evenementsBudget -= perte;
+    notes.push(`🏍️ Mr Breton passe récupérer sa part promise : -${perte} € (moitié du budget).`);
+  }
+
+  // 😠 L'Olmo n'a pas apprécié qu'on se paie sa tête (démission de la négociation
+  // ou reniement de l'accord) : une machine trinque en représailles.
+  if (state.drapeaux["sem_olmo_casse"]) {
+    const enMarche = state.machines.filter((m) => m.etat === "marche");
+    if (enMarche.length > 0) {
+      const m = enMarche[Math.floor(Math.random() * enMarche.length)];
+      m.etat = "panne";
+      notes.push(`🔧 L'Olmo n'a pas apprécié : ${m.nom} tombe mystérieusement en panne.`);
     }
   }
 

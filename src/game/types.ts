@@ -82,7 +82,7 @@ export type CibleEffet =
   | "bagarre" // évite des bagarres (levier événements, à venir)
   | "mafia" // négocie avec la mafia (levier mafia, à venir)
   | "tirage" // chanceux : bonus passif de proba sur les tirages de la pinte
-  | "pourboire" // pourboires aléatoires par soir (valeur = max €, chance = proba/soir)
+  | "pourboire" // grosse enveloppe hebdo (valeur = plafond %, table de proba dans engine.ts)
   | "achat" // remise sur les commandes fournisseur (relatif ; négatif = moins cher)
   | "weekend" // bonus de rendement personnel les vendredis/samedis (relatif)
   | "mentor" // bonus de capacité pour les COLLÈGUES présents le même soir (relatif)
@@ -167,6 +167,11 @@ export interface Effect {
   capaciteSoir?: number; // multiplicateur de capacité pour LE SOIR de l'événement uniquement (2 = double)
   caSoirPourcent?: number; // CA du soir de l'événement modifié en % (0.5 = +50 %), en plus de capaciteSoir
   fatiguePresentsJour?: number; // fatigue appliquée aux salariés PRÉSENTS (pas en repos) le soir de l'événement
+  fumetteAyms?: boolean; // marque les présents ce soir-là : fatigue DOUBLÉE en fin de semaine (voir state.doubleFatigueFin)
+  soireeLanela?: boolean; // marque les présents ce soir-là (sauf irrévocable) pour une démission forcée en fin de
+  // semaine ; l'irrévocable (Antho) encaisse juste un coup de moral immédiat (voir state.demissionsForceesFin)
+  ouvrirNegociationOlmo?: boolean; // marqueur intercepté par main.ts AVANT appliquerEffet : ouvre l'écran de
+  // négociation à curseur (jamais résolu par le moteur directement, voir state.negociationOlmo)
   note?: string; // ligne ajoutée au journal (visible au récap)
   /** Pari : `proba` de déclencher `succes`, sinon `echec`. Permet les choix risqués.
    *  `risque: true` = la branche `succes` est une MAUVAISE nouvelle (racket, amende…) :
@@ -291,6 +296,10 @@ export interface GameState {
   };
   /** Salarié glissé sur un choix de l'événement courant pour booster son tirage. */
   aideEvenement?: { employeId: string; choixIndex: number };
+  /** Négociation en cours avec l'Olmo (curseur de contre-offre, voir "olmo_cut").
+   *  plafondAccepte = 32 (40 avec un Mafieux dans l'équipe) ; au-delà, casse. */
+  negociationOlmo?: { plafondAccepte: number; valeur: number };
+  semainesBudgetHaut: number; // semaines CONSÉCUTIVES avec budget > 20 000 € (déclenche Mr Breton à 4)
   /** Notoriété au lancement de la semaine : sert à afficher au bilan la variation
    *  TOTALE (les événements modifient la notoriété en direct pendant l'animation). */
   notorieteDebutSemaine?: number;
@@ -306,6 +315,8 @@ export interface GameState {
    *  en cours : capaciteMult multiplie la capacité du soir, caMult est ajouté (en %)
    *  au CA du soir. Remis à zéro à chaque planification de semaine. */
   boostsJour: Partial<Record<number, { capaciteMult: number; caMult: number }>>;
+  doubleFatigueFin: string[]; // ids marqués par Ayms : fatigue ×2 en fin de semaine, puis vidé
+  demissionsForceesFin: string[]; // ids marqués par Lanela : démission forcée en fin de semaine, puis vidé
   autoStockAchete: boolean; // machine "auto-stock" achetée (case Fournisseur, débloquée sem. 5)
   autoStockActif: boolean; // ON = le stock est remonté à fond en fin de semaine, MAIS payant (plein tarif)
   pret?: Pret;

@@ -15,6 +15,7 @@ import {
   aidesPourChoix,
   ameliorerMachine,
   appliquerChoix,
+  appliquerEffet,
   bonusChanceux,
   commanderStocks,
   coutCommande,
@@ -57,7 +58,7 @@ import {
 } from "./ui";
 import { eur } from "./ui/components";
 import { cartesTraitsAntho, emojiEmprunt, objectifEmprunt, salarieDeBase } from "./ui/onboarding";
-import { tirerTraits } from "./game/traits";
+import { aTrait, tirerTraits } from "./game/traits";
 
 const app = document.getElementById("app")!;
 
@@ -268,6 +269,15 @@ app.addEventListener("click", (e) => {
       if (state && state.phase === "evenement") {
         const index = Number(cible.dataset.index);
         const choixEv = state.evenementCourant?.choix[index];
+        // Négociation Olmo : ce choix n'applique rien lui-même, il ouvre le curseur.
+        if (choixEv?.effet.ouvrirNegociationOlmo) {
+          const plafondAccepte = state.employes.some((e) => !e.demissionne && aTrait(e, "mafieux"))
+            ? 40
+            : 32;
+          state.negociationOlmo = { plafondAccepte, valeur: 20 };
+          rendre();
+          return;
+        }
         const tirage = choixEv?.effet.tirage;
         if (tirage && choixEv && !state.tirageEnCours) {
           // Aide assignée à CE choix (revalidée : salarié encore éligible) → proba boostée.
@@ -297,6 +307,32 @@ app.addEventListener("click", (e) => {
       if (state && state.phase === "evenement" && state.tirageEnCours) {
         appliquerChoix(state, state.tirageEnCours.index, state.tirageEnCours.gagne);
         state.tirageEnCours = undefined;
+        reprendreApresEvenement();
+      }
+      return;
+    case "confirmerNegociationOlmo":
+      // Contre-offre validée : accepté si ≤ plafond, sinon l'Olmo se braque (casse en fin de semaine).
+      if (state && state.phase === "evenement" && state.negociationOlmo) {
+        const { valeur, plafondAccepte } = state.negociationOlmo;
+        const budgetRef = state.historique[state.historique.length - 1]?.budgetApres ?? state.budget;
+        const recu = Math.round(budgetRef * 0.5);
+        const succes = valeur <= plafondAccepte;
+        const rendu = Math.round(recu * (1 - valeur / 100));
+        const garde = recu - rendu;
+        const effet = succes
+          ? {
+              budget: -rendu,
+              note: `🤝 L'Olmo accepte ${valeur} % : tu rends ${rendu.toLocaleString("fr-FR")} €, tu gardes ${garde.toLocaleString("fr-FR")} €.`,
+            }
+          : {
+              poseDrapeau: { cle: "sem_olmo_casse", valeur: true },
+              note: "😠 L'Olmo pense que tu te fous de lui. Il part sans un mot — il y aura de la casse.",
+            };
+        const budgetAvant = state.budget;
+        appliquerEffet(state, effet);
+        state.evenementsBudget += state.budget - budgetAvant;
+        state.negociationOlmo = undefined;
+        state.evenementsJoues += 1;
         reprendreApresEvenement();
       }
       return;
@@ -420,8 +456,28 @@ app.addEventListener("input", (e) => {
     );
     return;
   }
+  // Curseur de négociation avec l'Olmo (20 % → 50 %, ne peut que monter).
+  if (el.classList.contains("negociation-slider")) {
+    majNegociationOlmo();
+    return;
+  }
   if (el.classList.contains("four-slider")) majCoutCommande();
 });
+
+/** Met à jour en direct le remplissage/texte/bouton du curseur de négociation Olmo. */
+function majNegociationOlmo(): void {
+  if (!state || !state.negociationOlmo) return;
+  const input = document.getElementById("negociation-slider") as HTMLInputElement | null;
+  if (!input) return;
+  const v = Number(input.value);
+  state.negociationOlmo.valeur = v;
+  const wrap = input.closest(".four-slider-wrap") as HTMLElement | null;
+  if (wrap) wrap.style.setProperty("--fill", `${((v - 20) / (50 - 20)) * 100}%`);
+  const valLbl = document.getElementById("negociation-val");
+  if (valLbl) valLbl.textContent = `${v} %`;
+  const btn = document.getElementById("negociation-confirmer");
+  if (btn) btn.textContent = `Proposer ${v} %`;
+}
 
 // ---- Curseurs (fournisseur + emprunt) : drag tactile sur tout le rail ----
 // Un <input type=range> restylé (-webkit-appearance:none) suit mal le doigt

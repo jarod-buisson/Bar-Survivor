@@ -600,6 +600,210 @@ export const EVENEMENTS: GameEvent[] = [
     ],
   },
   {
+    id: "corentin_verre",
+    titre: "Corentin remet ça",
+    texte:
+      "Corentin, un habitué, réclame un verre — et une nouvelle « sortie improvisée » avec un inconnu du quartier.",
+    condition: (s) => s.semaine >= 6,
+    choix: [
+      {
+        label: "Accepter",
+        effet: {
+          budget: 500,
+          tirage: {
+            proba: 0.5,
+            risque: true,
+            succes: {
+              notoriete: -5,
+              note: "🌃 Corentin a embarqué un client au hasard dans la ruelle pour une « expérience » entre habitués — ça jase dans le quartier.",
+            },
+            echec: { note: "🌃 Corentin s'est tenu tranquille cette fois, juste un verre entre habitués." },
+          },
+        },
+      },
+      { label: "Refuser", effet: { note: "🌃 Corentin hausse les épaules et retourne à sa place." } },
+    ],
+  },
+  {
+    id: "groupie_antho",
+    titre: "Une groupie pour Antho",
+    texte: "Une femme entre dans le bar, cherche des yeux derrière le comptoir. « Il est là ce soir, Antho ? »",
+    cibleId: "antho",
+    genererChoix: (s) => {
+      const jourIdx = s.jourAnim - 1;
+      const autresPresents = s.employes.filter(
+        (e) => !e.demissionne && !e.irrevocable && !e.reposJours[jourIdx],
+      );
+      const choixOui: Choice = {
+        label: "Oui, il est là",
+        effet: {
+          caSoirPourcent: 0.1,
+          moralCible: -10,
+          note: "💃 Sa groupie s'installe au comptoir toute la soirée. Le CA en profite, Antho beaucoup moins.",
+        },
+      };
+      if (autresPresents.length === 0) return [choixOui];
+      return [
+        choixOui,
+        {
+          label: "Non, il n'est pas là",
+          effet: { notoriete: -3, note: "💃 Déçue, elle repart aussitôt sans un mot." },
+        },
+      ];
+    },
+    choix: [],
+  },
+  {
+    id: "ayms_fumette",
+    titre: "La récréation d'Ayms",
+    texte: "Ayms, un habitué, propose à toute l'équipe de goûter à son « petit remède » derrière le local à poubelles.",
+    choix: [
+      {
+        label: "Accepter",
+        effet: {
+          capaciteSoir: 1.5,
+          fumetteAyms: true,
+          note: "🌿 Toute l'équipe présente carbure à fond ce soir — la fatigue de la semaine s'en ressentira.",
+        },
+      },
+      { label: "Refuser", effet: { note: "🌿 Ayms hausse les épaules et retourne à sa bière, seul." } },
+    ],
+  },
+  {
+    id: "lanela",
+    titre: "Lanela",
+    texte: "Une cliente entre dans le bar. Personne dans l'équipe ne peut la voir en peinture. Elle sourit : « Bonjour ! »",
+    unique: true,
+    condition: (s) => s.semaine >= 10,
+    choix: [
+      {
+        label: "Lui répondre bonjour",
+        effet: {
+          soireeLanela: true,
+          note: "😬 Lanela s'installe et lance la conversation. La soirée est longue, très longue…",
+        },
+      },
+      { label: "L'ignorer", effet: { note: "😮‍💨 Elle hausse les épaules et repart aussitôt." } },
+    ],
+  },
+  {
+    id: "la_torche",
+    titre: "La Torche fait sa tournée",
+    texte: "La Torche est passé derrière le comptoir et s'est servi quelques bouteilles pour sa consommation perso. Tu l'as vu faire.",
+    condition: (s) => !s.drapeaux["torche_viree"],
+    choix: [
+      {
+        label: "Le virer du bar",
+        effet: {
+          stock: { bieres: -8, vin: -6 },
+          notoriete: -10,
+          poseDrapeau: { cle: "torche_viree", valeur: true },
+          note: "🔥 La Torche jure qu'on ne le reverra plus — et le fait savoir haut et fort dans le quartier.",
+        },
+      },
+      {
+        label: "Ne rien dire",
+        effet: {
+          stock: { bieres: -8, vin: -6 },
+          notoriete: 10,
+          note: "🔥 Tu laisses filer. La Torche, ravi, vante ta clémence à qui veut l'entendre — il reviendra sûrement.",
+        },
+      },
+    ],
+  },
+  {
+    id: "mr_breton",
+    titre: "Mr Breton passe à la caisse",
+    texte:
+      "Un homme en chemise à fleurs entre dans le bar — tu ne l'as jamais vu. « Je vois que l'affaire fonctionne bien ! J'ai besoin de m'acheter une nouvelle moto, je me permets de te prendre la moitié de ton budget. »",
+    unique: true,
+    condition: (s) => s.semainesBudgetHaut >= 4,
+    choix: [
+      {
+        label: "D'accord Mr Breton ! Pas de soucis",
+        effet: {
+          poseDrapeau: { cle: "sem_breton_rancon", valeur: true },
+          note: "🏍️ Mr Breton empoche la promesse et repart, tout sourire.",
+        },
+      },
+    ],
+  },
+  {
+    id: "olmo_arrangement",
+    titre: "Un grand de l'Olmo",
+    texte:
+      "Un grand de l'Olmo entre dans le bar. Un air familier — difficile de savoir si tu peux lui faire confiance. Il te propose un arrangement : il te confie de grosses sommes à faire blanchir par le bar.",
+    condition: (s) => s.semaine >= 15 && !s.drapeaux["blanchiment_actif"],
+    genererChoix: (s) => {
+      const budgetRef = s.historique[s.historique.length - 1]?.budgetApres ?? s.budget;
+      const recu = Math.round(budgetRef * 0.5);
+      return [
+        {
+          label: `Accepter (+${recu.toLocaleString("fr-FR")} €)`,
+          effet: {
+            budget: recu,
+            poseDrapeau: { cle: "blanchiment_actif", valeur: true },
+            note: `🕴️ L'Olmo te confie ${recu.toLocaleString("fr-FR")} € à faire passer par les comptes du bar.`,
+          },
+          enchaine: { id: "olmo_cut", proba: 1 },
+        },
+        { label: "Refuser", effet: { note: "🕴️ Il hausse les épaules et repart sans insister." } },
+      ];
+    },
+    choix: [],
+  },
+  {
+    id: "olmo_cut",
+    titre: "L'Olmo revient encaisser",
+    texte: "Une fois la somme blanchie, l'Olmo repasse. « Je te laisse 20 % de ce que je t'ai confié. Ça te va ? »",
+    genererChoix: (s) => {
+      const budgetRef = s.historique[s.historique.length - 1]?.budgetApres ?? s.budget;
+      const recu = Math.round(budgetRef * 0.5);
+      const garde20 = Math.round(recu * 0.2);
+      const rendu20 = recu - garde20;
+      return [
+        {
+          label: `Confirmer (garder ${garde20.toLocaleString("fr-FR")} €)`,
+          effet: {
+            budget: -rendu20,
+            note: `🤝 Tu rends ${rendu20.toLocaleString("fr-FR")} € à l'Olmo, propre. Tu gardes ${garde20.toLocaleString("fr-FR")} €.`,
+          },
+        },
+        {
+          label: "« Ah non, ça ne m'intéresse plus finalement »",
+          effet: {
+            poseDrapeau: { cle: "sem_olmo_casse", valeur: true },
+            note: "😠 L'Olmo pense que tu te fous de lui. Il part sans un mot — il y aura de la casse.",
+          },
+        },
+        {
+          label: "Négocier un autre pourcentage",
+          effet: { ouvrirNegociationOlmo: true },
+        },
+      ];
+    },
+    choix: [],
+  },
+  {
+    id: "olmo_police",
+    titre: "Tout s'écroule",
+    texte:
+      "Un contrôle tombe sur des mouvements suspects dans les comptes. La police remonte vite jusqu'à toi : ton arrangement avec l'Olmo est grillé.",
+    priorite: true,
+    condition: (s) => s.drapeaux["sem_blanchiment_police"] === true,
+    choix: [
+      {
+        label: "Encaisser",
+        effet: {
+          declencherAmendePolice: { pourcentage: 0.35, fermeture: true },
+          notoriete: -15,
+          poseDrapeau: { cle: "blanchiment_actif", valeur: false },
+          note: "🚨 Ton arrangement avec l'Olmo est grillé : amende salée, fermeture administrative, et ta réputation en prend un sacré coup.",
+        },
+      },
+    ],
+  },
+  {
     id: "critique",
     titre: "Le critique incognito",
     texte:

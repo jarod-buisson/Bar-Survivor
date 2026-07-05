@@ -26,10 +26,13 @@ export function ecranEvenement(s: GameState): string {
 
   const boutons = ev.choix.map((c, i) => boutonChoix(s, c, i)).join("");
 
-  // Tirage en cours : la pinte remplace les boutons de choix.
+  // Tirage en cours : la pinte remplace les boutons de choix. Négociation Olmo :
+  // le curseur remplace les boutons (voir main.ts, action "ouvrirNegociationOlmo").
   const corps = s.tirageEnCours
     ? zonePinte(s.tirageEnCours)
-    : `<div class="choix-zone">${boutons}</div>${zoneAide(s)}`;
+    : s.negociationOlmo
+      ? zoneNegociationOlmo(s.negociationOlmo)
+      : `<div class="choix-zone">${boutons}</div>${zoneAide(s)}`;
 
   return `
     <div class="ecran jeu">
@@ -170,6 +173,27 @@ function zonePinte(t: NonNullable<GameState["tirageEnCours"]>): string {
       </div>
       <div class="tirage-verdict ${bon ? "bon" : "mauvais"}">${verdict}</div>
       <button class="principal tirage-continuer" data-action="finTirage">Continuer →</button>
+    </div>
+  `;
+}
+
+/** Négociation avec l'Olmo : curseur de contre-offre (20 % → 50 %, ne peut que
+ *  monter). Le remplissage/texte est mis à jour en direct par main.ts. */
+function zoneNegociationOlmo(n: NonNullable<GameState["negociationOlmo"]>): string {
+  const pct = ((n.valeur - 20) / (50 - 20)) * 100;
+  return `
+    <div class="negociation-olmo">
+      <div class="four-tete">
+        <span class="four-nom">Ta contre-offre</span>
+        <span class="four-val" id="negociation-val">${n.valeur} %</span>
+      </div>
+      <div class="four-slider-wrap" style="--fill:${pct}%">
+        <div class="four-fill"></div>
+        <input type="range" class="four-slider negociation-slider" id="negociation-slider"
+               min="20" max="50" step="1" value="${n.valeur}" />
+      </div>
+      <p class="hint-small">Il acceptera jusqu'à ${n.plafondAccepte} % — au-delà, il pensera que tu te fous de lui.</p>
+      <button class="principal" id="negociation-confirmer" data-action="confirmerNegociationOlmo">Proposer ${n.valeur} %</button>
     </div>
   `;
 }
