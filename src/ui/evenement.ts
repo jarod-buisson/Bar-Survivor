@@ -20,9 +20,11 @@ export function ecranEvenement(s: GameState): string {
   const portrait = cible ? cible.emoji : "🍺";
   const dernierRetour = s.journal.length > 0 ? s.journal[s.journal.length - 1] : "";
   // {nom} dans le titre/texte = le salarié ciblé par l'événement.
+  // {cause} = la grosse soirée qui a déclenché la venue de la police.
   const nom = cible?.nom ?? "quelqu'un";
-  const titre = ev.titre.replace(/\{nom\}/g, nom);
-  const texte = ev.texte.replace(/\{nom\}/g, nom);
+  const cause = s.policeEnAttenteCause ?? "votre dernière grosse soirée";
+  const titre = ev.titre.replace(/\{nom\}/g, nom).replace(/\{cause\}/g, cause);
+  const texte = ev.texte.replace(/\{nom\}/g, nom).replace(/\{cause\}/g, cause);
 
   const boutons = ev.choix.map((c, i) => boutonChoix(s, c, i)).join("");
 

@@ -606,6 +606,7 @@ export function appliquerEffet(
   if (effet.grosseSoiree) {
     state.policeEnAttente = state.policeAvertissementFait ? "proces" : "avertissement";
     state.policeEnAttenteSemaine = state.semaine;
+    state.policeEnAttenteCause = effet.causeSoiree;
   }
   if (effet.resoudPoliceAvertissement) {
     state.policeEnAttente = undefined;
@@ -633,6 +634,14 @@ export function appliquerEffet(
         caMult: actuel.caMult + (effet.caSoirPourcent ?? 0),
       };
     }
+  }
+  if (effet.capaciteLendemain && state.jourAnim >= 1 && state.jourAnim <= 6) {
+    const jourSuivant = state.jourAnim + 1;
+    const actuel = state.boostsJour[jourSuivant] ?? { capaciteMult: 1, caMult: 0 };
+    state.boostsJour[jourSuivant] = {
+      capaciteMult: actuel.capaciteMult * effet.capaciteLendemain,
+      caMult: actuel.caMult,
+    };
   }
   // 🌿 Ayms : les présents du soir carburent, mais paieront ça en fatigue doublée
   // en fin de semaine (voir simulerSemaine).
@@ -1358,7 +1367,8 @@ export function simulerSemaine(state: GameState): void {
   const salairesDetail = actifs(state).map((e) => ({ nom: e.nom, montant: e.salaire }));
   const salaires = salairesDetail.reduce((s, l) => s + l.montant, 0);
   const loyer = state.loyer;
-  const charges = CHARGES;
+  const coutMascotte = Number(state.drapeaux.chien_cout_hebdo) > 0 ? Number(state.drapeaux.chien_cout_hebdo) : 0;
+  const charges = CHARGES + coutMascotte;
 
   // Emprunt initial : on rembourse un pourcentage du CA de la semaine, taux
   // progressif selon l'ancienneté de la dette (s'arrête quand tout est remboursé).
@@ -1534,6 +1544,12 @@ export function menagePro(state: GameState): boolean {
 export function preparerSemaineSuivante(state: GameState): void {
   state.semaine += 1;
   state.reparTentees = [];
+
+  // Repère la semaine où l'équipe atteint 3 salariés pour la première fois
+  // (fenêtre de déclenchement de l'événement vieux_manoir).
+  if (state.semaineEquipe3 === undefined && actifs(state).length >= 3) {
+    state.semaineEquipe3 = state.semaine;
+  }
 
   // 🚔 Fermeture administrative décidée la semaine passée (procès policier perdu).
   state.barFerme = state.barFermeProchaine ?? false;

@@ -158,6 +158,7 @@ export interface Effect {
   moralEquipePourcent?: number; // moral de TOUTE l'équipe modifié en % de sa valeur actuelle (ex: -0.20 = -20 %)
   budgetPourcentage?: number; // budget modifié en % de sa valeur actuelle (ex: -0.5 = perd la moitié de la caisse)
   grosseSoiree?: boolean; // marque un choix "grosse soirée" acceptée : déclenche la venue de la police la semaine suivante
+  causeSoiree?: string; // rappelée dans le texte de police via {cause} (ex. "votre soirée étudiante")
   resoudPoliceAvertissement?: boolean; // referme l'avertissement policier en cours (remet le compteur à zéro)
   declencherAmendePolice?: { pourcentage: number; fermeture: boolean }; // amende (% du CA de la semaine) + fermeture éventuelle la semaine suivante, résolue en fin de semaine
   stock?: Partial<Record<StockCategorie, number>>; // ajustements de stock par catégorie
@@ -166,6 +167,7 @@ export interface Effect {
   partenariatAmblam?: boolean; // signe le partenariat Amblam (CA réduit N semaines, cumul rendu ×2 ensuite)
   capaciteSoir?: number; // multiplicateur de capacité pour LE SOIR de l'événement uniquement (2 = double)
   caSoirPourcent?: number; // CA du soir de l'événement modifié en % (0.5 = +50 %), en plus de capaciteSoir
+  capaciteLendemain?: number; // multiplicateur de capacité pour LE LENDEMAIN de l'événement (0.8 = -20 %, équipe qui traîne)
   fatiguePresentsJour?: number; // fatigue appliquée aux salariés PRÉSENTS (pas en repos) le soir de l'événement
   fumetteAyms?: boolean; // marque les présents ce soir-là : fatigue DOUBLÉE en fin de semaine (voir state.doubleFatigueFin)
   soireeLanela?: boolean; // marque les présents ce soir-là (sauf irrévocable) pour une démission forcée en fin de
@@ -331,6 +333,8 @@ export interface GameState {
    *  "proces" = 2e passage, tirage 50/50 (amende, éventuellement fermeture). */
   policeEnAttente?: "avertissement" | "proces";
   policeEnAttenteSemaine?: number; // semaine où la grosse soirée a eu lieu (la police ne passe qu'à partir de la semaine suivante)
+  policeEnAttenteCause?: string; // rappelle au joueur quelle soirée a causé la venue de la police ({cause})
+  semaineEquipe3?: number; // semaine où l'équipe a atteint 3 salariés pour la première fois (déclenche vieux_manoir)
   policeAvertissementFait?: boolean; // true = le 1er avertissement a déjà eu lieu (prochaine grosse soirée = procès direct)
   amendePoliceEnAttente?: { pourcentage: number; fermeture: boolean }; // amende à appliquer en fin de semaine (résolue une fois le CA connu)
   barFerme?: boolean; // fermeture en cours (police OU travaux) : aucun client, aucune gestion possible, salaires/charges dus quand même

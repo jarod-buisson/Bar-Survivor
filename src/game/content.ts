@@ -872,19 +872,136 @@ export const EVENEMENTS: GameEvent[] = [
     ],
   },
   {
+    id: "vieux_manoir",
+    titre: "Le Vieux Manoir",
+    texte:
+      "Aujourd'hui, toute l'équipe te lance un regard suppliant : « Patron, on veut tous aller au Vieux Manoir ce soir ! Steuplé ?! »",
+    unique: true,
+    condition: (s) =>
+      s.semaineEquipe3 !== undefined &&
+      s.semaine >= s.semaineEquipe3 + 2 &&
+      s.semaine <= s.semaineEquipe3 + 5 &&
+      s.employes.filter((e) => !e.demissionne).length >= 3,
+    choix: [
+      {
+        label: "Les laisser y aller",
+        effet: {
+          caSoirPourcent: 0.5,
+          capaciteLendemain: 0.8,
+          note: "🎉 Soirée mémorable au Vieux Manoir : le bar carbure ce soir (+50 % de CA), mais gare à la gueule de bois — l'équipe traînera un peu demain.",
+        },
+      },
+      {
+        label: "Refuser, ce soir on bosse",
+        effet: { moralEquipe: -10, note: "😒 L'équipe fait la tête toute la soirée. Le moral en prend un coup." },
+      },
+    ],
+  },
+
+  // ---- V-NOME, le chien du quartier ----
+  // État tout entier dans state.drapeaux (pas de champs dédiés) :
+  //  - chien_cout_hebdo (number) : 0/absent = pas (ou plus) adopté, >0 = coût hebdo actuel de la mascotte.
+  //  - chien_chasses (number) : 0 = jamais chassé, 1 = chassé une fois (revient une dernière fois), 2 = chassé deux fois (parti pour de bon).
+  {
     id: "chien_star",
-    unique: true, // on n'adopte pas une mascotte deux fois
     titre: "Le chien du quartier",
     texte:
-      "Aujourd'hui, un gros chien débonnaire — « V-NOME » gravé sur sa vieille médaille — s'installe devant l'entrée et accueille chaque client en remuant la queue. Les gens s'arrêtent pour le caresser.",
+      "Aujourd'hui, un chien mal éduqué dort devant le bar — « V-NOME » gravé sur sa vieille médaille — « WOOF ! WOOF !! » Les gens s'arrêtent pour le caresser.",
+    condition: (s) =>
+      s.semaine < 10 &&
+      !(Number(s.drapeaux.chien_cout_hebdo) > 0) &&
+      (Number(s.drapeaux.chien_chasses) || 0) === 0,
     choix: [
       {
         label: "L'adopter comme mascotte (gamelle et panier : 100 €)",
-        effet: { budget: -100, notoriete: 4, moralEquipe: 4, note: "🐕 « Le bar de V-NOME » — les clients viennent exprès pour lui." },
+        effet: {
+          budget: -100,
+          notoriete: 4,
+          moralEquipe: 4,
+          poseDrapeau: { cle: "chien_cout_hebdo", valeur: 200 },
+          note: "🐕 « Le bar de V-NOME » — les clients viennent exprès pour lui. Mascotte adoptée : 200 €/semaine.",
+        },
       },
       {
         label: "Le chasser gentiment",
-        effet: { note: "🐕 Il est parti s'installer devant la boulangerie. Elle ne le regrettera pas." },
+        effet: {
+          poseDrapeau: { cle: "chien_chasses", valeur: 1 },
+          note: "🐕 Il est parti s'installer devant la boulangerie. Elle ne le regrettera pas.",
+        },
+      },
+    ],
+  },
+  {
+    id: "chien_retour",
+    titre: "V-NOME est de retour",
+    texte:
+      "Aujourd'hui, le même chien revient se coucher devant la porte du bar, la truffe basse — une dernière fois, comme s'il espérait une seconde chance.",
+    priorite: true, // revient à coup sûr la semaine suivante, comme les vacances
+    cooldown: 1,
+    condition: (s) =>
+      !(Number(s.drapeaux.chien_cout_hebdo) > 0) && (Number(s.drapeaux.chien_chasses) || 0) === 1,
+    choix: [
+      {
+        label: "L'adopter comme mascotte (gamelle et panier : 100 €)",
+        effet: {
+          budget: -100,
+          notoriete: 4,
+          moralEquipe: 4,
+          poseDrapeau: { cle: "chien_cout_hebdo", valeur: 200 },
+          note: "🐕 « Le bar de V-NOME » — les clients viennent exprès pour lui. Mascotte adoptée : 200 €/semaine.",
+        },
+      },
+      {
+        label: "Le chasser à nouveau",
+        effet: {
+          poseDrapeau: { cle: "chien_chasses", valeur: 2 },
+          note: "🐕 Cette fois, il ne reviendra plus. V-NOME s'éloigne pour de bon.",
+        },
+      },
+    ],
+  },
+  {
+    id: "chien_augmentation",
+    titre: "L'augmentation de V-NOME",
+    texte:
+      "WOOF ! Après tout ce que ma présence t'a rapporté je veux une augmentation ! Tu vas me passer à 10 000 euros par semaine !",
+    unique: true,
+    condition: (s) => Number(s.drapeaux.chien_cout_hebdo) > 0 && s.semaine >= 20 && s.semaine <= 30,
+    choix: [
+      {
+        label: "Accepter (10 000 €/semaine)",
+        effet: {
+          poseDrapeau: { cle: "chien_cout_hebdo", valeur: 10000 },
+          note: "🐕 V-NOME touche désormais 10 000 €/semaine. Bonne chance pour la suite.",
+        },
+      },
+      {
+        label: "Refuser",
+        effet: { note: "🐕 « Ah ouais ? On va voir ça… »" },
+        enchaine: { id: "chien_augmentation_suite", proba: 1 },
+      },
+    ],
+  },
+  {
+    id: "chien_augmentation_suite",
+    titre: "V-NOME s'énerve",
+    texte:
+      "WOOF WOOF ! *V-NOME devient fou, ouvre la gueule et vous chope par le pantalon… il se déchire* « WOOF ! On est d'accord, va pour 500 € par semaine alors ?! »",
+    condition: () => false, // jamais tiré au hasard : uniquement enchaîné depuis chien_augmentation
+    choix: [
+      {
+        label: "Accepter (500 €/semaine)",
+        effet: {
+          poseDrapeau: { cle: "chien_cout_hebdo", valeur: 500 },
+          note: "🐕 V-NOME se calme et repart avec son nouveau salaire : 500 €/semaine.",
+        },
+      },
+      {
+        label: "Refuser",
+        effet: {
+          poseDrapeau: { cle: "chien_cout_hebdo", valeur: 0 },
+          note: "🐕 « Bon bah j'me casse moi ! WOOF WOOF ! » V-NOME tourne les talons et disparaît pour de bon.",
+        },
       },
     ],
   },
@@ -1021,6 +1138,7 @@ export const EVENEMENTS: GameEvent[] = [
           fatigueEquipe: 8,
           stock: { bieres: -8, cocktails: -5, softs: -3 },
           grosseSoiree: true,
+          causeSoiree: "votre soirée étudiante avec le BDE Médecine",
           note: "🎓 Soirée marathon : caisse pleine (+400 €), équipe rincée, stocks au tapis.",
         },
         // Une chance sur deux que la soirée dérape : le vomi s'invite le même soir.
@@ -1050,6 +1168,7 @@ export const EVENEMENTS: GameEvent[] = [
           notoriete: 3,
           fatigueEquipe: 4,
           grosseSoiree: true,
+          causeSoiree: "votre diffusion du match de foot",
           note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi.",
         },
       },
@@ -1063,7 +1182,7 @@ export const EVENEMENTS: GameEvent[] = [
     id: "police_avertissement",
     titre: "La police à la porte",
     texte:
-      "Le lendemain de la soirée, deux agents passent au bar : plusieurs voisins se sont plaints du bruit jusqu'à point d'heure. « On vous met juste en garde, cette fois. »",
+      "Le lendemain de {cause}, deux agents passent au bar : plusieurs voisins se sont plaints du bruit jusqu'à point d'heure. « On vous met juste en garde, cette fois. »",
     priorite: true,
     cooldown: 1,
     condition: (s) => s.policeEnAttente === "avertissement" && s.semaine > (s.policeEnAttenteSemaine ?? 0),
@@ -1081,7 +1200,7 @@ export const EVENEMENTS: GameEvent[] = [
     id: "police_proces",
     titre: "Convocation au tribunal",
     texte:
-      "Cette fois, c'est plus grave : nouvelle plainte pour tapage, et la mairie parle de fermeture administrative. Une audience est fixée.",
+      "Cette fois, c'est plus grave : nouvelle plainte pour tapage après {cause}, et la mairie parle de fermeture administrative. Une audience est fixée.",
     priorite: true,
     cooldown: 1,
     condition: (s) => s.policeEnAttente === "proces" && s.semaine > (s.policeEnAttenteSemaine ?? 0),

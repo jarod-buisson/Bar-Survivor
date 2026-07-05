@@ -105,12 +105,24 @@ function menuSalaries(s: GameState): string {
       </div>`;
     })
     .join("");
+  const coutMascotte = Number(s.drapeaux.chien_cout_hebdo);
+  const mascotte =
+    coutMascotte > 0
+      ? `
+      <div class="salarie-carte">
+        <div class="sc-portrait">🐕</div>
+        <div class="sc-main">
+          <div class="sc-nom">MASCOTTE DU BAR</div>
+          <div class="sc-role">Coût : ${eur(coutMascotte)}/semaine</div>
+        </div>
+      </div>`
+      : "";
   return `
     ${entete("👥 Salariés")}
     <div class="menu-corps">
       <p class="hint-small">💤 Touche un jour pour mettre un salarié en repos. Personne au travail = bar fermé ce jour-là.</p>
       <p class="hint-small">💪 Plus l'équipe du soir est compétente, plus le ticket moyen grimpe : les bons vendeurs font plus de CA avec les mêmes clients.</p>
-      ${cartes}
+      ${cartes}${mascotte}
     </div>`;
 }
 
