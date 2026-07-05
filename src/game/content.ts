@@ -215,6 +215,13 @@ function salarieAuHasard(s: GameState): Employee | undefined {
   return a[Math.floor(Math.random() * a.length)];
 }
 
+/** Coût qui suit le budget courant (% du budget, borné plancher/plafond) — évite
+ *  qu'un tarif fixe devienne dérisoire une fois le budget bien monté. */
+function coutAdaptatif(s: GameState, pourcentage: number, plancher: number, plafond: number): number {
+  const brut = s.budget * pourcentage;
+  return Math.round(Math.min(plafond, Math.max(plancher, brut)) / 50) * 50;
+}
+
 /** Fatigue au-delà de laquelle un salarié réclame des vacances. */
 const SEUIL_VACANCES = 62;
 
@@ -841,22 +848,26 @@ export const EVENEMENTS: GameEvent[] = [
     texte:
       "Aujourd'hui, une canalisation lâche dans la cave. L'eau monte doucement vers les stocks…",
     condition: (s) => !equipeA(s, "ingenieur"),
-    choix: [
-      {
-        label: "Appeler un plombier (400 €)",
-        effet: { budget: -400, note: "🔧 Fuite colmatée proprement. La cave est sauvée." },
-      },
-      {
-        label: "Bricoler ça toi-même",
-        effet: {
-          tirage: {
-            proba: 0.5,
-            succes: { note: "🔧 Du chatterton et de la volonté : ça tient ! Zéro euro dépensé." },
-            echec: { budget: -300, stock: { bieres: -12, repas: -8 }, note: "💦 Ta rustine a lâché dans la nuit : stocks noyés (-300 € de dégâts)." },
+    genererChoix: (s) => {
+      const coutPlombier = coutAdaptatif(s, 0.08, 400, 3000);
+      return [
+        {
+          label: `Appeler un plombier (${coutPlombier} €)`,
+          effet: { budget: -coutPlombier, note: "🔧 Fuite colmatée proprement. La cave est sauvée." },
+        },
+        {
+          label: "Bricoler ça toi-même",
+          effet: {
+            tirage: {
+              proba: 0.5,
+              succes: { note: "🔧 Du chatterton et de la volonté : ça tient ! Zéro euro dépensé." },
+              echec: { budget: -300, stock: { bieres: -12, repas: -8 }, note: "💦 Ta rustine a lâché dans la nuit : stocks noyés (-300 € de dégâts)." },
+            },
           },
         },
-      },
-    ],
+      ];
+    },
+    choix: [], // remplacés au tirage par genererChoix
   },
   {
     id: "fuite_eau_ing",
@@ -1160,23 +1171,27 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Soir de match",
     texte:
       "Aujourd'hui, c'est LE match de la saison et ton bar n'a pas l'abonnement sport. Les clients scrutent l'écran éteint avec espoir.",
-    choix: [
-      {
-        label: "Payer l'abonnement au bar d'à côté du satellite (150 €)",
-        effet: {
-          budget: -150,
-          notoriete: 3,
-          fatigueEquipe: 4,
-          grosseSoiree: true,
-          causeSoiree: "votre diffusion du match de foot",
-          note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi.",
+    genererChoix: (s) => {
+      const coutAbonnement = coutAdaptatif(s, 0.03, 150, 1500);
+      return [
+        {
+          label: `Payer l'abonnement au bar d'à côté du satellite (${coutAbonnement} €)`,
+          effet: {
+            budget: -coutAbonnement,
+            notoriete: 3,
+            fatigueEquipe: 4,
+            grosseSoiree: true,
+            causeSoiree: "votre diffusion du match de foot",
+            note: "⚽ Bar plein à craquer jusqu'au coup de sifflet final. Le quartier a vibré chez toi.",
+          },
         },
-      },
-      {
-        label: "« Ici on discute, on ne regarde pas la télé »",
-        effet: { notoriete: -1, note: "⚽ La moitié de la salle a migré chez le concurrent au coup d'envoi." },
-      },
-    ],
+        {
+          label: "« Ici on discute, on ne regarde pas la télé »",
+          effet: { notoriete: -1, note: "⚽ La moitié de la salle a migré chez le concurrent au coup d'envoi." },
+        },
+      ];
+    },
+    choix: [], // remplacés au tirage par genererChoix
   },
   {
     id: "police_avertissement",

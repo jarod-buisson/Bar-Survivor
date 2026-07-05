@@ -194,13 +194,15 @@ const EFF_SALARIE = 10; // points d'indice apportés par un salarié lambda en p
 const ALEA_SERVICE = 0.08; // ±8 % d'aléa sur l'indice d'efficacité, chaque service
 const SEMAINE_AMELIORATIONS = 5; // améliorations débloquées à partir de cette semaine
 const COUT_AUTO_STOCK = 8_000; // prix de la machine "auto-stock" (case Fournisseur)
-// 💰 Aimant aux grosses sommes : une fois par semaine, ramène une grosse enveloppe —
-// rare au-delà de 15 % du CA (table de proba cumulative, du plus fréquent au plus rare).
+// 💰 Aimant aux grosses sommes : 1 semaine sur 2 (GROSSES_SOMMES_PROBA_SEMAINE),
+// ramène une grosse enveloppe — rare au-delà de 15 % du CA (table de proba
+// cumulative, du plus fréquent au plus rare).
+const GROSSES_SOMMES_PROBA_SEMAINE = 0.5;
 const GROSSES_SOMMES_TABLE: { proba: number; pct: number }[] = [
-  { proba: 0.4, pct: 0.05 },
+  { proba: 0.6, pct: 0.05 },
   { proba: 0.3, pct: 0.15 },
-  { proba: 0.2, pct: 0.2 },
-  { proba: 0.1, pct: 0.25 },
+  { proba: 0.07, pct: 0.2 },
+  { proba: 0.03, pct: 0.25 },
 ];
 const BUDGET_HAUT_SEUIL = 20_000; // Mr Breton : seuil de budget "haut" (condition : 4 semaines d'affilée, voir content.ts)
 
@@ -1139,10 +1141,11 @@ export function simulerSemaine(state: GameState): void {
     if (e) notes.push(`🍺 ${e.nom} a servi ivre ${nb} soir${nb > 1 ? "s" : ""} cette semaine.`);
   }
 
-  // 💰 Aimant aux grosses sommes : une fois par semaine, ramène une grosse
-  // enveloppe (5 à 25 % du CA de la semaine, rare au-delà de 15 %).
+  // 💰 Aimant aux grosses sommes : 1 semaine sur 2, ramène une grosse enveloppe
+  // (5 à 25 % du CA de la semaine, rare au-delà de 15 %).
   for (const e of equipeSemaine) {
     if (!aTrait(e, "grosses_sommes")) continue;
+    if (Math.random() >= GROSSES_SOMMES_PROBA_SEMAINE) continue;
     const r = Math.random();
     let cumul = 0;
     let pct = GROSSES_SOMMES_TABLE[0].pct;
