@@ -67,16 +67,16 @@ function planningJours(e: Employee): string {
 
 function menuSalaries(s: GameState): string {
   const cartes = s.employes
+    .filter((e: Employee) => !e.demissionne)
     .map((e: Employee) => {
-      const licencier =
-        e.irrevocable || e.demissionne
-          ? ""
-          : `<button class="mini no" data-action="licencier" data-value="${e.id}"
+      const licencier = e.irrevocable
+        ? ""
+        : `<button class="mini no" data-action="licencier" data-value="${e.id}"
               ${s.budget < coutLicenciement(e) ? "disabled" : ""}>
               Licencier (${eur(coutLicenciement(e))})
             </button>`;
       return `
-      <div class="salarie-carte ${e.demissionne ? "off" : ""}">
+      <div class="salarie-carte">
         <div class="sc-portrait">${e.emoji}</div>
         <div class="sc-main">
           <div class="sc-nom">${e.nom} ${e.irrevocable ? '<span class="badge-irr">irrévocable</span>' : ""}</div>
@@ -87,7 +87,7 @@ function menuSalaries(s: GameState): string {
             ${statBar("😮‍💨 Fatigue", e.fatigue)}
             ${statBar("💪 Compétence", e.competence)}
           </div>
-          ${e.demissionne ? "" : planningJours(e)}
+          ${planningJours(e)}
           ${
             e.vacances === "posees"
               ? '<div class="hint-small">🏖 Part en vacances la semaine prochaine</div>'
@@ -96,7 +96,7 @@ function menuSalaries(s: GameState): string {
                 : ""
           }
           ${
-            !e.demissionne && e.joursSansRepos >= 5
+            e.joursSansRepos >= 5
               ? `<div class="hint-small neg">⏰ ${e.joursSansRepos} jours enchaînés sans 2 jours de repos d'affilée — heures sup de plus en plus chères !</div>`
               : ""
           }

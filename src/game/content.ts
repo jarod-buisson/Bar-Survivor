@@ -216,7 +216,7 @@ function salarieAuHasard(s: GameState): Employee | undefined {
 }
 
 /** Fatigue au-delà de laquelle un salarié réclame des vacances. */
-const SEUIL_VACANCES = 50;
+const SEUIL_VACANCES = 62;
 
 /** Le salarié le plus fatigué qui réclame des vacances (fatigue > 50, pas déjà en congés,
  *  pas déjà engagé dans une escalade de refus — voir salarieVacancesMenace/Proces). */
@@ -328,9 +328,9 @@ export const EVENEMENTS: GameEvent[] = [
   },
   {
     id: "racket_mafieux",
-    titre: "Le syndicat des bars",
+    titre: "Ruelle d'Olmo",
     texte:
-      "Momo entre, costume trop large… puis reconnaît ton salarié bien connecté. Le ton change immédiatement : « fallait le dire que t'étais de la famille ! »",
+      "Momo entre dans le bar et reconnaît un salarié : « T'es de la famille toi ? Ça va mon frère ?! »",
     condition: (s) => equipeA(s, "mafieux"),
     choix: [
       {
@@ -349,7 +349,7 @@ export const EVENEMENTS: GameEvent[] = [
     id: "influenceur",
     titre: "Un influenceur en tournée",
     texte:
-      "Aujourd'hui, Mister G, influenceur food (2 millions d'abonnés, lunettes ridicules), s'installe et filme tout. Il « adorerait goûter un peu tout ».",
+      "Aujourd'hui, Mister G, (5 millions d'abonnés, dégaine ridicule), s'installe et filme tout. Il « adorerait goûter un peu tout »",
     unique: true,
     choix: [
       {
@@ -382,7 +382,7 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Contrôle d'hygiène surprise",
     texte:
       "Aujourd'hui, une inspectrice de l'hygiène débarque sans prévenir, gants blancs et regard d'acier. Elle inspecte chaque recoin…",
-    condition: (s) => s.proprete >= 50,
+    condition: (s) => s.semaine >= 7 && s.proprete >= 50,
     choix: [
       {
         label: "La laisser faire, tout est en ordre",
@@ -395,7 +395,7 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Contrôle d'hygiène surprise",
     texte:
       "Aujourd'hui, une inspectrice de l'hygiène débarque sans prévenir… et ton bar n'est PAS présentable. Elle fronce déjà les sourcils.",
-    condition: (s) => s.proprete < 50,
+    condition: (s) => s.semaine >= 7 && s.proprete < 50,
     choix: [
       {
         label: "Assumer et payer l'amende",
@@ -923,31 +923,29 @@ export const EVENEMENTS: GameEvent[] = [
     id: "sdf_monnaie",
     titre: "De la monnaie ?",
     texte:
-      "Aujourd'hui, Fredo, le SDF du coin, pousse la porte pour la troisième fois de la semaine : « Chef, tu peux me faire de la monnaie ? » L'équipe lève les yeux au ciel.",
+      "Aujourd'hui, Fredo, longue barbe blanche et quelques cheveux encore présents autour du crâne, pousse la porte et entre dans le bar avec son odeur et ses deux chiens : « Salut mon ami, tu peux me faire de la monnaie ? »",
     choix: [
       {
-        label: "Faire la monnaie, comme d'habitude",
+        label: "Faire la monnaie",
         effet: {
           tirage: {
-            proba: 0.4,
-            risque: true, // la zone = l'équipe qui sature
-            aide: "ambianceur", // il garde l'équipe de bonne humeur
+            proba: 0.5,
+            risque: true, // la zone = la fatigue qui traîne
             succes: {
-              moralEquipe: -5,
-              note: "🪙 L'équipe sature : « on n'est pas une banque, patron. » Le moral en prend un coup.",
+              fatiguePresentsJour: 6,
+              note: "🪙 L'odeur et les chiens ont traîné un peu trop longtemps au comptoir : l'équipe présente ce soir en ressort fatiguée.",
             },
             echec: {
-              notoriete: 2,
-              note: "🪙 Un comptoir ouvert à tous : le quartier apprécie, ça se sait.",
+              note: "🪙 Il repart avec sa monnaie, ni vu ni connu.",
             },
           },
         },
       },
       {
-        label: "Refuser, cette fois",
+        label: "Refuser",
         effet: {
-          notoriete: -1,
-          note: "🪙 Il est reparti en traînant les pieds. Deux habitués ont froncé les sourcils.",
+          notoriete: -2,
+          note: "🪙 Il sort en criant « TA GUEULE ! » aux clients présents. Le quartier en jase.",
         },
       },
     ],

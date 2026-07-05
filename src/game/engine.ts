@@ -73,9 +73,9 @@ const CV_MAX = 4; // nombre max de CV en attente dans la case CV
 const CV_SEMAINE_DEBUT = 4; // les CV commencent à arriver à partir de cette semaine
 
 // ---- Fatigue, repos & fermeture (chantier A) ----
-const FATIGUE_JOUR_TRAVAIL = 4.5; // fatigue gagnée par jour travaillé (5j+2j repos ≈ +6/sem net, contre +9 avant)
+const FATIGUE_JOUR_TRAVAIL = 4; // fatigue gagnée par jour travaillé (5j+2j repos ≈ +4/sem net, contre +9 en v0.x)
 const FATIGUE_JOUR_REPOS = 8; // fatigue récupérée par jour de repos
-// Équilibre voulu : 5j travail + 2j repos = +9 de fatigue/sem (elle monte, lentement).
+// Équilibre voulu : 5j travail + 2j repos = +4 de fatigue/sem (montée lente, moins d'avalanche de vacances à 3-4 salariés).
 // Seule une vraie coupure (vacances : 7j de repos = -56) remet un salarié à neuf.
 const MORAL_JOUR_REPOS = 3; // moral gagné par jour de repos
 const MORAL_MALUS_HEURES_SUP = 4; // moral perdu PAR jour au-delà de 5 jours travaillés

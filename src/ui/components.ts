@@ -71,16 +71,16 @@ export function barreStats(s: GameState): string {
 /** Bandeau des salariés (portrait, moral). */
 export function bandeauSalaries(s: GameState): string {
   const cases = s.employes
-    .map((e: Employee) => {
-      const etat = e.demissionne ? `<span class="parti">parti</span>` : coeurs(e.moral);
-      return `
-        <div class="salarie ${e.demissionne ? "off" : ""}">
+    .filter((e: Employee) => !e.demissionne)
+    .map(
+      (e: Employee) => `
+        <div class="salarie">
           <div class="portrait">${e.emoji}</div>
-          <div class="coeurs">${etat}</div>
+          <div class="coeurs">${coeurs(e.moral)}</div>
           <div class="nom">${e.nom}</div>
           ${badgesTraits(e)}
-        </div>`;
-    })
+        </div>`,
+    )
     .join("");
   return `<div class="salaries">${cases}</div>`;
 }
