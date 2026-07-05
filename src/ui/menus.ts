@@ -10,6 +10,7 @@ import {
   ameliorationsDebloquees,
   capaciteBar,
   capaciteLocale,
+  coutAutoStock,
   coutLicenciement,
   coutMenagePro,
   coutTravaux,
@@ -157,7 +158,7 @@ function menuFournisseur(s: GameState): string {
   // Le coût total se recalcule côté client (main.ts) au glissement des curseurs.
   const curseurs = CATEGORIES_STOCK.map((c) => {
     const val = Math.round(s.stocks[c.id]);
-    const alerte = val <= 0 ? "rupture" : val < 30 ? "bas" : "";
+    const alerte = val <= 0 ? "rupture" : val < 30 ? "stock-bas" : "";
     return `
       <div class="four-ligne ${alerte}">
         <div class="four-tete">
@@ -190,6 +191,18 @@ function menuFournisseur(s: GameState): string {
           </div>`;
       })
       .join("");
+    const coutAS = coutAutoStock();
+    ameliorations += s.autoStockAchete
+      ? `<div class="machine-ligne">
+          <span>🤖 Auto-stock <small>remonte le stock à fond chaque fin de semaine (payant, à double tranchant)</small></span>
+          <button class="mini ${s.autoStockActif ? "ok" : ""}" data-action="toggleAutoStock">${
+            s.autoStockActif ? "Activé (désactiver)" : "Désactivé (activer)"
+          }</button>
+        </div>`
+      : `<div class="machine-ligne">
+          <span>🤖 Auto-stock <small>remonte le stock à fond chaque fin de semaine (payant, à double tranchant)</small></span>
+          <button class="mini ok" data-action="acheterAutoStock" ${s.budget >= coutAS ? "" : "disabled"}>Acheter (${eur(coutAS)})</button>
+        </div>`;
   }
 
   return `
@@ -266,24 +279,62 @@ function menuMenage(s: GameState): string {
 // ---- Travaux (agrandissement du local) ----
 
 function menuTravaux(s: GameState): string {
-  const cout = coutTravaux(s);
   const noms = ["Troquet de quartier", "Bar spacieux", "Grande brasserie", "Institution du quartier"];
-  const suivant =
-    cout === undefined
-      ? `<div class="ok-txt">Taille maximale atteinte 🏆</div>`
-      : `
-        <div class="bloc-titre">Prochain agrandissement</div>
-        <div>« ${noms[s.niveauLocal + 1]} » — jusqu'à <strong>${capaciteLocale({ ...s, niveauLocal: s.niveauLocal + 1 })} clients/soir</strong></div>
-        <button class="principal" data-action="agrandir" ${s.budget < cout ? "disabled" : ""}>
-          🏗 Lancer les travaux (${eur(cout)})
-        </button>
-        ${s.budget < cout ? `<p class="hint-small">Budget insuffisant — c'est un gros coup à préparer.</p>` : ""}`;
+
+  // Plan vu du dessus : Terrasse + Bar toujours acquis, puis jusqu'à 3 salles
+  // dans le prolongement des murs — acquise / prochaine (cliquable) / verrouillée.
+  const salles = [1, 2, 3]
+    .map((niveau) => {
+      if (niveau <= s.niveauLocal) {
+        return `
+          <div class="piece actif">
+            <span class="piece-nom">${noms[niveau]}</span>
+            <span class="piece-cap">${capaciteLocale({ ...s, niveauLocal: niveau })} pl.</span>
+          </div>`;
+      }
+      const cout = coutTravaux({ ...s, niveauLocal: niveau - 1 });
+      if (cout === undefined) return "";
+      if (niveau === s.niveauLocal + 1) {
+        const dispo = s.budget >= cout;
+        return `
+          <button class="piece dispo" data-action="agrandir" ${dispo ? "" : "disabled"}>
+            <span class="piece-nom">${noms[niveau]}</span>
+            <span class="piece-cap">+${capaciteLocale({ ...s, niveauLocal: niveau }) - capaciteLocale(s)} pl.</span>
+            <span class="piece-prix">${dispo ? "🏗" : "🔒"} ${eur(cout)}</span>
+          </button>`;
+      }
+      return `
+        <div class="piece verrou">
+          <span class="piece-nom">${noms[niveau]}</span>
+          <span class="piece-prix">🔒 ${eur(cout)}</span>
+        </div>`;
+    })
+    .join("");
+
+  const cout = coutTravaux(s);
+  const insuffisant = cout !== undefined && s.budget < cout;
+
   return `
     ${entete("🏗 Travaux")}
     <div class="menu-corps">
-      <div class="cal-now">Local actuel : <strong>« ${noms[s.niveauLocal]} »</strong> · plafond ${capaciteLocale(s)} clients/soir</div>
       <div class="hint-small">Capacité de service actuelle : ~${capaciteBar(s)} clients/soir (équipe + machines, bridée par le local).</div>
-      ${suivant}
+      <div class="plan-bar">
+        <div class="piece terrasse actif">
+          <span class="piece-nom">Terrasse</span>
+        </div>
+        <div class="piece bar actif">
+          <span class="piece-nom">🍸 Bar</span>
+          <span class="piece-cap">${capaciteLocale(s)} pl.</span>
+        </div>
+        ${salles}
+      </div>
+      ${
+        cout === undefined
+          ? `<div class="ok-txt">Taille maximale atteinte 🏆</div>`
+          : insuffisant
+            ? `<p class="hint-small">Budget insuffisant pour la prochaine salle — c'est un gros coup à préparer.</p>`
+            : `<p class="hint-small">Clique la salle éclairée pour lancer les travaux.</p>`
+      }
     </div>`;
 }
 

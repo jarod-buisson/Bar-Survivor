@@ -142,8 +142,8 @@ export const FORCES: Trait[] = [
     emoji: "📦",
     type: "force",
     rarete: "commun",
-    description: "Connaît les fournisseurs : -10 % sur toutes les commandes.",
-    effet: { cible: "achat", valeur: -0.1 },
+    description: "Connaît les fournisseurs : -20 % sur toutes les commandes.",
+    effet: { cible: "achat", valeur: -0.2 },
   },
   {
     id: "noctambule",

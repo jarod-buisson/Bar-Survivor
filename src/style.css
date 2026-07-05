@@ -183,7 +183,7 @@ body {
   color: var(--texte-doux);
   font-variant-numeric: tabular-nums;
 }
-.four-ligne.bas .four-val {
+.four-ligne.stock-bas .four-val {
   color: var(--ambre);
 }
 .four-ligne.rupture .four-val {
@@ -1300,6 +1300,96 @@ body {
 }
 .cal-case small {
   color: var(--texte-doux);
+}
+
+/* Travaux — plan du bar vu du dessus */
+.plan-bar {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.02) 0 1px,
+    transparent 1px 10px
+  ),
+  repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 10px);
+  background-color: var(--fond);
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.piece {
+  flex: 1 0 84px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+  padding: 8px 6px;
+  font-size: 0.72rem;
+  border: 2px solid var(--bordure);
+  border-radius: 4px;
+  color: var(--texte-doux);
+  font-family: inherit;
+  cursor: default;
+}
+.piece.terrasse {
+  border-style: dashed;
+  background: rgba(107, 191, 89, 0.08);
+}
+.piece.actif {
+  background: var(--panneau-clair);
+  border-color: var(--ambre);
+  color: var(--ambre-clair);
+}
+.piece-nom {
+  font-weight: 700;
+}
+.piece-cap {
+  font-size: 0.68rem;
+  color: var(--texte-doux);
+}
+.piece.actif .piece-cap {
+  color: var(--ambre-clair);
+}
+.piece.dispo {
+  background: rgba(240, 165, 0, 0.12);
+  border-color: var(--ambre-clair);
+  border-style: solid;
+  box-shadow: 0 0 10px rgba(240, 165, 0, 0.35);
+  cursor: pointer;
+  animation: pulse-dispo 1.8s ease-in-out infinite;
+}
+.piece.dispo:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+  animation: none;
+  opacity: 0.55;
+}
+.piece-prix {
+  font-weight: 700;
+  color: var(--ambre-clair);
+}
+.piece.dispo:disabled .piece-prix {
+  color: var(--texte-doux);
+}
+.piece.verrou {
+  border-style: dashed;
+  opacity: 0.45;
+}
+.piece.verrou .piece-prix {
+  color: var(--texte-doux);
+}
+@keyframes pulse-dispo {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(240, 165, 0, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(240, 165, 0, 0.55);
+  }
 }
 
 /* ============================================================

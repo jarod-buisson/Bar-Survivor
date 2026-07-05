@@ -9,7 +9,7 @@ import type { Choice, Effect, GameState } from "../game/types";
 import { aidesPourChoix, bonusChanceux, probaAvecAide } from "../game/engine";
 import { CATEGORIES_STOCK } from "../game/content";
 import { trait } from "../game/traits";
-import { bandeauSalaries, barreStats } from "./components";
+import { barreStats } from "./components";
 
 const JOURS_LONGS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
 
@@ -46,7 +46,6 @@ export function ecranEvenement(s: GameState): string {
           ? `<p class="jour-ev">📅 ${JOURS_LONGS[s.jourAnim - 1]} — jour ${s.jourAnim}/7 de la semaine</p>`
           : ""
       }
-      ${bandeauSalaries(s)}
     </div>
   `;
 }

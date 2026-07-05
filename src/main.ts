@@ -10,6 +10,7 @@
 import "./style.css";
 import type { GameState, StockCategorie } from "./game/types";
 import {
+  acheterAutoStock,
   agrandirBar,
   aidesPourChoix,
   ameliorerMachine,
@@ -38,6 +39,7 @@ import {
   simulerSemaine,
   tirerEvenement,
   declencherEvenement,
+  toggleAutoStock,
   toggleRepos,
 } from "./game/engine";
 import {
@@ -333,6 +335,12 @@ app.addEventListener("click", (e) => {
       break;
     case "ameliorer":
       if (state && value) ameliorerMachine(state, value);
+      break;
+    case "acheterAutoStock":
+      if (state) acheterAutoStock(state);
+      break;
+    case "toggleAutoStock":
+      if (state) toggleAutoStock(state);
       break;
     case "agrandir":
       if (state) agrandirBar(state);

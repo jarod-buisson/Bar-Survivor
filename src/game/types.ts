@@ -164,6 +164,9 @@ export interface Effect {
   poseDrapeau?: { cle: string; valeur: number | boolean }; // mémorise un choix (cohérence)
   casseMachineAleatoire?: boolean; // casse une machine encore en état
   partenariatAmblam?: boolean; // signe le partenariat Amblam (CA réduit N semaines, cumul rendu ×2 ensuite)
+  capaciteSoir?: number; // multiplicateur de capacité pour LE SOIR de l'événement uniquement (2 = double)
+  caSoirPourcent?: number; // CA du soir de l'événement modifié en % (0.5 = +50 %), en plus de capaciteSoir
+  fatiguePresentsJour?: number; // fatigue appliquée aux salariés PRÉSENTS (pas en repos) le soir de l'événement
   note?: string; // ligne ajoutée au journal (visible au récap)
   /** Pari : `proba` de déclencher `succes`, sinon `echec`. Permet les choix risqués.
    *  `risque: true` = la branche `succes` est une MAUVAISE nouvelle (racket, amende…) :
@@ -299,6 +302,12 @@ export interface GameState {
   machines: Machine[];
   niveauLocal: number; // taille du bar (0-3) : plafonne les clients/soir (case Travaux)
   joursEvenements: number[]; // jours (1-7) où un événement se déclenche cette semaine
+  /** Boosts ponctuels posés par un événement sur UN jour précis (1-7) de la semaine
+   *  en cours : capaciteMult multiplie la capacité du soir, caMult est ajouté (en %)
+   *  au CA du soir. Remis à zéro à chaque planification de semaine. */
+  boostsJour: Partial<Record<number, { capaciteMult: number; caMult: number }>>;
+  autoStockAchete: boolean; // machine "auto-stock" achetée (case Fournisseur, débloquée sem. 5)
+  autoStockActif: boolean; // ON = le stock est remonté à fond en fin de semaine, MAIS payant (plein tarif)
   pret?: Pret;
   detteRestant: number; // emprunt initial restant à rembourser
   detteJusteSoldee?: boolean; // vrai la semaine où la dette vient d'être soldée

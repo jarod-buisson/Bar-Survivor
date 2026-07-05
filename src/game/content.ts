@@ -541,6 +541,65 @@ export const EVENEMENTS: GameEvent[] = [
     ],
   },
   {
+    id: "playlist_yeda",
+    titre: "Yeda veut mixer",
+    texte:
+      "Yeda, l'ambianceur du quartier et habitué de longue date, te demande les codes de la playlist pour gérer la musique lui-même ce soir.",
+    choix: [
+      {
+        label: "Lui laisser la main",
+        effet: {
+          capaciteSoir: 2,
+          caSoirPourcent: 0.5,
+          fatiguePresentsJour: 6,
+          note: "🎧 Yeda aux platines : le bar est bondé toute la soirée, mais l'équipe n'a pas chômé.",
+        },
+      },
+      {
+        label: "Refuser, la musique c'est pour la maison",
+        effet: {
+          tirage: {
+            proba: 0.2,
+            risque: true,
+            succes: {
+              fatiguePresentsJour: 6,
+              note: "😤 Vexé, Yeda passe la soirée à râler au comptoir. L'équipe encaisse, épuisée.",
+            },
+            echec: { note: "🙅 Refusé sans drame : Yeda hausse les épaules et boit sa bière tranquille." },
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "soiree_tajine",
+    titre: "Youbi organise une soirée Tajine",
+    texte:
+      "Youbi, fidèle client, veut organiser une soirée Tajine ce soir pour tous les habitués du quartier !",
+    choix: [
+      {
+        label: "Accepter",
+        effet: {
+          caSoirPourcent: 0.3,
+          note: "🍲 Soirée Tajine réussie : le bouche-à-oreille fait grimper le CA du soir.",
+          tirage: {
+            proba: 0.7,
+            risque: true,
+            succes: {
+              notoriete: -4,
+              note: "👃 L'odeur a dérangé pas mal de clients, qui ont préféré partir plus tôt.",
+            },
+            echec: { note: "😌 L'odeur est passée inaperçue, personne ne s'est plaint." },
+          },
+        },
+      },
+      {
+        label: "Refuser",
+        effet: { note: "🍲 Youbi ira cuisiner son tajine chez lui, tant pis pour l'ambiance." },
+      },
+    ],
+  },
+  {
     id: "critique",
     titre: "Le critique incognito",
     texte:

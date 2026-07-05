@@ -15,6 +15,7 @@ import type {
   OfferType,
   Statut,
   StockCategorie,
+  Stocks,
   WeeklyRecap,
 } from "./types";
 import {
@@ -144,6 +145,11 @@ const SAISON_MAX = 1.25;
 const TAUX_MATIERES = 0.2; // coût matières = 20 % du CA (le réassort du stock coûte EN PLUS ~12 %)
 const CONSO_VARIA = 0.25; // ±25 % d'aléa hebdo sur la conso de CHAQUE catégorie
 const PENALITE_RUPTURE = 3.5; // pénalité de notoriété par point de "poids" d'une catégorie à sec
+// Rupture partielle (v1.1) : sous ce seuil, une catégorie commence à faire perdre du service
+// (des clients la voulaient, elle est trop basse) — proportionnel au manque ET au poids de la
+// catégorie (mêmes poids que la rupture totale). Pas besoin de tomber à 0 pour que ça compte.
+const SEUIL_STOCK_BAS = 30; // % en dessous duquel une catégorie commence à coûter du service
+const SENSIBILITE_STOCK_BAS = 0.35; // pire cas (toutes les catégories à sec) : -35 % de capacité
 // Un bar PLEIN ne plombe pas sa réputation : on tolère un vrai débordement
 // (12 % de refus) avant que le bouche-à-oreille ne tourne au vinaigre. Sinon la
 // notoriété se verrouille à ~50 dès que les week-ends remplissent le local, et
@@ -187,6 +193,7 @@ const EFF_PATRON = 32; // le joueur tient le comptoir : points d'indice de base,
 const EFF_SALARIE = 10; // points d'indice apportés par un salarié lambda en pleine forme
 const ALEA_SERVICE = 0.08; // ±8 % d'aléa sur l'indice d'efficacité, chaque service
 const SEMAINE_AMELIORATIONS = 5; // améliorations débloquées à partir de cette semaine
+const COUT_AUTO_STOCK = 8_000; // prix de la machine "auto-stock" (case Fournisseur)
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
@@ -228,6 +235,9 @@ export function creerPartie(difficulte: Difficulty, offre: OfferType): GameState
     machines: machinesDeDepart(),
     niveauLocal: 0,
     joursEvenements: [],
+    boostsJour: {},
+    autoStockAchete: false,
+    autoStockActif: false,
     detteRestant: DETTE_INITIALE,
     modeInfini: false,
     reparTentees: [],
@@ -396,6 +406,20 @@ function facteurProprete(p: number): number {
   return 0.8 + (p / 100) * 0.25;
 }
 
+/** Rupture partielle : chaque catégorie sous SEUIL_STOCK_BAS retire du service, au prorata
+ *  du manque ET de son poids (bière = plus lourd). 1 = tout va bien, descend vers
+ *  1 - SENSIBILITE_STOCK_BAS si tout le parc de catégories est à sec. */
+function facteurStock(stocks: Stocks): number {
+  let manque = 0;
+  let poidsTotal = 0;
+  for (const c of CATEGORIES_STOCK) {
+    poidsTotal += c.poids;
+    const s = stocks[c.id];
+    if (s < SEUIL_STOCK_BAS) manque += c.poids * ((SEUIL_STOCK_BAS - s) / SEUIL_STOCK_BAS);
+  }
+  return 1 - Math.min(1, manque / poidsTotal) * SENSIBILITE_STOCK_BAS;
+}
+
 // ---- Emprunt initial (dette de départ) ----
 // Le montant est choisi à l'onboarding (state.detteInitiale) — plus de constante d'affichage.
 
@@ -462,6 +486,7 @@ function intensifierEffetNegatif(effet: Effect, semaine: number): Effect {
     moralCible: pire(effet.moralCible, true),
     fatigueEquipe: pire(effet.fatigueEquipe, false),
     fatigueCible: pire(effet.fatigueCible, false),
+    fatiguePresentsJour: pire(effet.fatiguePresentsJour, false),
     stock,
   };
 }
@@ -582,6 +607,21 @@ function appliquerEffet(
   if (effet.fatigueEquipe) {
     for (const e of actifs(state)) e.fatigue = borne(e.fatigue + effet.fatigueEquipe);
   }
+  if (effet.fatiguePresentsJour && state.jourAnim >= 1 && state.jourAnim <= 7) {
+    const jourIdx = state.jourAnim - 1;
+    for (const e of actifs(state)) {
+      if (!e.reposJours[jourIdx]) e.fatigue = borne(e.fatigue + effet.fatiguePresentsJour);
+    }
+  }
+  if (effet.capaciteSoir || effet.caSoirPourcent) {
+    if (state.jourAnim >= 1 && state.jourAnim <= 7) {
+      const actuel = state.boostsJour[state.jourAnim] ?? { capaciteMult: 1, caMult: 0 };
+      state.boostsJour[state.jourAnim] = {
+        capaciteMult: actuel.capaciteMult * (effet.capaciteSoir ?? 1),
+        caMult: actuel.caMult + (effet.caSoirPourcent ?? 0),
+      };
+    }
+  }
   const cible = cibleId
     ? state.employes.find((e) => e.id === cibleId && !e.demissionne)
     : undefined;
@@ -640,6 +680,7 @@ function appliquerEffet(
  *  jours d'OUVERTURE. Rien en semaine 1 (le joueur apprend les bases). */
 export function planifierEvenements(state: GameState): void {
   state.joursEvenements = [];
+  state.boostsJour = {};
   // Instantané pour le bilan : la variation de réputation affichée couvre TOUTE
   // la semaine, y compris les événements appliqués en direct pendant l'animation.
   state.notorieteDebutSemaine = state.notoriete;
@@ -647,9 +688,14 @@ export function planifierEvenements(state: GameState): void {
   const ouverts = joursOuverture(state);
   const joursDispo: number[] = [];
   for (let d = 1; d <= 7; d++) if (ouverts[d - 1]) joursDispo.push(d);
-  // Rythme doux (v0.6) : 0, 1 ou 2 pop-ups par semaine, tirés au hasard
-  // (équiprobable, ~1/sem en moyenne). Des semaines calmes sont voulues.
-  let nb = Math.min(Math.floor(Math.random() * 3), joursDispo.length);
+  // Rythme (v1.0) : au moins 1 pop-up par semaine, 50 % de chance d'un 2e,
+  // et si un 2e tombe, 20 % de chance d'un 3e.
+  let nb = 1;
+  if (Math.random() < 0.5) {
+    nb = 2;
+    if (Math.random() < 0.2) nb = 3;
+  }
+  nb = Math.min(nb, joursDispo.length);
   // Un événement FORCÉ en attente (police, procès vacances) garantit au moins
   // un jour de pop-up cette semaine — il n'attend pas le tirage aléatoire.
   const forcePret =
@@ -788,6 +834,12 @@ export function simulerSemaine(state: GameState): void {
 
   // Catégories à sec DÈS le début de semaine : clients mécontents → notoriété plombée.
   const ruptures = CATEGORIES_STOCK.filter((c) => state.stocks[c.id] <= 0);
+  // Snapshot AVANT consommation de la semaine : la conso plus bas peut vider une
+  // catégorie qui n'était que basse en tout début de semaine (sinon la note finale
+  // se trompe de coupables, cf. facteurStock qui lit lui aussi le stock de DÉBUT de semaine).
+  const stocksBasDebutSemaine = CATEGORIES_STOCK.filter(
+    (c) => state.stocks[c.id] > 0 && state.stocks[c.id] < SEUIL_STOCK_BAS,
+  );
 
   // Planning : jours d'ouverture (au moins un salarié au travail).
   const ouverts = joursOuverture(state);
@@ -809,6 +861,7 @@ export function simulerSemaine(state: GameState): void {
   // Facteurs constants sur toute la semaine.
   const notorF = facteurNotoriete(state.notoriete);
   const propreF = facteurProprete(state.proprete);
+  const stockF = facteurStock(state.stocks); // rupture PARTIELLE (voir facteurStock)
   const saisonF = SAISON_MIN + Math.random() * (SAISON_MAX - SAISON_MIN); // "humeur" de la semaine
   const clienteleF = OFFRE_CLIENTELE[state.offre];
   const panierOffre = OFFRE_PANIER[state.offre];
@@ -913,8 +966,14 @@ export function simulerSemaine(state: GameState): void {
     // 2) CAPACITÉ : le service de l'équipe, plafonné par les places du local,
     //    PUIS ralenti par l'état des machines et l'aléa du soir : un parc HS
     //    pénalise le service même quand le local déborde de monde.
+    // Un événement peut booster CE soir précis (capaciteMult / caMult) — voir Effect.capaciteSoir.
+    const boostSoir = state.boostsJour[d];
     const capacite = Math.round(
-      Math.min(eff * CLIENTS_PAR_POINT, capaciteLocale(state)) * machinesF * aleaService,
+      Math.min(eff * CLIENTS_PAR_POINT, capaciteLocale(state)) *
+        machinesF *
+        aleaService *
+        stockF *
+        (boostSoir?.capaciteMult ?? 1),
     );
     const clients = Math.min(demande, capacite);
     const refuses = Math.max(0, demande - clients);
@@ -930,8 +989,8 @@ export function simulerSemaine(state: GameState): void {
       (1 + bonusCA) *
       (state.drapeaux["prix_ami"] ? PRIX_AMI_PANIER : 1);
 
-    // 4) CA du soir = clients servis × panier.
-    let ca = Math.round(clients * panier);
+    // 4) CA du soir = clients servis × panier (+ éventuel boost événement du soir).
+    let ca = Math.round(clients * panier * (1 + (boostSoir?.caMult ?? 0)));
     // 🤝 Carte Amblam : les adhérents paient au rabais → CA du soir amputé,
     // le manque à gagner est mémorisé (Amblam le rendra ×2 à l'échéance).
     if (state.partenariatAmblam) {
@@ -1059,6 +1118,13 @@ export function simulerSemaine(state: GameState): void {
   // (Seulement si le bar a ouvert : fermé, personne ne voit les frigos vides.)
   if (joursOuvertsNb > 0) {
     for (const c of ruptures) deltaNotor -= PENALITE_RUPTURE * c.poids;
+  }
+  // Stock bas (mais pas à sec) : du service perdu toute la semaine, faute de
+  // marchandise — moins brutal qu'une vraie rupture, mais ça compte quand même.
+  if (joursOuvertsNb > 0 && stockF < 0.97 && stocksBasDebutSemaine.length > 0) {
+    notes.push(
+      `📉 Stock bas (${stocksBasDebutSemaine.map((c) => c.nom.toLowerCase()).join(", ")}) : du monde reparti bredouille toute la semaine.`,
+    );
   }
   // Fermé plus de FERMETURE_TOLEREE jours : les habitués nous oublient.
   if (joursFermesNb > FERMETURE_TOLEREE) {
@@ -1414,6 +1480,20 @@ export function preparerSemaineSuivante(state: GameState): void {
     state.loyer += LOYER_HAUSSE;
   }
 
+  // 🤖 Auto-stock : remonte toutes les catégories à fond, mais PAIE le plein tarif
+  // (remise Négociant incluse) — pratique, mais peut faire fondre le budget si le
+  // stock n'était pas vraiment nécessaire cette semaine-là.
+  if (state.autoStockActif) {
+    const cibles: Partial<Record<StockCategorie, number>> = {};
+    for (const c of CATEGORIES_STOCK) cibles[c.id] = 100;
+    const cout = coutCommande(state, cibles);
+    if (cout > 0) {
+      state.budget -= cout;
+      for (const c of CATEGORIES_STOCK) state.stocks[c.id] = 100;
+      state.journal.push(`🤖 Auto-stock : réapprovisionnement automatique complet (-${cout} €).`);
+    }
+  }
+
   arriveeCV(state);
   gererDemissions(state);
   verifierGameOver(state);
@@ -1545,6 +1625,27 @@ export function reparerPro(state: GameState, id: string): boolean {
 /** Améliorations débloquées à partir de la semaine 5. */
 export function ameliorationsDebloquees(state: GameState): boolean {
   return state.semaine >= SEMAINE_AMELIORATIONS;
+}
+
+/** Prix de la machine "auto-stock" (case Fournisseur, débloquée sem. 5). */
+export function coutAutoStock(): number {
+  return COUT_AUTO_STOCK;
+}
+
+/** Achète la machine auto-stock (une fois pour toutes) et l'active directement. */
+export function acheterAutoStock(state: GameState): boolean {
+  if (!ameliorationsDebloquees(state) || state.autoStockAchete) return false;
+  if (state.budget < COUT_AUTO_STOCK) return false;
+  state.budget -= COUT_AUTO_STOCK;
+  state.autoStockAchete = true;
+  state.autoStockActif = true;
+  return true;
+}
+
+/** Active/désactive l'auto-stock (sans effet si pas encore achetée). */
+export function toggleAutoStock(state: GameState): void {
+  if (!state.autoStockAchete) return;
+  state.autoStockActif = !state.autoStockActif;
 }
 
 export function ameliorerMachine(state: GameState, id: string): boolean {
