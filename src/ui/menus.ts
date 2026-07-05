@@ -281,15 +281,16 @@ function menuMenage(s: GameState): string {
 function menuTravaux(s: GameState): string {
   const noms = ["Troquet de quartier", "Bar spacieux", "Grande brasserie", "Institution du quartier"];
 
-  // Plan vu du dessus : Terrasse + Bar toujours acquis, puis jusqu'à 3 salles
-  // dans le prolongement des murs — acquise / prochaine (cliquable) / verrouillée.
+  // Plan vu du dessus : Terrasse + Bar toujours acquis (agencement fixe en grille,
+  // pas un simple alignement), puis jusqu'à 3 salles dans le prolongement des murs
+  // — acquise / prochaine (cliquable) / verrouillée.
   const salles = [1, 2, 3]
     .map((niveau) => {
       if (niveau <= s.niveauLocal) {
         return `
-          <div class="piece actif">
+          <div class="piece salle-${niveau} actif">
             <span class="piece-nom">${noms[niveau]}</span>
-            <span class="piece-cap">${capaciteLocale({ ...s, niveauLocal: niveau })} pl.</span>
+            <span class="piece-cap">+${capaciteLocale({ ...s, niveauLocal: niveau }) - capaciteLocale({ ...s, niveauLocal: niveau - 1 })} pl.</span>
           </div>`;
       }
       const cout = coutTravaux({ ...s, niveauLocal: niveau - 1 });
@@ -297,14 +298,14 @@ function menuTravaux(s: GameState): string {
       if (niveau === s.niveauLocal + 1) {
         const dispo = s.budget >= cout;
         return `
-          <button class="piece dispo" data-action="agrandir" ${dispo ? "" : "disabled"}>
+          <button class="piece salle-${niveau} dispo" data-action="agrandir" ${dispo ? "" : "disabled"}>
             <span class="piece-nom">${noms[niveau]}</span>
             <span class="piece-cap">+${capaciteLocale({ ...s, niveauLocal: niveau }) - capaciteLocale(s)} pl.</span>
             <span class="piece-prix">${dispo ? "🏗" : "🔒"} ${eur(cout)}</span>
           </button>`;
       }
       return `
-        <div class="piece verrou">
+        <div class="piece salle-${niveau} verrou">
           <span class="piece-nom">${noms[niveau]}</span>
           <span class="piece-prix">🔒 ${eur(cout)}</span>
         </div>`;
@@ -321,10 +322,11 @@ function menuTravaux(s: GameState): string {
       <div class="plan-bar">
         <div class="piece terrasse actif">
           <span class="piece-nom">Terrasse</span>
+          <span class="piece-cap">50 pl.</span>
         </div>
         <div class="piece bar actif">
           <span class="piece-nom">🍸 Bar</span>
-          <span class="piece-cap">${capaciteLocale(s)} pl.</span>
+          <span class="piece-cap">100 pl.</span>
         </div>
         ${salles}
       </div>

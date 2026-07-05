@@ -1302,9 +1302,16 @@ body {
   color: var(--texte-doux);
 }
 
-/* Travaux — plan du bar vu du dessus */
+/* Travaux — plan du bar vu du dessus (agencement irrégulier, façon plan
+   d'architecte : la terrasse et le bar occupent toute la hauteur, la 1re
+   salle à venir est la plus grande, les 2 suivantes se partagent le reste). */
 .plan-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(64px, 0.8fr) minmax(96px, 1.3fr) minmax(76px, 1fr) minmax(76px, 1fr);
+  grid-template-rows: repeat(2, 72px);
+  grid-template-areas:
+    "terrasse bar salle-1 salle-2"
+    "terrasse bar salle-1 salle-3";
   gap: 4px;
   padding: 10px;
   background: repeating-linear-gradient(
@@ -1318,9 +1325,24 @@ body {
   border-radius: 10px;
   overflow-x: auto;
 }
+.piece.terrasse {
+  grid-area: terrasse;
+}
+.piece.bar {
+  grid-area: bar;
+}
+.piece.salle-1 {
+  grid-area: salle-1;
+}
+.piece.salle-2 {
+  grid-area: salle-2;
+}
+.piece.salle-3 {
+  grid-area: salle-3;
+}
 .piece {
-  flex: 1 0 84px;
-  min-height: 96px;
+  min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
