@@ -68,6 +68,37 @@ let minuteur: number | undefined;
 const JOUR_MS = 280;
 const JOUR_FERME_MS = 90; // les jours fermés défilent vite (on saute le service)
 
+// ---- Sauvegarde locale (localStorage) : pas de backend, juste survivre au F5 ----
+const SAVE_KEY = "bar-survival-save";
+
+function sauvegarder(): void {
+  if (!state) return;
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  } catch {
+    // stockage indisponible (navigation privée, quota...) : tant pis, pas bloquant
+  }
+}
+
+function chargerSauvegarde(): GameState | null {
+  try {
+    const brut = localStorage.getItem(SAVE_KEY);
+    if (!brut) return null;
+    const s = JSON.parse(brut) as GameState;
+    return typeof s?.semaine === "number" ? s : null;
+  } catch {
+    return null;
+  }
+}
+
+function effacerSauvegarde(): void {
+  try {
+    localStorage.removeItem(SAVE_KEY);
+  } catch {
+    // rien à faire
+  }
+}
+
 /** Rendu avec fondu : quand on CHANGE d'écran (phase ou menu), le navigateur
  *  fait un court crossfade via l'API View Transitions (110 ms, voir style.css).
  *  Les re-rendus internes (animation de semaine, sliders, toggles, pinte)
@@ -92,6 +123,7 @@ function rendre(): void {
     const ecran = app.querySelector(".ecran");
     if (ecran) ecran.scrollTop = scrollActuel;
   }
+  sauvegarder();
 }
 
 function rendreBrut(): void {
@@ -409,6 +441,7 @@ app.addEventListener("click", (e) => {
     case "rejouer":
       if (minuteur) window.clearTimeout(minuteur);
       state = null;
+      effacerSauvegarde();
       break;
   }
   rendre();
@@ -589,4 +622,10 @@ window.addEventListener("pointerup", (e) => {
 window.addEventListener("pointercancel", finDrag);
 
 initTooltips();
+state = chargerSauvegarde();
+// Rechargée en pleine animation de semaine (F5 pendant le défilement des jours) :
+// aucun timer n'a survécu au rechargement, on relance juste la suite.
+if (state && state.phase === "semaine" && !state.evenementCourant) {
+  avancerJour();
+}
 rendre();
