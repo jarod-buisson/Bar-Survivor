@@ -180,6 +180,13 @@ const INFLATION_PAR_SEMAINE = 500; // mode infini : charges +500 €/sem cumulé
 // placement déguisé qui met la trésorerie sous pression un mois.
 export const AMBLAM = { taux: 0.15, duree: 4, multiplicateur: 2 };
 
+// 🕴️ Blanchiment (l'Olmo) : accepter ouvre une FENÊTRE DE RISQUE limitée — 20 %
+// de bust policier CHAQUE semaine, mais seulement pendant BLANCHIMENT_FENETRE
+// semaines, après quoi l'affaire "refroidit" (drapeau blanchiment_actif retiré).
+// Survivre la fenêtre = garder sa part. P(passer propre) = 0.8^4 ≈ 41 %.
+const BLANCHIMENT_FENETRE = 4;
+const BLANCHIMENT_PROBA_BUST = 0.2;
+
 // Affluence par jour (Lun→Dim) : week-end fort, début de semaine calme.
 const AFFLUENCE_JOUR = [0.45, 0.55, 0.75, 0.95, 1.5, 1.7, 0.6];
 
@@ -699,7 +706,13 @@ export function appliquerEffet(
       state.stocks[cat] = borne(state.stocks[cat] + val);
     }
   }
-  if (effet.poseDrapeau) state.drapeaux[effet.poseDrapeau.cle] = effet.poseDrapeau.valeur;
+  if (effet.poseDrapeau) {
+    state.drapeaux[effet.poseDrapeau.cle] = effet.poseDrapeau.valeur;
+    // Démarrage du blanchiment : ouvre la fenêtre de risque (voir planifierEvenements).
+    if (effet.poseDrapeau.cle === "blanchiment_actif" && effet.poseDrapeau.valeur === true) {
+      state.drapeaux["blanchiment_semaines"] = BLANCHIMENT_FENETRE;
+    }
+  }
   if (effet.partenariatAmblam) {
     state.partenariatAmblam = { semainesRestantes: AMBLAM.duree, cumule: 0 };
   }
@@ -731,9 +744,21 @@ export function planifierEvenements(state: GameState): void {
   state.demissionsForceesFin = [];
   // 🏍️ Mr Breton : série de semaines consécutives avec un budget confortable.
   state.semainesBudgetHaut = state.budget > BUDGET_HAUT_SEUIL ? state.semainesBudgetHaut + 1 : 0;
-  // 🚨 Blanchiment en cours : 20 % de chance CHAQUE semaine que ça se fasse griller.
-  if (state.drapeaux["blanchiment_actif"] && Math.random() < 0.2) {
-    state.drapeaux["sem_blanchiment_police"] = true;
+  // 🚨 Blanchiment en cours : chaque semaine, risque de bust — mais la fenêtre de
+  // risque est limitée. On tire le bust, puis on décrémente ; à 0, l'affaire
+  // refroidit (plus de risque) sans avoir été grillée : le joueur garde sa part.
+  if (state.drapeaux["blanchiment_actif"]) {
+    if (Math.random() < BLANCHIMENT_PROBA_BUST) state.drapeaux["sem_blanchiment_police"] = true;
+    const restant = Number(state.drapeaux["blanchiment_semaines"] ?? 0) - 1;
+    if (restant <= 0) {
+      state.drapeaux["blanchiment_actif"] = false;
+      // Refroidi seulement s'il n'y a pas de bust déclenché ce tour-ci.
+      if (!state.drapeaux["sem_blanchiment_police"]) {
+        state.journal.push("🕴️ L'affaire de l'Olmo est retombée : plus rien dans les comptes.");
+      }
+    } else {
+      state.drapeaux["blanchiment_semaines"] = restant;
+    }
   }
   // Instantané pour le bilan : la variation de réputation affichée couvre TOUTE
   // la semaine, y compris les événements appliqués en direct pendant l'animation.

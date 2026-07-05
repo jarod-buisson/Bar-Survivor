@@ -349,12 +349,13 @@ app.addEventListener("click", (e) => {
         const budgetRef = state.historique[state.historique.length - 1]?.budgetApres ?? state.budget;
         const recu = Math.round(budgetRef * 0.5);
         const succes = valeur <= plafondAccepte;
-        const rendu = Math.round(recu * (1 - valeur / 100));
-        const garde = recu - rendu;
+        // valeur = % de commission que tu réclames ; tu TOUCHES ce montant (positif),
+        // l'argent blanchi ne passe jamais par ton budget.
+        const garde = Math.round(recu * (valeur / 100));
         const effet = succes
           ? {
-              budget: -rendu,
-              note: `🤝 L'Olmo accepte ${valeur} % : tu rends ${rendu.toLocaleString("fr-FR")} €, tu gardes ${garde.toLocaleString("fr-FR")} €.`,
+              budget: garde,
+              note: `🤝 L'Olmo accepte ${valeur} % : tu touches ${garde.toLocaleString("fr-FR")} € de commission, propre.`,
             }
           : {
               poseDrapeau: { cle: "sem_olmo_casse", valeur: true },

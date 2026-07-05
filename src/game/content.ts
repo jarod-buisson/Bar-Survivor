@@ -744,13 +744,17 @@ export const EVENEMENTS: GameEvent[] = [
     genererChoix: (s) => {
       const budgetRef = s.historique[s.historique.length - 1]?.budgetApres ?? s.budget;
       const recu = Math.round(budgetRef * 0.5);
+      const commission = Math.round(recu * 0.2);
       return [
         {
-          label: `Accepter (+${recu.toLocaleString("fr-FR")} €)`,
+          // L'argent blanchi n'est PAS à toi : tu ne touches que ta commission,
+          // versée à la fin de l'opération (olmo_cut). Aucun cash immédiat — donc
+          // rien à "garder" en trichant, et la commission (positive) échappe à la
+          // sévérité de fin de partie qui n'amplifie que les pertes.
+          label: `Accepter (commission ~${commission.toLocaleString("fr-FR")} €)`,
           effet: {
-            budget: recu,
             poseDrapeau: { cle: "blanchiment_actif", valeur: true },
-            note: `🕴️ L'Olmo te confie ${recu.toLocaleString("fr-FR")} € à faire passer par les comptes du bar.`,
+            note: `🕴️ L'Olmo te confie ${recu.toLocaleString("fr-FR")} € à faire passer par les comptes du bar. Ta commission tombera une fois l'opération bouclée.`,
           },
           enchaine: { id: "olmo_cut", proba: 1 },
         },
@@ -763,24 +767,28 @@ export const EVENEMENTS: GameEvent[] = [
     id: "olmo_cut",
     titre: "L'Olmo revient encaisser",
     texte: "Une fois la somme blanchie, l'Olmo repasse. « Je te laisse 20 % de ce que je t'ai confié. Ça te va ? »",
+    condition: () => false, // jamais tiré au hasard : uniquement enchaîné depuis olmo_arrangement
     genererChoix: (s) => {
       const budgetRef = s.historique[s.historique.length - 1]?.budgetApres ?? s.budget;
       const recu = Math.round(budgetRef * 0.5);
       const garde20 = Math.round(recu * 0.2);
-      const rendu20 = recu - garde20;
       return [
         {
-          label: `Confirmer (garder ${garde20.toLocaleString("fr-FR")} €)`,
+          // Ta commission = ce que TU touches (positif). L'argent blanchi repart chez
+          // l'Olmo, il n'a jamais transité par ton budget.
+          label: `Confirmer (toucher ${garde20.toLocaleString("fr-FR")} €)`,
           effet: {
-            budget: -rendu20,
-            note: `🤝 Tu rends ${rendu20.toLocaleString("fr-FR")} € à l'Olmo, propre. Tu gardes ${garde20.toLocaleString("fr-FR")} €.`,
+            budget: garde20,
+            note: `🤝 Opération bouclée : tu touches ta commission de ${garde20.toLocaleString("fr-FR")} €, propre.`,
           },
         },
         {
-          label: "« Ah non, ça ne m'intéresse plus finalement »",
+          // Vouloir tout garder = essayer de doubler l'Olmo. Il reprend TOUT son
+          // argent (tu ne touches rien) et casse du matériel pour l'affront.
+          label: "Essayer de tout garder",
           effet: {
             poseDrapeau: { cle: "sem_olmo_casse", valeur: true },
-            note: "😠 L'Olmo pense que tu te fous de lui. Il part sans un mot — il y aura de la casse.",
+            note: "😠 Tu crois pouvoir doubler l'Olmo ? Il repart avec la totalité de son argent — et laisse un avertissement : il y aura de la casse.",
           },
         },
         {
@@ -1335,7 +1343,7 @@ export const EVENEMENTS: GameEvent[] = [
     texte:
       "Aujourd'hui, {nom} s'accoude au comptoir, les traits tirés : « Patron, je suis au bout du rouleau. Il me faudrait une vraie semaine pour souffler. »",
     priorite: true, // passe devant les autres événements : la fatigue n'attend pas
-    cooldown: 1, // peut revenir chaque semaine (un autre salarié, ou le même s'il insiste)
+    cooldown: 3, // pas plus d'une demande de vacances toutes les 3 sem. (anti-flood)
     condition: (s) => salarieEpuise(s) !== undefined,
     choisirCible: (s) => salarieEpuise(s)?.id,
     choix: [
