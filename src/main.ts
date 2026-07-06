@@ -40,7 +40,6 @@ import {
   simulerSemaine,
   tirerEvenement,
   declencherEvenement,
-  toggleAutoStock,
   toggleRepos,
 } from "./game/engine";
 import {
@@ -112,16 +111,25 @@ function rendre(): void {
   const change = cle !== dernierEcran;
   dernierEcran = cle;
   // Re-rendu du même écran (toggle, slider...) : on garde la position de scroll,
-  // sinon app.innerHTML recrée le conteneur et le fait sauter en haut.
-  const scrollActuel = change ? 0 : (app.querySelector(".ecran")?.scrollTop ?? 0);
+  // sinon app.innerHTML recrée le conteneur et le fait sauter en haut. On restaure
+  // CHAQUE conteneur défilable : les sous-menus (Salariés, etc.) scrollent sur
+  // `.menu-corps`, pas sur `.ecran` — d'où le saut au toggle d'un repos en bas.
+  const SELECTEURS_SCROLL = [".ecran", ".menu-corps"];
+  const scrolls: Record<string, number> = {};
+  if (!change) {
+    for (const sel of SELECTEURS_SCROLL) scrolls[sel] = app.querySelector(sel)?.scrollTop ?? 0;
+  }
   if (change && doc.startViewTransition) {
     doc.startViewTransition(() => rendreBrut());
   } else {
     rendreBrut();
   }
-  if (!change && scrollActuel) {
-    const ecran = app.querySelector(".ecran");
-    if (ecran) ecran.scrollTop = scrollActuel;
+  if (!change) {
+    for (const sel of SELECTEURS_SCROLL) {
+      const top = scrolls[sel];
+      const el = app.querySelector(sel);
+      if (top && el) el.scrollTop = top;
+    }
   }
   sauvegarder();
 }
@@ -408,9 +416,18 @@ app.addEventListener("click", (e) => {
     case "acheterAutoStock":
       if (state) acheterAutoStock(state);
       break;
-    case "toggleAutoStock":
-      if (state) toggleAutoStock(state);
-      break;
+    case "presetStock":
+      // Prérègle TOUS les curseurs de commande d'un coup (50 % ou 100 %) sans
+      // descendre sous le stock actuel. Manip DOM directe + recalcul du coût, sans
+      // re-render : sinon les curseurs repartiraient de leur valeur d'origine.
+      if (value) {
+        const cible = Number(value);
+        app.querySelectorAll<HTMLInputElement>(".four-slider").forEach((el) => {
+          el.value = String(Math.max(Number(el.dataset.base), cible));
+        });
+        majCoutCommande();
+      }
+      return;
     case "agrandir":
       if (state) agrandirBar(state);
       break;
@@ -506,7 +523,22 @@ app.addEventListener("input", (e) => {
     return;
   }
   if (el.classList.contains("four-slider")) majCoutCommande();
+  else if (el.classList.contains("seuil-slider")) majSeuilAuto(el as HTMLInputElement);
 });
+
+/** Curseur gris (seuil auto-stock) d'une catégorie : met à jour le remplissage,
+ *  le libellé et enregistre le seuil dans l'état (0 = désarmé, « off »). */
+function majSeuilAuto(el: HTMLInputElement): void {
+  if (!state) return;
+  const cat = el.dataset.cat as StockCategorie | undefined;
+  if (!cat) return;
+  const v = Number(el.value);
+  (state.autoStockSeuils ??= {})[cat] = v;
+  const wrap = el.closest(".four-slider-wrap") as HTMLElement | null;
+  if (wrap) wrap.style.setProperty("--fill", `${v}%`);
+  const lbl = app.querySelector(`[data-seuil-val="${cat}"]`);
+  if (lbl) lbl.textContent = v === 0 ? "off" : `${v}%`;
+}
 
 /** Met à jour en direct le remplissage/texte/bouton du curseur de négociation Olmo. */
 function majNegociationOlmo(): void {
@@ -548,7 +580,7 @@ function appliquerValeurSlider(input: HTMLInputElement, v: number): void {
 app.addEventListener("pointerdown", (e) => {
   const wrap = (e.target as HTMLElement).closest(".four-slider-wrap") as HTMLElement | null;
   if (!wrap) return;
-  const input = wrap.querySelector<HTMLInputElement>(".four-slider");
+  const input = wrap.querySelector<HTMLInputElement>(".four-slider, .seuil-slider");
   if (!input) return;
   e.preventDefault();
   dragSlider = input;

@@ -257,6 +257,73 @@ body {
   background: var(--ambre-clair);
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
+
+/* 🤖 Curseur gris = seuil auto-stock : plus fin, teinte neutre pour ne pas se
+   confondre avec le niveau ambré au-dessus. */
+.seuil-ligne {
+  margin-top: 6px;
+}
+.seuil-lbl {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--texte-doux);
+  margin-bottom: 1px;
+}
+.seuil-wrap {
+  height: 16px;
+}
+.seuil-wrap::before {
+  height: 6px;
+}
+.seuil-wrap .four-fill {
+  height: 6px;
+  background: #9aa0a6;
+}
+.seuil-slider {
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 16px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+.seuil-slider::-webkit-slider-runnable-track {
+  height: 16px;
+  background: transparent;
+}
+.seuil-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #cdd2d7;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+}
+.seuil-slider::-moz-range-track {
+  height: 16px;
+  background: transparent;
+}
+.seuil-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #cdd2d7;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+}
+
+/* Boutons de préréglage des commandes (Tout à 50 % / 100 %) au-dessus de Commander. */
+.preset-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.preset-btns .mini {
+  flex: 1;
+}
 .accueil h2 {
   font-size: 0.95rem;
   color: var(--ambre);

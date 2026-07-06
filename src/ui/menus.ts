@@ -171,6 +171,19 @@ function menuFournisseur(s: GameState): string {
   const curseurs = CATEGORIES_STOCK.map((c) => {
     const val = Math.round(s.stocks[c.id]);
     const alerte = val <= 0 ? "rupture" : val < 30 ? "stock-bas" : "";
+    // 🤖 Curseur gris (seuil auto) : visible seulement si l'auto-stock est acheté.
+    const seuil = s.autoStockAchete ? Math.round(s.autoStockSeuils?.[c.id] ?? 0) : 0;
+    const seuilLigne = s.autoStockAchete
+      ? `
+        <div class="seuil-ligne">
+          <span class="seuil-lbl">🤖 seuil auto <span data-seuil-val="${c.id}">${seuil === 0 ? "off" : `${seuil}%`}</span></span>
+          <div class="four-slider-wrap seuil-wrap" style="--fill:${seuil}%">
+            <div class="four-fill"></div>
+            <input type="range" class="seuil-slider" data-cat="${c.id}"
+                   min="0" max="100" step="5" value="${seuil}" />
+          </div>
+        </div>`
+      : "";
     return `
       <div class="four-ligne ${alerte}">
         <div class="four-tete">
@@ -182,6 +195,7 @@ function menuFournisseur(s: GameState): string {
           <input type="range" class="four-slider" data-cat="${c.id}" data-prix="${c.prix}" data-base="${val}"
                  min="0" max="100" step="1" value="${val}" />
         </div>
+        ${seuilLigne}
       </div>`;
   }).join("");
 
@@ -206,13 +220,10 @@ function menuFournisseur(s: GameState): string {
     const coutAS = coutAutoStock();
     ameliorations += s.autoStockAchete
       ? `<div class="machine-ligne">
-          <span>🤖 Auto-stock <small>remonte le stock à fond chaque fin de semaine (payant, à double tranchant)</small></span>
-          <button class="mini ${s.autoStockActif ? "ok" : ""}" data-action="toggleAutoStock">${
-            s.autoStockActif ? "Activé (désactiver)" : "Désactivé (activer)"
-          }</button>
+          <span>🤖 Auto-stock <small>règle le <b>seuil gris</b> de chaque produit ci-dessus : en fin de semaine, s'il est retombé sous le seuil, il est recomplété (plein tarif). « off » = désarmé.</small></span>
         </div>`
       : `<div class="machine-ligne">
-          <span>🤖 Auto-stock <small>remonte le stock à fond chaque fin de semaine (payant, à double tranchant)</small></span>
+          <span>🤖 Auto-stock <small>ajoute un seuil de sécurité par produit : recomplété tout seul chaque fin de semaine (payant)</small></span>
           <button class="mini ok" data-action="acheterAutoStock" ${s.budget >= coutAS ? "" : "disabled"}>Acheter (${eur(coutAS)})</button>
         </div>`;
   }
@@ -222,6 +233,10 @@ function menuFournisseur(s: GameState): string {
     <div class="menu-corps">
       <p class="hint-small">Tire un curseur pour recommander (budget ${eur(s.budget)}). Tu peux ouvrir sans faire le plein.</p>
       <div class="fournisseur">${curseurs}</div>
+      <div class="preset-btns">
+        <button class="mini" data-action="presetStock" data-value="50">Tout à 50 %</button>
+        <button class="mini" data-action="presetStock" data-value="100">Tout à 100 %</button>
+      </div>
       <button class="principal" data-action="commander" id="btn-commander" disabled>
         Commander · <span id="cout-commande">0 €</span>
       </button>

@@ -320,7 +320,11 @@ export interface GameState {
   doubleFatigueFin: string[]; // ids marqués par Ayms : fatigue ×2 en fin de semaine, puis vidé
   demissionsForceesFin: string[]; // ids marqués par Lanela : démission forcée en fin de semaine, puis vidé
   autoStockAchete: boolean; // machine "auto-stock" achetée (case Fournisseur, débloquée sem. 5)
-  autoStockActif: boolean; // ON = le stock est remonté à fond en fin de semaine, MAIS payant (plein tarif)
+  autoStockActif: boolean; // (hérité) ancien ON/OFF global — remplacé par les seuils par catégorie ci-dessous
+  /** Seuil auto par catégorie (curseur gris) : en fin de semaine, si le stock est
+   *  retombé sous ce seuil, l'auto-stock recomplète JUSQU'À ce seuil (plein tarif).
+   *  0 / absent = auto-stock désarmé pour cette catégorie. Optionnel = compat vieilles sauvegardes. */
+  autoStockSeuils?: Partial<Record<StockCategorie, number>>;
   pret?: Pret;
   detteRestant: number; // emprunt initial restant à rembourser
   detteJusteSoldee?: boolean; // vrai la semaine où la dette vient d'être soldée

@@ -1,16 +1,16 @@
 # Graph Report - Bar Survivor  (2026-07-06)
 
 ## Corpus Check
-- 24 files · ~39,977 words
+- 24 files · ~40,539 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 325 nodes · 782 edges · 21 communities (12 shown, 9 thin omitted)
+- 326 nodes · 782 edges · 21 communities (12 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8823ebc5`
+- Built from commit: `68c23d21`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -82,8 +82,8 @@ Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+8 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.08
-Nodes (38): CATEGORIES_STOCK, EMPRUNT_MAX, joursOuverture(), statutNotif(), trait(), Employee, GameState, WeeklyRecap (+30 more)
+Cohesion: 0.09
+Nodes (33): EMPRUNT_MAX, joursOuverture(), statutNotif(), Employee, GameState, WeeklyRecap, rendreBrut(), ecranAccueil() (+25 more)
 
 ### Community 4 - "Manifeste npm (package.json)"
 Cohesion: 0.13
@@ -91,7 +91,7 @@ Nodes (14): allowScripts, esbuild@0.25.12, description, devDependencies, typescr
 
 ### Community 5 - "Community 5"
 Cohesion: 0.06
-Nodes (39): aucunRepos(), CategorieStock, CV_PROFILS, equipeA(), EVENEMENTS, ModeleCandidat, ProfilCV, profilVersEmploye() (+31 more)
+Nodes (42): aucunRepos(), CategorieStock, CV_PROFILS, equipeDeDepart(), EVENEMENTS, genererCandidats(), ModeleCandidat, ProfilCV (+34 more)
 
 ### Community 6 - "Outillage graphify"
 Cohesion: 0.12
@@ -102,16 +102,16 @@ Cohesion: 0.18
 Nodes (25): aIngenieur(), coutAutoStock(), coutLicenciement(), coutMenagePro(), tauxDette(), bonusRendementPct(), coutReparation(), badgesTraits() (+17 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.29
-Nodes (11): aidesPourChoix(), bonusChanceux(), probaAvecAide(), Choice, boutonChoix(), ecranEvenement(), JOURS_LONGS, resumeEffet() (+3 more)
+Cohesion: 0.17
+Nodes (16): CATEGORIES_STOCK, aidesPourChoix(), bonusChanceux(), probaAvecAide(), trait(), Choice, badgeTrait(), bandeauBas() (+8 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.06
-Nodes (58): equipeDeDepart(), genererCandidats(), genererCV(), stocksPleins(), actifs(), AFFLUENCE_JOUR, AMBLAM, appliquerEffet() (+50 more)
+Nodes (55): equipeA(), genererCV(), actifs(), AFFLUENCE_JOUR, AMBLAM, appliquerEffet(), arriveeCV(), BUDGET_INITIAL (+47 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.11
-Nodes (15): acheterAutoStock(), definirEmprunt(), definirNomBar(), embaucher(), licencier(), refuserCandidat(), refuserCV(), toggleAutoStock() (+7 more)
+Nodes (14): acheterAutoStock(), definirEmprunt(), definirNomBar(), embaucher(), licencier(), refuserCandidat(), refuserCV(), toggleRepos() (+6 more)
 
 ## Knowledge Gaps
 - **93 isolated node(s):** `name`, `private`, `version`, `type`, `description` (+88 more)
@@ -123,7 +123,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `#app (point de montage)` connect `UI & ecrans (rendu)` to `Community 12`?**
   _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `simulerSemaine()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`, `Community 8`, `Community 12`?**
+- **Why does `simulerSemaine()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`, `Community 8`, `Community 9`, `Community 12`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
   _93 weakly-connected nodes found - possible documentation gaps or missing edges._
@@ -132,6 +132,6 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Config TypeScript (tsconfig)` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.08313725490196078 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09413067552602436 - nodes in this community are weakly interconnected._
 - **Should `Manifeste npm (package.json)` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._

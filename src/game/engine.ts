@@ -259,6 +259,7 @@ export function creerPartie(difficulte: Difficulty, offre: OfferType): GameState
     semainesBudgetHaut: 0,
     autoStockAchete: false,
     autoStockActif: false,
+    autoStockSeuils: {},
     detteRestant: DETTE_INITIALE,
     modeInfini: false,
     reparTentees: [],
@@ -1622,17 +1623,25 @@ export function preparerSemaineSuivante(state: GameState): void {
     state.loyer += LOYER_HAUSSE;
   }
 
-  // 🤖 Auto-stock : remonte toutes les catégories à fond, mais PAIE le plein tarif
-  // (remise Négociant incluse) — pratique, mais peut faire fondre le budget si le
-  // stock n'était pas vraiment nécessaire cette semaine-là.
-  if (state.autoStockActif) {
+  // 🤖 Auto-stock : pour chaque catégorie dont le SEUIL (curseur gris) est armé,
+  // si le stock est retombé sous ce seuil, on recomplète JUSQU'AU seuil — au plein
+  // tarif (remise Négociant incluse). Le joueur choisit son niveau de sécurité par
+  // produit. On ne dépense QUE si le budget suit (pas de game over surprise).
+  if (state.autoStockAchete) {
+    const seuils = state.autoStockSeuils ?? {};
     const cibles: Partial<Record<StockCategorie, number>> = {};
-    for (const c of CATEGORIES_STOCK) cibles[c.id] = 100;
+    for (const c of CATEGORIES_STOCK) {
+      const seuil = seuils[c.id] ?? 0;
+      if (seuil > 0 && state.stocks[c.id] < seuil) cibles[c.id] = seuil;
+    }
     const cout = coutCommande(state, cibles);
-    if (cout > 0) {
+    if (cout > 0 && state.budget >= cout) {
       state.budget -= cout;
-      for (const c of CATEGORIES_STOCK) state.stocks[c.id] = 100;
-      state.journal.push(`🤖 Auto-stock : réapprovisionnement automatique complet (-${cout} €).`);
+      for (const c of CATEGORIES_STOCK) {
+        const cible = cibles[c.id];
+        if (cible !== undefined) state.stocks[c.id] = Math.min(100, cible);
+      }
+      state.journal.push(`🤖 Auto-stock : réappro jusqu'aux seuils choisis (-${cout} €).`);
     }
   }
 
