@@ -76,7 +76,7 @@ const CV_SEMAINE_DEBUT = 4; // les CV commencent à arriver à partir de cette s
 const FATIGUE_JOUR_TRAVAIL = 4; // fatigue gagnée par jour travaillé (5j+2j repos ≈ +4/sem net, contre +9 en v0.x)
 const FATIGUE_JOUR_REPOS = 8; // fatigue récupérée par jour de repos
 // Équilibre voulu : 5j travail + 2j repos = +4 de fatigue/sem (montée lente, moins d'avalanche de vacances à 3-4 salariés).
-// Seule une vraie coupure (vacances : 7j de repos = -56) remet un salarié à neuf.
+// Seule une vraie coupure (une semaine de vacances) remet un salarié à neuf : fatigue forcée à 0.
 const MORAL_JOUR_REPOS = 3; // moral gagné par jour de repos
 const MORAL_MALUS_HEURES_SUP = 4; // moral perdu PAR jour au-delà de 5 jours travaillés
 const MORAL_MALUS_EPUISE = 5; // moral perdu en fin de semaine si fatigue ≥ 80
@@ -1252,6 +1252,10 @@ export function simulerSemaine(state: GameState): void {
     e.fatigue = borne(
       e.fatigue + travailles * FATIGUE_JOUR_TRAVAIL * vitesseFatigue - repos * FATIGUE_JOUR_REPOS,
     );
+    // 🏖 Vacances : une vraie coupure d'une semaine remet le salarié À NEUF
+    // (fatigue = 0), quel que soit son niveau d'épuisement de départ. Coupe le
+    // flood de re-demandes de vacances quand on a 3-4 salariés.
+    if (e.vacances === "encours") e.fatigue = 0;
     const heuresSup = travailles > 5 ? (travailles - 5) * MORAL_MALUS_HEURES_SUP : 0;
     const epuise = e.fatigue >= 80 ? MORAL_MALUS_EPUISE : 0;
     e.moral = borne(e.moral + repos * MORAL_JOUR_REPOS - heuresSup - epuise);

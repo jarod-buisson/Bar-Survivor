@@ -444,6 +444,16 @@ app.addEventListener("click", (e) => {
       state = null;
       effacerSauvegarde();
       break;
+    case "recommencer":
+      // Action destructive : on efface la partie en cours et on repart à zéro
+      // (écran d'accueil → onboarding). Confirmation obligatoire.
+      if (!window.confirm("Recommencer une nouvelle partie ? La partie en cours sera définitivement effacée.")) {
+        return;
+      }
+      if (minuteur) window.clearTimeout(minuteur);
+      state = null;
+      effacerSauvegarde();
+      break;
   }
   rendre();
 });

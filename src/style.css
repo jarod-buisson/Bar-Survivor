@@ -764,6 +764,30 @@ body {
 .hub-header {
   text-align: center;
   margin-bottom: 8px;
+  position: relative;
+}
+/* ⚙ Réglages : petit bouton en haut à droite du hub (restart, etc.). */
+.reglages-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  background: var(--panneau-clair);
+  color: var(--texte-doux);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.reglages-btn:hover {
+  color: var(--ambre-clair);
+}
+/* Bouton d'action destructive (Recommencer). */
+.principal.danger {
+  background: #7a2a2a;
+  color: #ffecec;
 }
 .jeu-titre {
   font-family: "Oi", system-ui;

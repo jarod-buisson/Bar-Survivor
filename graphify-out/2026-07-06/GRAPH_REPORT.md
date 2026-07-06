@@ -1,16 +1,16 @@
-# Graph Report - Bar Survivor  (2026-07-06)
+# Graph Report - Bar Survivor  (2026-07-04)
 
 ## Corpus Check
-- 24 files · ~39,977 words
+- 24 files · ~29,517 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 325 nodes · 782 edges · 21 communities (12 shown, 9 thin omitted)
+- 285 nodes · 665 edges · 22 communities (13 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8823ebc5`
+- Built from commit: `15bd609d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,6 +25,7 @@
 - [[_COMMUNITY_Community 8|Community 8]]
 - [[_COMMUNITY_Community 9|Community 9]]
 - [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
 - [[_COMMUNITY_Community 12|Community 12]]
 - [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 15|Community 15]]
@@ -37,27 +38,27 @@
 - [[_COMMUNITY_Community 22|Community 22]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `simulerSemaine()` - 24 edges
-2. `eur()` - 23 edges
-3. `runHabile()` - 20 edges
-4. `ecranMenu()` - 15 edges
-5. `compilerOptions` - 15 edges
-6. `GameState` - 14 edges
-7. `Bar Survival — décisions de conception` - 14 edges
-8. `actifs()` - 12 edges
-9. `capaciteLocale()` - 12 edges
-10. `rendreBrut()` - 12 edges
+1. `eur()` - 22 edges
+2. `simulerSemaine()` - 20 edges
+3. `compilerOptions` - 15 edges
+4. `GameState` - 14 edges
+5. `ecranMenu()` - 14 edges
+6. `Bar Survival — décisions de conception` - 13 edges
+7. `run()` - 12 edges
+8. `rendreBrut()` - 12 edges
+9. `actifs()` - 11 edges
+10. `entete()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `#phone (simulation écran mobile)` --conceptually_related_to--> `🍺 Bar Survival`  [INFERRED]
   index.html → README.md
-- `equipeCibleLocal()` --calls--> `capaciteLocale()`  [EXTRACTED]
+- `#app (point de montage)` --conceptually_related_to--> `🍺 Bar Survival`  [INFERRED]
+  index.html → README.md
+- `run()` --calls--> `commanderStocks()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
-- `gererSemaineCourante()` --calls--> `coutCommande()`  [EXTRACTED]
+- `run()` --calls--> `coutCommande()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
 - `run()` --calls--> `creerPartie()`  [EXTRACTED]
-  sim/simulation.ts → src/game/engine.ts
-- `run()` --calls--> `preparerSemaineSuivante()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
 
 ## Import Cycles
@@ -67,11 +68,11 @@
 - **Même code: web (TS+Vite) vers mobile (Capacitor)** — readme_bar_survival, readme_typescript_vite, readme_capacitor [EXTRACTED 0.85]
 - **Boucle de jeu hebdomadaire** — readme_economie_engine, readme_evenements, readme_recap_hebdo, readme_game_over [INFERRED 0.75]
 
-## Communities (21 total, 9 thin omitted)
+## Communities (22 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.11
-Nodes (35): actifsN(), choisirChoixBot(), coutSemaineFermee(), equipeCibleLocal(), evenementsDeLaSemaine, fixerGraine(), gererSemaineCourante(), graineCourante() (+27 more)
+Cohesion: 0.21
+Nodes (15): EMPRUNT_MAX, Employee, ecranAccueil(), echap(), machineEcrire(), carteAntho(), carteDepart(), carteEmprunt() (+7 more)
 
 ### Community 1 - "UI & ecrans (rendu)"
 Cohesion: 0.29
@@ -82,8 +83,8 @@ Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+8 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.08
-Nodes (38): CATEGORIES_STOCK, EMPRUNT_MAX, joursOuverture(), statutNotif(), trait(), Employee, GameState, WeeklyRecap (+30 more)
+Cohesion: 0.15
+Nodes (17): joursOuverture(), GameState, WeeklyRecap, rendreBrut(), ecranAlerte(), barreStats(), ecranFin(), ecranHub() (+9 more)
 
 ### Community 4 - "Manifeste npm (package.json)"
 Cohesion: 0.13
@@ -91,30 +92,34 @@ Nodes (14): allowScripts, esbuild@0.25.12, description, devDependencies, typescr
 
 ### Community 5 - "Community 5"
 Cohesion: 0.06
-Nodes (39): aucunRepos(), CategorieStock, CV_PROFILS, equipeA(), EVENEMENTS, ModeleCandidat, ProfilCV, profilVersEmploye() (+31 more)
+Nodes (39): aucunRepos(), CategorieStock, CV_PROFILS, equipeA(), equipeDeDepart(), EVENEMENTS, genererCV(), ModeleCandidat (+31 more)
 
 ### Community 6 - "Outillage graphify"
-Cohesion: 0.12
-Nodes (15): Bar Survival — décisions de conception, Cadrage de la partie, graphify, Machines, Modèle économique (bottom-up), Notoriété = moteur d'affluence, Objectif & fin de partie, Pistes non encore faites (backlog) (+7 more)
+Cohesion: 0.13
+Nodes (14): Bar Survival — décisions de conception, Cadrage de la partie, graphify, Machines, Modèle économique (bottom-up), Notoriété = moteur d'affluence, Objectif & fin de partie, Pistes non encore faites (backlog) (+6 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.18
-Nodes (25): aIngenieur(), coutAutoStock(), coutLicenciement(), coutMenagePro(), tauxDette(), bonusRendementPct(), coutReparation(), badgesTraits() (+17 more)
+Cohesion: 0.15
+Nodes (29): agrandirBar(), aIngenieur(), ameliorationsDebloquees(), ameliorerMachine(), capaciteBar(), capaciteLocale(), coutLicenciement(), coutMenagePro() (+21 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.29
-Nodes (11): aidesPourChoix(), bonusChanceux(), probaAvecAide(), Choice, boutonChoix(), ecranEvenement(), JOURS_LONGS, resumeEffet() (+3 more)
+Cohesion: 0.20
+Nodes (15): CATEGORIES_STOCK, aidesPourChoix(), bonusChanceux(), probaAvecAide(), trait(), badgeTrait(), bandeauBas(), bandeauSalaries() (+7 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.06
-Nodes (58): equipeDeDepart(), genererCandidats(), genererCV(), stocksPleins(), actifs(), AFFLUENCE_JOUR, AMBLAM, appliquerEffet() (+50 more)
+Cohesion: 0.08
+Nodes (47): actifsN(), moyenne(), run(), RunResult, genererCandidats(), stocksPleins(), actifs(), AFFLUENCE_JOUR (+39 more)
+
+### Community 11 - "Community 11"
+Cohesion: 0.20
+Nodes (9): appliquerAmelioration(), BONUS_PAR_NIVEAU, COUT_REPARATION, facteurUsure(), POIDS_MACHINE, PRIX_AMELIORATION, rendementMachine(), USURE_PAR_MACHINE (+1 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.11
-Nodes (15): acheterAutoStock(), definirEmprunt(), definirNomBar(), embaucher(), licencier(), refuserCandidat(), refuserCV(), toggleAutoStock() (+7 more)
+Cohesion: 0.13
+Nodes (15): declencherEvenement(), definirEmprunt(), definirNomBar(), embaucher(), licencier(), planifierEvenements(), refuserCandidat(), refuserCV() (+7 more)
 
 ## Knowledge Gaps
-- **93 isolated node(s):** `name`, `private`, `version`, `type`, `description` (+88 more)
+- **87 isolated node(s):** `name`, `private`, `version`, `type`, `description` (+82 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -122,16 +127,16 @@ Nodes (15): acheterAutoStock(), definirEmprunt(), definirNomBar(), embaucher(), 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `#app (point de montage)` connect `UI & ecrans (rendu)` to `Community 12`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `simulerSemaine()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`, `Community 8`, `Community 12`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `eur()` connect `Community 8` to `Community 0`, `Community 9`, `Community 3`, `Community 12`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _93 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.10960960960960961 - nodes in this community are weakly interconnected._
+  _87 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Config TypeScript (tsconfig)` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.08313725490196078 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14666666666666667 - nodes in this community are weakly interconnected._
 - **Should `Manifeste npm (package.json)` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
+- **Should `Community 5` be split into smaller, more focused modules?**
+  _Cohesion score 0.06464646464646465 - nodes in this community are weakly interconnected._

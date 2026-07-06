@@ -18,7 +18,7 @@ import {
 } from "../game/engine";
 import { CATEGORIES_STOCK } from "../game/content";
 import { NIVEAU_MAX, bonusRendementPct, coutAmelioration, coutReparation } from "../game/machines";
-import { badgeTrait, badgesTraits, eur } from "./components";
+import { badgeTrait, badgesTraits, echap, eur } from "./components";
 import { bilanDetail } from "./recap";
 
 function entete(titre: string): string {
@@ -418,6 +418,18 @@ function menuCalendrier(s: GameState): string {
     </div>`;
 }
 
+// ---- Réglages ----
+
+function menuReglages(s: GameState): string {
+  return `
+    ${entete("⚙ Réglages")}
+    <div class="menu-corps">
+      <div class="cal-now">${echap(s.nomBar || "Bar")} — Semaine <strong>${s.semaine}</strong></div>
+      <p class="hint-small">La partie est sauvegardée automatiquement. Recommencer efface définitivement la partie en cours.</p>
+      <button class="principal danger" data-action="recommencer">🔄 Recommencer une partie</button>
+    </div>`;
+}
+
 /** Affiche le menu ouvert (state.menuOuvert). */
 export function ecranMenu(s: GameState): string {
   let corps: string;
@@ -448,6 +460,9 @@ export function ecranMenu(s: GameState): string {
       break;
     case "calendrier":
       corps = menuCalendrier(s);
+      break;
+    case "reglages":
+      corps = menuReglages(s);
       break;
     default:
       corps = entete("Menu");

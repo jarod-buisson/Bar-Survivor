@@ -35,12 +35,13 @@ const POIDS_DEFAUT = 0.1;
 const BONUS_RENDEMENT = 40; // points de bonusEfficacite qui valent +100 % de rendement
 
 // Usure hebdo de base PAR machine (points de HP/sem), du + fragile au + robuste.
+// Baissée ~30 % (v1.1) : les machines cassaient trop vite en milieu de partie.
 const USURE_PAR_MACHINE: Record<string, number> = {
-  laveverre: 7,
-  glacon: 6,
-  tireuse: 5,
-  cafe: 4,
-  frigo: 3,
+  laveverre: 5,
+  glacon: 4,
+  tireuse: 4,
+  cafe: 3,
+  frigo: 2,
   caisse: 2,
 };
 const USURE_DEFAUT = 4; // usure d'une machine absente de la table
@@ -124,10 +125,11 @@ export function facteurMachines(
 
 /** Probabilité de tomber en panne sur la semaine, selon les HP.
  *  HP ≥ 50 : jamais de panne — aligné sur le seuil visuel (barre orange à 50 %),
- *  pour qu'une machine encore "verte" à l'écran ne casse jamais par surprise. */
+ *  pour qu'une machine encore "verte" à l'écran ne casse jamais par surprise.
+ *  Proba ~halvée (v1.1) : moins de pannes-surprises même une fois la machine usée. */
 export function probaPanne(hp: number): number {
-  if (hp < 25) return 1 / 5;
-  if (hp < 50) return 1 / 10;
+  if (hp < 25) return 1 / 8;
+  if (hp < 50) return 1 / 20;
   return 0; // HP >= 50 : pas de panne
 }
 

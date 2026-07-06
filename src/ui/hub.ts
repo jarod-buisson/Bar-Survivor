@@ -55,6 +55,7 @@ export function ecranHub(s: GameState): string {
   return `
     <div class="ecran jeu hub">
       <header class="hub-header">
+        <button class="reglages-btn" data-action="ouvrirMenu" data-value="reglages" aria-label="Réglages">⚙</button>
         <h1 class="jeu-titre">BAR SURVIVAL</h1>
         <div class="jeu-bar">${echap(s.nomBar || "Avant d'ouvrir")}</div>
       </header>
