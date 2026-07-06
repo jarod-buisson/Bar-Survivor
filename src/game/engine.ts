@@ -349,8 +349,9 @@ export function toggleRepos(state: GameState, id: string, jour: number): void {
  *  Fermeture administrative (police) : bar fermé tous les jours, quoi qu'il arrive. */
 export function joursOuverture(state: GameState): boolean[] {
   if (state.barFerme) return Array(7).fill(false);
+  // Un salarié SPÉCIAL (hors service) ne « garde pas le bar ouvert » à lui seul.
   return Array.from({ length: 7 }, (_, j) =>
-    actifs(state).some((e) => !e.reposJours[j]),
+    actifs(state).some((e) => !e.fonction && !e.reposJours[j]),
   );
 }
 
@@ -1458,6 +1459,9 @@ export function simulerSemaine(state: GameState): void {
   // Chaque jour au-delà de JOURS_STANDARD = un niveau de plus, de plus en plus cher.
   let heuresSupTotal = 0;
   for (const e of actifs(state)) {
+    // Salariés SPÉCIAUX (fonction) = intervenants externes : ils gèrent leur repos
+    // eux-mêmes, on paie juste le salaire fixe. Aucune heure sup, aucun compteur.
+    if (e.fonction) continue;
     let cout = 0;
     let niveauMax = 0;
     for (let j = 0; j < 7; j++) {
