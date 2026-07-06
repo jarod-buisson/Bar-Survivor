@@ -152,7 +152,7 @@ const PENALITE_RUPTURE = 3.5; // pénalité de notoriété par point de "poids" 
 // (des clients la voulaient, elle est trop basse) — proportionnel au manque ET au poids de la
 // catégorie (mêmes poids que la rupture totale). Pas besoin de tomber à 0 pour que ça compte.
 // 💰 Livret (menu Banque) : argent placé bloqué à vie, rapporte ce taux au budget CHAQUE semaine.
-export const TAUX_LIVRET = 0.07;
+export const TAUX_LIVRET = 0.02;
 
 // 💲 Prix par ressource (menu Fournisseur & prix). Chaque niveau décale la DEMANDE
 // et le PANIER en sens inverse → ≈ neutre en CA par lui-même ; c'est l'ADÉQUATION
