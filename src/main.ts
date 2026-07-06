@@ -8,7 +8,7 @@
 // ============================================================
 
 import "./style.css";
-import type { GameState, StockCategorie } from "./game/types";
+import type { GameState, NiveauPrix, StockCategorie } from "./game/types";
 import {
   acheterAutoStock,
   agrandirBar,
@@ -26,6 +26,7 @@ import {
   EMPRUNT_MAX,
   embaucher,
   embaucherCV,
+  investirLivret,
   joursOuverture,
   licencier,
   menageEquipe,
@@ -416,6 +417,13 @@ app.addEventListener("click", (e) => {
     case "acheterAutoStock":
       if (state) acheterAutoStock(state);
       break;
+    case "investirLivret":
+      if (state) {
+        const sl = document.getElementById("livret-slider") as HTMLInputElement | null;
+        const pct = sl ? Number(sl.value) : 0;
+        investirLivret(state, (state.budget * pct) / 100);
+      }
+      break;
     case "presetStock":
       // Prérègle TOUS les curseurs de commande d'un coup (50 % ou 100 %) sans
       // descendre sous le stock actuel. Manip DOM directe + recalcul du coût, sans
@@ -430,6 +438,13 @@ app.addEventListener("click", (e) => {
       return;
     case "agrandir":
       if (state) agrandirBar(state);
+      break;
+    case "setPrix":
+      // Choix du tarif d'une ressource (radio Petit/Moyen/Gros). data-value = "cat:niveau".
+      if (state && value) {
+        const [cat, niv] = value.split(":");
+        (state.prix ??= {})[cat as StockCategorie] = niv as NiveauPrix;
+      }
       break;
     case "fermerRecap":
       if (state) {
@@ -524,7 +539,22 @@ app.addEventListener("input", (e) => {
   }
   if (el.classList.contains("four-slider")) majCoutCommande();
   else if (el.classList.contains("seuil-slider")) majSeuilAuto(el as HTMLInputElement);
+  else if (el.classList.contains("livret-slider")) majLivret(el as HTMLInputElement);
 });
+
+/** Curseur du livret (Banque) : % du budget à placer. Met à jour le remplissage,
+ *  le montant en € et l'état du bouton Investir (désactivé à 0). */
+function majLivret(el: HTMLInputElement): void {
+  const pct = Number(el.value);
+  const budget = Number(el.dataset.budget) || 0;
+  const montant = Math.round((budget * pct) / 100);
+  const wrap = el.closest(".four-slider-wrap") as HTMLElement | null;
+  if (wrap) wrap.style.setProperty("--fill", `${pct}%`);
+  const lbl = document.getElementById("livret-montant");
+  if (lbl) lbl.textContent = eur(montant);
+  const btn = document.getElementById("btn-investir") as HTMLButtonElement | null;
+  if (btn) btn.disabled = montant <= 0;
+}
 
 /** Curseur gris (seuil auto-stock) d'une catégorie : met à jour le remplissage,
  *  le libellé et enregistre le seuil dans l'état (0 = désarmé, « off »). */
@@ -580,7 +610,7 @@ function appliquerValeurSlider(input: HTMLInputElement, v: number): void {
 app.addEventListener("pointerdown", (e) => {
   const wrap = (e.target as HTMLElement).closest(".four-slider-wrap") as HTMLElement | null;
   if (!wrap) return;
-  const input = wrap.querySelector<HTMLInputElement>(".four-slider, .seuil-slider");
+  const input = wrap.querySelector<HTMLInputElement>(".four-slider, .seuil-slider, .livret-slider");
   if (!input) return;
   e.preventDefault();
   dragSlider = input;

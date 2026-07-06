@@ -324,6 +324,75 @@ body {
 .preset-btns .mini {
   flex: 1;
 }
+
+/* 💲 Boutons de tarif par ressource (radio : un seul actif). */
+.prix-choix {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.prix-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--bordure);
+  background: var(--panneau);
+  color: var(--texte-doux);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.prix-btn.actif {
+  background: var(--ambre);
+  color: #2a1a05;
+  border-color: var(--ambre-clair);
+}
+
+/* 💰 Curseur du livret (Banque) : même look ambré que les curseurs de commande. */
+.livret-bloc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--panneau-clair);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.livret-slider {
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+.livret-slider::-webkit-slider-runnable-track {
+  height: 20px;
+  background: transparent;
+}
+.livret-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--ambre-clair);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+.livret-slider::-moz-range-track {
+  height: 20px;
+  background: transparent;
+}
+.livret-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ambre-clair);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
 .accueil h2 {
   font-size: 0.95rem;
   color: var(--ambre);
@@ -1219,6 +1288,16 @@ body {
   padding: 1px 5px;
   vertical-align: middle;
 }
+/* Badge des salariés spéciaux (Psy/Mécano) : teinte froide pour les distinguer. */
+.badge-fonction {
+  font-size: 0.6rem;
+  background: #4a6fa5;
+  color: #fff;
+  border-radius: 6px;
+  padding: 1px 6px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 .sc-role {
   font-size: 0.72rem;
   color: var(--texte-doux);
@@ -1402,6 +1481,47 @@ body {
 }
 .cal-case small {
   color: var(--texte-doux);
+}
+/* 📅 Grille des 12 mois : tout grisé sauf le mois en cours (ambré). */
+.mois-indice {
+  background: var(--panneau-clair);
+  border-left: 3px solid var(--ambre);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+.mois-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.mois-case {
+  border-radius: 10px;
+  padding: 12px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.78rem;
+}
+.mois-case.grise {
+  background: var(--panneau);
+  border: 1px solid var(--bordure);
+  color: var(--texte-doux);
+  opacity: 0.55;
+}
+.mois-case.actif {
+  background: var(--ambre);
+  color: #2a1a05;
+  font-weight: 800;
+  box-shadow: 0 0 0 2px var(--ambre-clair);
+}
+.mois-nom {
+  font-weight: inherit;
+}
+.mois-tag {
+  font-size: 0.68rem;
+  opacity: 0.85;
 }
 
 /* Travaux — plan du bar vu du dessus (agencement irrégulier, façon plan

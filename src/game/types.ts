@@ -45,7 +45,14 @@ export interface Employee {
   faiblesses: string[]; // ids de Trait (dépressif peut s'ajouter en cours de partie)
   irrevocable?: boolean; // Antho : ne peut pas être licencié (mais peut démissionner à bout)
   demissionne?: boolean; // true si le salarié a quitté le bar (démission ou licenciement)
+  fonction?: Fonction; // salarié SPÉCIAL (Psy/Mécano) : ne fait pas le service, effet passif fort
 }
+
+/** Salariés « fonction » : hors service, à effet passif (voir engine). */
+export type Fonction = "psychologue" | "mecano";
+
+/** Niveau de prix appliqué à une ressource (menu Fournisseur et prix). */
+export type NiveauPrix = "petit" | "moyen" | "gros";
 
 /** Un CV reçu (candidat potentiel) dans la case CV du hub. Les traits seront
  *  attribués plus tard ; `faiblessesMasquees` floute les faiblesses d'un CV
@@ -254,7 +261,10 @@ export interface WeeklyRecap {
   remboursement: number; // prêt bancaire remboursé cette semaine (0 si aucun)
   inflation: number; // charges croissantes du mode infini (0 tant qu'on rembourse)
   evenements: number; // impact € des événements & imprévus (déjà payé au fil de la semaine)
-  resultat: number; // CA - matières - dépenses + événements
+  interetsLivret: number; // intérêts versés par le livret cette semaine (+7 % du placé)
+  facteurMois: number; // multiplicateur CA de l'adéquation prix↔mois (1 = neutre), déjà inclus dans le CA
+  moisNom: string; // nom du mois en cours (pour la ligne de bilan "prix bien vus / à côté")
+  resultat: number; // CA - matières - dépenses + événements + intérêts livret
   budgetApres: number;
 }
 
@@ -325,6 +335,12 @@ export interface GameState {
    *  retombé sous ce seuil, l'auto-stock recomplète JUSQU'À ce seuil (plein tarif).
    *  0 / absent = auto-stock désarmé pour cette catégorie. Optionnel = compat vieilles sauvegardes. */
   autoStockSeuils?: Partial<Record<StockCategorie, number>>;
+  /** 💰 Livret : argent placé à la banque (bloqué à vie), rapporte +7 %/sem au budget.
+   *  Optionnel = compat vieilles sauvegardes. */
+  livret?: number;
+  /** Prix choisi par ressource (menu Fournisseur et prix). Absent = "moyen".
+   *  Combiné à l'attente du mois (calendrier) pour piloter le CA. Optionnel = compat sauvegardes. */
+  prix?: Partial<Record<StockCategorie, NiveauPrix>>;
   pret?: Pret;
   detteRestant: number; // emprunt initial restant à rembourser
   detteJusteSoldee?: boolean; // vrai la semaine où la dette vient d'être soldée

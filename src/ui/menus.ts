@@ -14,9 +14,26 @@ import {
   coutLicenciement,
   coutMenagePro,
   coutTravaux,
+  prixDe,
   tauxDette,
+  TAUX_LIVRET,
 } from "../game/engine";
-import { CATEGORIES_STOCK } from "../game/content";
+import type { Fonction, NiveauPrix } from "../game/types";
+
+/** Libellés des 3 niveaux de prix (menu Fournisseur & prix). */
+const PRIX_LABEL: Record<NiveauPrix, string> = {
+  petit: "Petit prix",
+  moyen: "Prix moyen",
+  gros: "Gros prix",
+};
+
+/** Libellé + effet passif d'un salarié spécial (Psy/Mécano). */
+function fonctionInfo(f: Fonction): { label: string; passif: string } {
+  return f === "psychologue"
+    ? { label: "🧠 Psychologue", passif: "Toute l'équipe ne fatigue plus jamais." }
+    : { label: "🔧 Mécano", passif: "Plus aucune usure sur les machines." };
+}
+import { CATEGORIES_STOCK, MOIS_INFOS, moisIndex } from "../game/content";
 import { NIVEAU_MAX, bonusRendementPct, coutAmelioration, coutReparation } from "../game/machines";
 import { badgeTrait, badgesTraits, echap, eur } from "./components";
 import { bilanDetail } from "./recap";
@@ -75,6 +92,21 @@ function menuSalaries(s: GameState): string {
               ${s.budget < coutLicenciement(e) ? "disabled" : ""}>
               Licencier (${eur(coutLicenciement(e))})
             </button>`;
+      // 🧠🔧 Salarié SPÉCIAL (fonction) : carte allégée, hors service (ni repos ni fatigue).
+      if (e.fonction) {
+        const info = fonctionInfo(e.fonction);
+        return `
+      <div class="salarie-carte">
+        <div class="sc-portrait">${e.emoji}</div>
+        <div class="sc-main">
+          <div class="sc-nom">${e.nom} <span class="badge-fonction">${info.label}</span></div>
+          <div class="sc-role">${eur(e.salaire)}/sem · ne fait pas le service</div>
+          <div class="sc-stats">${statBar("❤ Moral", e.moral)}</div>
+          <div class="hint-small pos">✨ ${info.passif}</div>
+          ${licencier}
+        </div>
+      </div>`;
+      }
       return `
       <div class="salarie-carte">
         <div class="sc-portrait">${e.emoji}</div>
@@ -130,6 +162,23 @@ function menuSalaries(s: GameState): string {
 
 function cvCarte(cv: CV): string {
   const e = cv.profil;
+  // 🧠🔧 CV SPÉCIAL (fonction) : pas de compétence ni de traits, on annonce l'effet passif.
+  if (e.fonction) {
+    const info = fonctionInfo(e.fonction);
+    return `
+    <div class="salarie-carte">
+      <div class="sc-portrait">${e.emoji}</div>
+      <div class="sc-main">
+        <div class="sc-nom">${e.nom} <span class="badge-fonction">${info.label}</span></div>
+        <div class="sc-role">${eur(e.salaire)}/sem · ne fait pas le service</div>
+        <div class="hint-small pos">✨ ${info.passif}</div>
+        <div class="c-actions">
+          <button class="mini ok" data-action="embaucherCV" data-value="${e.id}">Embaucher</button>
+          <button class="mini no" data-action="refuserCV" data-value="${e.id}">Refuser</button>
+        </div>
+      </div>
+    </div>`;
+  }
   // Les faiblesses de certains CV sont masquées (aléa) : on embauche à l'aveugle.
   const forces = `<div class="cv-traits">💪 ${e.forces.map(badgeTrait).join("")}</div>`;
   const faiblesses = cv.faiblessesMasquees
@@ -184,6 +233,13 @@ function menuFournisseur(s: GameState): string {
           </div>
         </div>`
       : "";
+    const niveau = prixDe(s, c.id);
+    const prixRow = (["petit", "moyen", "gros"] as const)
+      .map(
+        (niv) =>
+          `<button class="prix-btn ${niveau === niv ? "actif" : ""}" data-action="setPrix" data-value="${c.id}:${niv}">${PRIX_LABEL[niv]}</button>`,
+      )
+      .join("");
     return `
       <div class="four-ligne ${alerte}">
         <div class="four-tete">
@@ -195,6 +251,7 @@ function menuFournisseur(s: GameState): string {
           <input type="range" class="four-slider" data-cat="${c.id}" data-prix="${c.prix}" data-base="${val}"
                  min="0" max="100" step="1" value="${val}" />
         </div>
+        <div class="prix-choix">${prixRow}</div>
         ${seuilLigne}
       </div>`;
   }).join("");
@@ -229,9 +286,10 @@ function menuFournisseur(s: GameState): string {
   }
 
   return `
-    ${entete("📦 Fournisseur")}
+    ${entete("📦 Fournisseur & prix")}
     <div class="menu-corps">
       <p class="hint-small">Tire un curseur pour recommander (budget ${eur(s.budget)}). Tu peux ouvrir sans faire le plein.</p>
+      <p class="hint-small">💲 Choisis un tarif par produit. Prix bas = plus de clients, ticket plus faible ; gros prix = moins de clients, ticket plus haut. Le bon dosage dépend du mois (📅 Calendrier) !</p>
       <div class="fournisseur">${curseurs}</div>
       <div class="preset-btns">
         <button class="mini" data-action="presetStock" data-value="50">Tout à 50 %</button>
@@ -385,11 +443,33 @@ function menuBanque(s: GameState): string {
         <div>Remboursement : <strong>${Math.round(tauxDette(s.semaine) * 100)} % du CA de chaque semaine</strong></div>
         <div class="hint-small">Plus le bar tourne, plus la dette fond — une semaine creuse coûte peu. Le taux grimpe avec le temps : 15 % (sem. 1-10), 20 % (11-20), 35 % au-delà.</div>
         ${s.dernierBilan ? `<div class="hint-small">Semaine dernière : ${eur(s.dernierBilan.detteRemboursement)} remboursés.</div>` : ""}`;
+  const livret = Math.round(s.livret ?? 0);
+  const gainHebdo = Math.round(livret * TAUX_LIVRET);
+  const tauxPct = Math.round(TAUX_LIVRET * 100);
+  const investissements = `
+    <div class="bloc-titre">💰 Investissements</div>
+    <div class="livret-bloc">
+      <div class="four-tete">
+        <span>🏦 Livret <small>bloqué à vie</small></span>
+        <span>Placé : <strong>${eur(livret)}</strong></span>
+      </div>
+      ${livret > 0 ? `<div class="hint-small pos">+${eur(gainHebdo)} versés chaque semaine (${tauxPct} %).</div>` : ""}
+      <p class="hint-small">Place une part de ton budget : la banque te reverse <strong>${tauxPct} %</strong> du livret chaque semaine. ⚠️ l'argent placé est <strong>définitivement bloqué</strong> (aucun retrait possible).</p>
+      <div class="four-slider-wrap" style="--fill:0%">
+        <div class="four-fill"></div>
+        <input type="range" id="livret-slider" class="livret-slider" data-budget="${Math.round(s.budget)}"
+               min="0" max="100" step="1" value="0" />
+      </div>
+      <div class="four-tete"><span class="hint-small">Montant à placer</span><span class="four-val" id="livret-montant">0 €</span></div>
+      <button class="principal" data-action="investirLivret" id="btn-investir" disabled>Investir</button>
+      <p class="hint-small">2 autres placements arrivent bientôt 📈</p>
+    </div>`;
   return `
     ${entete("🏦 Banque")}
     <div class="menu-corps">
       <div class="cal-now">Budget : <strong>${eur(s.budget)}</strong></div>
       ${dette}
+      ${investissements}
     </div>`;
 }
 
@@ -421,15 +501,24 @@ function menuHistorique(s: GameState): string {
 // ---- Calendrier ----
 
 function menuCalendrier(s: GameState): string {
-  const aVenir = [1, 2, 3, 4]
-    .map((d) => `<div class="cal-case">Semaine ${s.semaine + d}<small>—</small></div>`)
-    .join("");
+  const courant = moisIndex(s.semaine);
+  const semaineDansMois = ((Math.max(1, s.semaine) - 1) % 4) + 1; // 1..4
+  const info = MOIS_INFOS[courant];
+  const cases = MOIS_INFOS.map((m, i) => {
+    const actif = i === courant;
+    return `
+      <div class="mois-case ${actif ? "actif" : "grise"}">
+        <span class="mois-nom">${m.nom}</span>
+        ${actif ? `<span class="mois-tag">sem. ${semaineDansMois}/4</span>` : ""}
+      </div>`;
+  }).join("");
   return `
     ${entete("📅 Calendrier")}
     <div class="menu-corps">
-      <div class="cal-now">Semaine courante : <strong>${s.semaine}</strong></div>
-      <div class="cal-grid">${aVenir}</div>
-      <p class="hint-small">Événements saisonniers : plus tard 📅</p>
+      <div class="cal-now">Mois en cours : <strong>${info.nom}</strong> · semaine ${s.semaine}</div>
+      <div class="mois-indice">💡 ${info.indice}</div>
+      <p class="hint-small">Chaque mois a ses envies. Ajuste tes prix (menu 📦 Fournisseur & prix) pour coller à la demande du moment : plus tu vises juste, plus ça rapporte. On change de mois toutes les 4 semaines.</p>
+      <div class="mois-grid">${cases}</div>
     </div>`;
 }
 

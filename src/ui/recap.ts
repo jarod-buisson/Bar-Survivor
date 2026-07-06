@@ -65,6 +65,15 @@ export function bilanDetail(b: WeeklyRecap): string {
         ${b.remboursement > 0 ? ligne("Remboursement prêt", -b.remboursement) : ""}
         ${b.inflation > 0 ? ligne("📈 Inflation (mode infini)", -b.inflation) : ""}
         ${b.evenements !== 0 ? ligne("🎲 Événements & imprévus", b.evenements) : ""}
+        ${b.interetsLivret > 0 ? ligne("💰 Intérêts du livret", b.interetsLivret) : ""}
+        ${
+          b.facteurMois && b.facteurMois !== 1
+            ? ligne(
+                `📅 ${b.moisNom} : prix ${b.facteurMois >= 1 ? "bien vus 👍" : "à côté 👎"}`,
+                Math.round(b.chiffreAffaires - b.chiffreAffaires / b.facteurMois),
+              )
+            : ""
+        }
         <div class="bilan-ligne total"><span>Résultat de la semaine</span><span class="${b.resultat < 0 ? "neg" : "pos"}">${b.resultat >= 0 ? "+" : ""}${eur(b.resultat)}</span></div>
         <div class="bilan-ligne total"><span>Budget restant</span><span>${eur(b.budgetApres)}</span></div>
   `;

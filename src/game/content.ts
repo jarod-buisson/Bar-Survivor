@@ -2,7 +2,7 @@
 //  CONTENU DU JEU — salariés + candidats + événements.
 // ============================================================
 
-import type { Choice, CV, Employee, GameEvent, GameState, StockCategorie } from "./types";
+import type { Choice, CV, Employee, Fonction, GameEvent, GameState, NiveauPrix, StockCategorie } from "./types";
 import { aTrait, tirerTraits } from "./traits";
 
 function rand(min: number, max: number): number {
@@ -43,6 +43,54 @@ export function stocksPleins(): Record<StockCategorie, number> {
     StockCategorie,
     number
   >;
+}
+
+// ---- Calendrier : 12 mois d'année SCOLAIRE (septembre → août) ----
+// 1 mois = 4 semaines ; on boucle tous les 48 semaines (mode infini inclus).
+// `indice` = texte affiché au joueur. `attente` = config de prix SECRÈTE que le
+// mois récompense (voir facteurMois dans engine) : jamais montrée telle quelle.
+export interface MoisInfo {
+  nom: string;
+  indice: string;
+  attente: Record<StockCategorie, NiveauPrix>;
+}
+
+// Raccourci pour écrire une attente dans l'ordre des CATEGORIES_STOCK.
+const att = (
+  bieres: NiveauPrix,
+  cocktails: NiveauPrix,
+  repas: NiveauPrix,
+  softs: NiveauPrix,
+  chaudes: NiveauPrix,
+  vin: NiveauPrix,
+): Record<StockCategorie, NiveauPrix> => ({ bieres, cocktails, repas, softs, chaudes, vin });
+
+// Attentes calibrées en spreads (≈ 2 petit / 2 moyen / 2 gros par mois) pour que
+// « moyen partout » reste ≈ neutre (×1.0) et que coller au mois soit un VRAI bonus.
+// Ordre des colonnes : bières, cocktails, repas, softs, boissons chaudes, vin.
+export const MOIS_INFOS: MoisInfo[] = [
+  { nom: "Septembre", indice: "C'est la rentrée, les étudiants arrivent en force !", attente: att("petit", "petit", "gros", "moyen", "gros", "moyen") },
+  { nom: "Octobre", indice: "L'Oktoberfest bat son plein, on picole sérieusement !", attente: att("gros", "moyen", "gros", "petit", "petit", "moyen") },
+  { nom: "Novembre", indice: "Les anciens commencent à avoir froid…", attente: att("petit", "moyen", "gros", "petit", "gros", "moyen") },
+  { nom: "Décembre", indice: "Bientôt Noël, plus personne n'a d'argent…", attente: att("petit", "petit", "moyen", "moyen", "gros", "gros") },
+  { nom: "Janvier", indice: "Tout le monde fait le Dry January ?!", attente: att("gros", "gros", "moyen", "petit", "petit", "moyen") },
+  { nom: "Février", indice: "C'est la Saint-Valentin tout le mois, il faut croire…", attente: att("petit", "gros", "moyen", "petit", "moyen", "gros") },
+  { nom: "Mars", indice: "Le soleil revient, les terrasses se remplissent !", attente: att("petit", "moyen", "gros", "petit", "moyen", "gros") },
+  { nom: "Avril", indice: "Rien de spécial ce mois-ci… un mois tranquille.", attente: att("moyen", "moyen", "moyen", "moyen", "moyen", "moyen") },
+  { nom: "Mai", indice: "Il fait bon, c'est le moment de venir manger, non ?", attente: att("moyen", "petit", "gros", "moyen", "petit", "gros") },
+  { nom: "Juin", indice: "Fête de la musique tout le mois ! Qu'est-ce qu'on boit ?!", attente: att("petit", "petit", "gros", "moyen", "gros", "moyen") },
+  { nom: "Juillet", indice: "FOOOOOOTBAAAALL ! Qu'est-ce qu'on boit ?", attente: att("petit", "moyen", "gros", "petit", "gros", "moyen") },
+  { nom: "Août", indice: "La ville se vide… ça se voit que c'est les vacances…", attente: att("gros", "gros", "petit", "petit", "moyen", "moyen") },
+];
+
+/** Index du mois (0 = Septembre) pour une semaine donnée : 1 mois = 4 semaines. */
+export function moisIndex(semaine: number): number {
+  return Math.floor((Math.max(1, semaine) - 1) / 4) % 12;
+}
+
+/** Infos du mois en cours (nom, indice, attente de prix). */
+export function moisDeSemaine(semaine: number): MoisInfo {
+  return MOIS_INFOS[moisIndex(semaine)];
 }
 
 // ---- Le salarié de base : Antho ----
@@ -133,6 +181,9 @@ interface ProfilCV {
   id: string;
   nom: string;
   emoji: string;
+  semaineMin?: number; // n'apparaît dans les CV qu'à partir de cette semaine
+  fonction?: Fonction; // salarié SPÉCIAL : hors service, à effet passif fort
+  salaireFixe?: number; // salaire imposé (sinon dérivé de la compétence tirée)
 }
 
 const CV_PROFILS: ProfilCV[] = [
@@ -148,11 +199,34 @@ const CV_PROFILS: ProfilCV[] = [
   { id: "harmo", nom: "Harmo", emoji: "🧑‍🎤" },
   { id: "vix", nom: "Vix", emoji: "👩‍🎤" },
   { id: "pasco", nom: "Pasco", emoji: "🕴" },
+  // Salariés SPÉCIAUX (hors service) : arrivent tard, salaire fixe élevé.
+  { id: "mecano", nom: "le Mécano", emoji: "🔧", fonction: "mecano", semaineMin: 15, salaireFixe: 1100 },
+  { id: "psy", nom: "la Psy", emoji: "🧠", fonction: "psychologue", semaineMin: 20, salaireFixe: 1200 },
 ];
 
 /** Transforme un profil de CV en salarié : compétence tirée au sort à la
  *  génération du CV, salaire demandé dérivé de cette compétence. */
 function profilVersEmploye(p: ProfilCV): Employee {
+  // Salarié SPÉCIAL (fonction) : salaire fixe, pas de compétence ni de traits — il
+  // ne fait pas le service, son intérêt est son effet passif (voir engine).
+  if (p.fonction) {
+    return {
+      id: p.id,
+      nom: p.nom,
+      emoji: p.emoji,
+      salaire: p.salaireFixe ?? 1000,
+      moral: 80,
+      competence: 0,
+      fatigue: 0,
+      semaineEmbauche: 1,
+      reposJours: aucunRepos(),
+      joursSansRepos: 0,
+      reposConsecutifs: 0,
+      forces: [],
+      faiblesses: [],
+      fonction: p.fonction,
+    };
+  }
   const traits = tirerTraits();
   const competence = rand(45, 80);
   return {
@@ -172,14 +246,17 @@ function profilVersEmploye(p: ProfilCV): Employee {
   };
 }
 
-/** Génère un CV pour un profil pas déjà présent dans la boîte (ou null si épuisé). */
-export function genererCV(dejaPresents: string[] = []): CV | null {
-  const dispo = CV_PROFILS.filter((p) => !dejaPresents.includes(p.id));
+/** Génère un CV pour un profil pas déjà présent dans la boîte, ÉLIGIBLE cette
+ *  semaine (les spéciaux ont un `semaineMin`) — ou null si le pool est épuisé. */
+export function genererCV(dejaPresents: string[] = [], semaine = 999): CV | null {
+  const dispo = CV_PROFILS.filter(
+    (p) => !dejaPresents.includes(p.id) && (p.semaineMin ?? 0) <= semaine,
+  );
   if (dispo.length === 0) return null;
   const p = dispo[Math.floor(Math.random() * dispo.length)];
   return {
     profil: profilVersEmploye(p),
-    faiblessesMasquees: Math.random() < 0.4, // ~40 % des CV cachent leurs faiblesses
+    faiblessesMasquees: p.fonction ? false : Math.random() < 0.4, // spéciaux : rien à cacher
   };
 }
 

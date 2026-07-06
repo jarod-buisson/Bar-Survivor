@@ -10,8 +10,10 @@ import type {
   Difficulty,
   Effect,
   Employee,
+  Fonction,
   GameState,
   JourCA,
+  NiveauPrix,
   OfferType,
   Statut,
   StockCategorie,
@@ -24,6 +26,7 @@ import {
   equipeDeDepart,
   genererCV,
   genererCandidats,
+  moisDeSemaine,
   salarieVacancesMenace,
   salarieVacancesProces,
   stocksPleins,
@@ -148,6 +151,23 @@ const PENALITE_RUPTURE = 3.5; // pénalité de notoriété par point de "poids" 
 // Rupture partielle (v1.1) : sous ce seuil, une catégorie commence à faire perdre du service
 // (des clients la voulaient, elle est trop basse) — proportionnel au manque ET au poids de la
 // catégorie (mêmes poids que la rupture totale). Pas besoin de tomber à 0 pour que ça compte.
+// 💰 Livret (menu Banque) : argent placé bloqué à vie, rapporte ce taux au budget CHAQUE semaine.
+export const TAUX_LIVRET = 0.07;
+
+// 💲 Prix par ressource (menu Fournisseur & prix). Chaque niveau décale la DEMANDE
+// et le PANIER en sens inverse → ≈ neutre en CA par lui-même ; c'est l'ADÉQUATION
+// avec l'attente du MOIS (facteurMoisPrix) qui fait vraiment la différence.
+const PRIX_DEMANDE: Record<NiveauPrix, number> = { petit: 1.18, moyen: 1, gros: 0.85 };
+const PRIX_PANIER: Record<NiveauPrix, number> = { petit: 0.85, moyen: 1, gros: 1.18 };
+// Le "gros" perd des clients... sauf si le bar est connu : la pénalité fond avec
+// la notoriété (à 100, un bar réputé peut être cher sans vider la salle).
+// Attente du MOIS (calendrier) : plus les prix collent, plus le CA grimpe (levier Fort).
+const NIVEAU_RANG: Record<NiveauPrix, number> = { petit: 0, moyen: 1, gros: 2 };
+// Levier FORT, calibré pour que « moyen partout » (adéquation moyenne ≈ 0.65 sur le
+// cycle des 12 mois) reste ≈ neutre (×1.0) : seul le joueur qui devine le mois monte
+// vers ×1.30, celui qui se trompe vraiment plonge vers ×0.43.
+const MOIS_MIN = 0.43; // adéquation NULLE (prix à l'opposé de l'attente) → CA ×0.43
+const MOIS_MAX = 1.3; // adéquation PARFAITE (pile l'attente du mois) → CA ×1.30
 const SEUIL_STOCK_BAS = 30; // % en dessous duquel une catégorie commence à coûter du service
 const SENSIBILITE_STOCK_BAS = 0.35; // pire cas (toutes les catégories à sec) : -35 % de capacité
 // Un bar PLEIN ne plombe pas sa réputation : on tolère un vrai débordement
@@ -260,6 +280,7 @@ export function creerPartie(difficulte: Difficulty, offre: OfferType): GameState
     autoStockAchete: false,
     autoStockActif: false,
     autoStockSeuils: {},
+    livret: 0,
     detteRestant: DETTE_INITIALE,
     modeInfini: false,
     reparTentees: [],
@@ -426,6 +447,47 @@ function facteurNotoriete(n: number): number {
 /** Propreté 0→100 : un bar sale fait fuir (0.8×), un bar nickel fidélise (1.05×). */
 function facteurProprete(p: number): number {
   return 0.8 + (p / 100) * 0.25;
+}
+
+/** Niveau de prix choisi pour une ressource (défaut "moyen"). */
+export function prixDe(state: GameState, cat: StockCategorie): NiveauPrix {
+  return state.prix?.[cat] ?? "moyen";
+}
+
+/** Multiplicateurs GLOBAUX (demande, panier) issus des prix par ressource, pondérés
+ *  par le poids de vente. Le "gros" perd moins de clients quand la notoriété monte. */
+function multsPrix(state: GameState): { demande: number; panier: number } {
+  const soft = Math.min(1, Math.max(0, (state.notoriete - 50) / 50)); // 0 sous 50, 1 à 100
+  const totalPoids = CATEGORIES_STOCK.reduce((s, c) => s + c.poids, 0);
+  let demande = 0;
+  let panier = 0;
+  for (const c of CATEGORIES_STOCK) {
+    const niveau = prixDe(state, c.id);
+    const part = c.poids / totalPoids;
+    const dem =
+      niveau === "gros" ? PRIX_DEMANDE.gros + (1 - PRIX_DEMANDE.gros) * soft : PRIX_DEMANDE[niveau];
+    demande += part * dem;
+    panier += part * PRIX_PANIER[niveau];
+  }
+  return { demande, panier };
+}
+
+/** Facteur CA (1 = neutre) de l'adéquation entre les prix du joueur et l'attente
+ *  SECRÈTE du mois en cours (calendrier). Pondéré par le poids de vente. */
+export function facteurMoisPrix(state: GameState): number {
+  const attente = moisDeSemaine(state.semaine).attente;
+  const totalPoids = CATEGORIES_STOCK.reduce((s, c) => s + c.poids, 0);
+  let a = 0; // adéquation ∈ [0,1]
+  for (const c of CATEGORIES_STOCK) {
+    const ecart = Math.abs(NIVEAU_RANG[prixDe(state, c.id)] - NIVEAU_RANG[attente[c.id]]);
+    a += (c.poids / totalPoids) * (1 - ecart / 2); // 1 parfait, 0.5 à un cran, 0 à l'opposé
+  }
+  return MOIS_MIN + (MOIS_MAX - MOIS_MIN) * a;
+}
+
+/** True si un salarié SPÉCIAL (fonction) actif et non démissionné est dans l'équipe. */
+export function aFonction(state: GameState, f: Fonction): boolean {
+  return actifs(state).some((e) => e.fonction === f);
 }
 
 /** Rupture partielle : chaque catégorie sous SEUIL_STOCK_BAS retire du service, au prorata
@@ -945,6 +1007,10 @@ export function simulerSemaine(state: GameState): void {
   const saisonF = SAISON_MIN + Math.random() * (SAISON_MAX - SAISON_MIN); // "humeur" de la semaine
   const clienteleF = OFFRE_CLIENTELE[state.offre];
   const panierOffre = OFFRE_PANIER[state.offre];
+  // 💲 Prix par ressource + 📅 attente du mois : constants sur toute la semaine.
+  const multPrix = multsPrix(state); // { demande, panier } ≈ neutre par lui-même
+  const facteurMois = facteurMoisPrix(state); // adéquation prix↔mois → 0.55 .. 1.30
+  const moisNom = moisDeSemaine(state.semaine).nom;
 
   // Cumul Amblam en début de semaine : sert à chiffrer la perte de LA semaine.
   const amblamCumuleAvant = state.partenariatAmblam?.cumule ?? 0;
@@ -984,7 +1050,8 @@ export function simulerSemaine(state: GameState): void {
     // Indice d'efficacité du soir = points des salariés présents (rendement
     // rogné par la fatigue, modulé par les traits : Efficacité +15 %, Lent -10 %,
     // ivresse -20 %…) × état du parc de machines × aléa du service.
-    const presents = actifs(state).filter((e) => !e.reposJours[d - 1]);
+    // Les salariés SPÉCIAUX (fonction) ne font pas le service : exclus du calcul.
+    const presents = actifs(state).filter((e) => !e.reposJours[d - 1] && !e.fonction);
     const nbMentors = presents.filter((e) => aTrait(e, "mentor")).length;
     let eff = EFF_PATRON; // le patron est toujours derrière le comptoir
     let bonusCA = 0;
@@ -1033,7 +1100,14 @@ export function simulerSemaine(state: GameState): void {
     // 1) DEMANDE : combien de clients veulent venir ce soir.
     const aleaSoir = 1 + (Math.random() * 2 - 1) * ALEA_SOIR; // ±15 %
     const demande = Math.round(
-      CLIENTELE_BASE * AFFLUENCE_JOUR[d - 1] * notorF * propreF * saisonF * clienteleF * aleaSoir,
+      CLIENTELE_BASE *
+        AFFLUENCE_JOUR[d - 1] *
+        notorF *
+        propreF *
+        saisonF *
+        clienteleF *
+        aleaSoir *
+        multPrix.demande, // 💲 prix bas = plus de clients, prix forts = moins
     );
 
     // 2) CAPACITÉ : le service de l'équipe, plafonné par les places du local,
@@ -1060,10 +1134,12 @@ export function simulerSemaine(state: GameState): void {
       (1 + (Math.max(0, state.notoriete - 50) / 100) * PANIER_NOTOR) *
       (1 + (Math.random() * 2 - 1) * PANIER_VARIA) *
       (1 + bonusCA) *
+      multPrix.panier * // 💲 prix forts = ticket plus élevé, prix bas = ticket plus faible
       (state.drapeaux["prix_ami"] ? PRIX_AMI_PANIER : 1);
 
-    // 4) CA du soir = clients servis × panier (+ éventuel boost événement du soir).
-    let ca = Math.round(clients * panier * (1 + (boostSoir?.caMult ?? 0)));
+    // 4) CA du soir = clients servis × panier (+ boost événement du soir) × adéquation du MOIS.
+    //    📅 Coller à l'attente secrète du mois = jusqu'à ×1.30 ; à côté = jusqu'à ×0.55.
+    let ca = Math.round(clients * panier * (1 + (boostSoir?.caMult ?? 0)) * facteurMois);
     // 🤝 Carte Amblam : les adhérents paient au rabais → CA du soir amputé,
     // le manque à gagner est mémorisé (Amblam le rendra ×2 à l'échéance).
     if (state.partenariatAmblam) {
@@ -1139,7 +1215,9 @@ export function simulerSemaine(state: GameState): void {
   const clientsMoyenParSoir = joursOuvertsNb > 0 ? clientsTotal / joursOuvertsNb : 0;
   const chargeService = capaciteLocale(state) > 0 ? clientsMoyenParSoir / capaciteLocale(state) : 0;
   const facteurUsureCharge = Math.min(1.3, Math.max(0.7, 0.7 + 0.6 * chargeService));
-  userMachines(state.machines, joursOuvertsNb, facteurUsureTraits * facteurUsureCharge);
+  // 🔧 Mécano dans l'équipe : plus AUCUNE usure (le sabotage d'événement passe quand même).
+  const usureMecano = aFonction(state, "mecano") ? 0 : facteurUsureTraits * facteurUsureCharge;
+  userMachines(state.machines, joursOuvertsNb, usureMecano);
   for (const c of CATEGORIES_STOCK) {
     const varia = 1 + (Math.random() * 2 - 1) * CONSO_VARIA; // ±CONSO_VARIA
     state.stocks[c.id] = borne(state.stocks[c.id] - clientsTotal * c.conso * varia * facteurConso);
@@ -1244,8 +1322,15 @@ export function simulerSemaine(state: GameState): void {
   // Travailler fatigue ; au-delà de 5 jours = heures sup (le moral trinque) ;
   // le repos récupère fatigue ET moral. Un salarié épuisé peut claquer la porte.
   // Fermeture administrative : personne ne travaille ni ne se repose vraiment, on gèle les deux jauges.
+  // 🧠 Psychologue dans l'équipe : la fatigue de TOUTE l'équipe reste à 0.
+  const psy = aFonction(state, "psychologue");
   for (const e of actifs(state)) {
     if (state.barFerme) continue;
+    // Salariés SPÉCIAUX (fonction) : hors service, ni fatigue ni heures sup.
+    if (e.fonction) {
+      e.fatigue = 0;
+      continue;
+    }
     const repos = e.reposJours.filter(Boolean).length;
     const travailles = 7 - repos;
     // 🔋 Infatigable : accumule la fatigue moins vite (bonus négatif).
@@ -1257,6 +1342,8 @@ export function simulerSemaine(state: GameState): void {
     // (fatigue = 0), quel que soit son niveau d'épuisement de départ. Coupe le
     // flood de re-demandes de vacances quand on a 3-4 salariés.
     if (e.vacances === "encours") e.fatigue = 0;
+    // 🧠 Psychologue : fatigue effacée en fin de semaine → plus jamais épuisé, plus de vacances.
+    if (psy) e.fatigue = 0;
     const heuresSup = travailles > 5 ? (travailles - 5) * MORAL_MALUS_HEURES_SUP : 0;
     const epuise = e.fatigue >= 80 ? MORAL_MALUS_EPUISE : 0;
     e.moral = borne(e.moral + repos * MORAL_JOUR_REPOS - heuresSup - epuise);
@@ -1450,6 +1537,9 @@ export function simulerSemaine(state: GameState): void {
   // (budget avant + résultat = budget après). Mais cet argent a DÉJÀ été
   // encaissé/décaissé au fil de la semaine : on ne le rejoue pas sur le budget.
   const evenements = state.evenementsBudget;
+  // 💰 Intérêts du livret : vrai encaissement (pas un événement pré-payé), donc
+  // compté dans le résultat ET crédité au budget ci-dessous.
+  const interetsLivret = Math.round((state.livret ?? 0) * TAUX_LIVRET);
   const resultat =
     caTotal -
     matieres -
@@ -1460,6 +1550,7 @@ export function simulerSemaine(state: GameState): void {
     detteRemboursement -
     remboursement -
     inflation +
+    interetsLivret +
     evenements;
   state.budget += resultat - evenements;
 
@@ -1487,6 +1578,9 @@ export function simulerSemaine(state: GameState): void {
     remboursement,
     inflation,
     evenements,
+    interetsLivret,
+    facteurMois,
+    moisNom,
     resultat,
     budgetApres: state.budget,
   };
@@ -1662,7 +1756,7 @@ function arriveeCV(state: GameState): void {
       ...state.cvRecus.map((cv) => cv.profil.id),
       ...state.employes.map((e) => e.id), // pas de CV d'un salarié déjà embauché
     ];
-    const cv = genererCV(exclus);
+    const cv = genererCV(exclus, state.semaine);
     if (cv) state.cvRecus.push(cv);
   }
 }
@@ -1797,6 +1891,16 @@ export function acheterAutoStock(state: GameState): boolean {
 export function toggleAutoStock(state: GameState): void {
   if (!state.autoStockAchete) return;
   state.autoStockActif = !state.autoStockActif;
+}
+
+/** 💰 Place `montant` sur le livret : débité du budget, ajouté au livret. L'argent
+ *  est bloqué à vie (aucun retrait) mais rapporte TAUX_LIVRET/sem au budget. */
+export function investirLivret(state: GameState, montant: number): boolean {
+  const somme = Math.round(montant);
+  if (somme <= 0 || state.budget < somme) return false;
+  state.budget -= somme;
+  state.livret = (state.livret ?? 0) + somme;
+  return true;
 }
 
 export function ameliorerMachine(state: GameState, id: string): boolean {

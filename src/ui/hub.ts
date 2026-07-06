@@ -12,13 +12,13 @@ const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean }[] = [
   { id: "salaries", emoji: "👥", label: "Salariés" },
   { id: "cv", emoji: "📄", label: "CV" },
-  { id: "stock", emoji: "📦", label: "Fournisseur" },
+  { id: "stock", emoji: "📦", label: "Fournisseur & prix" },
   { id: "reparations", emoji: "🔧", label: "Réparations" },
   { id: "menage", emoji: "🧹", label: "Ménage" },
   { id: "travaux", emoji: "🏗", label: "Travaux" },
   { id: "banque", emoji: "🏦", label: "Banque" },
   { id: "historique", emoji: "📜", label: "Historique" },
-  { id: "calendrier", emoji: "📅", label: "Calendrier", bientotDispo: true },
+  { id: "calendrier", emoji: "📅", label: "Calendrier" },
 ];
 
 export function ecranHub(s: GameState): string {
