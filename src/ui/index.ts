@@ -5,7 +5,7 @@
 
 export { ecranAccueil } from "./accueil";
 export { ecranPresentation, ecranEmbauche, salarieDeBase } from "./onboarding";
-export { ecranSemaine } from "./semaine";
+export { ecranSemaine, ecranLancement } from "./semaine";
 export { ecranEvenement } from "./evenement";
 export { ecranRecap } from "./recap";
 export { ecranAlerte } from "./alerte";

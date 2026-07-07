@@ -52,6 +52,7 @@ import {
   ecranEvenement,
   ecranFin,
   ecranHub,
+  ecranLancement,
   ecranMenu,
   ecranPresentation,
   ecranRecap,
@@ -149,6 +150,9 @@ function rendreBrut(): void {
     case "embauche":
       app.innerHTML = ecranEmbauche(state);
       break;
+    case "lancement":
+      app.innerHTML = ecranLancement(state);
+      break;
     case "semaine":
       app.innerHTML = ecranSemaine(state);
       break;
@@ -173,16 +177,34 @@ function rendreBrut(): void {
   }
 }
 
-/** Démarre la semaine : animation des 7 jours puis simulation + récap.
- *  Des événements peuvent interrompre l'animation (pop-up à choix). */
+/** Durée de la transition "ouverture du bar" avant le vrai début de semaine
+ *  (voir ecranLancement + .lancement-tuiles/.lancement-intro dans style.css). */
+const LANCEMENT_MS = 2000;
+
+/** Démarre la semaine : d'abord la transition "les tuiles s'aplatissent" (2 s),
+ *  puis l'animation des 7 jours et la simulation + récap. Des événements
+ *  peuvent interrompre l'animation des jours (pop-up à choix). */
 function lancerSemaine(): void {
   if (!state) return;
   if (minuteur) window.clearTimeout(minuteur);
-  state.jourAnim = 0;
-  state.phase = "semaine";
-  planifierEvenements(state); // tire les jours d'événement de la semaine
+  state.phase = "lancement";
   rendre();
-  avancerJour();
+  // Double rAF : on laisse le navigateur peindre l'état "plein" avant de
+  // basculer les classes, sinon la transition CSS n'a rien à interpoler.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      app.querySelector(".lancement-tuiles")?.classList.add("reduites");
+      app.querySelector(".lancement-intro")?.classList.add("visible");
+    });
+  });
+  minuteur = window.setTimeout(() => {
+    if (!state) return;
+    state.jourAnim = 0;
+    state.phase = "semaine";
+    planifierEvenements(state); // tire les jours d'événement de la semaine
+    rendre();
+    avancerJour();
+  }, LANCEMENT_MS);
 }
 
 function avancerJour(): void {

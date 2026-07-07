@@ -1096,8 +1096,82 @@ body {
   border: 1px solid var(--bordure);
 }
 
+/* ---- Transition "ouverture du bar" (2 s, voir main.ts lancerSemaine) :
+   les tuiles du hub s'aplatissent et se collent en bas pendant que l'intro
+   de semaine prend leur place. Classes "reduites"/"visible" ajoutées en JS
+   une fois le premier cadre peint, pour que la transition CSS parte de
+   l'état plein (sinon rien à interpoler). ---- */
+.lancement {
+  gap: 12px;
+}
+.lancement-intro {
+  flex-grow: 0;
+  flex-basis: 0%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  opacity: 0;
+  transition:
+    flex-grow 1.6s ease 0.3s,
+    opacity 1.4s ease 0.5s;
+}
+.lancement-intro.visible {
+  flex-grow: 1;
+  opacity: 1;
+}
+.lancement-tuiles {
+  flex-grow: 1;
+  flex-basis: 0%;
+  min-height: 0;
+  overflow: hidden;
+  transition:
+    flex-grow 2s ease,
+    gap 2s ease;
+}
+.lancement-tuiles.reduites {
+  flex-grow: 0;
+  gap: 6px;
+}
+.lancement-tuiles .tuile {
+  cursor: default;
+  transition:
+    padding 2s ease,
+    filter 2s ease,
+    opacity 2s ease;
+}
+.lancement-tuiles.reduites .tuile {
+  padding: 3px 6px;
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.lancement-tuiles .tuile-emoji {
+  transition: font-size 2s ease;
+}
+.lancement-tuiles.reduites .tuile-emoji {
+  font-size: 1.1rem;
+}
+.lancement-tuiles .tuile-label {
+  transition:
+    font-size 1.4s ease,
+    opacity 1s ease,
+    margin 1.4s ease;
+}
+.lancement-tuiles.reduites .tuile-label {
+  font-size: 0;
+  opacity: 0;
+  margin: 0;
+}
+
 /* ---- Animation de la semaine ---- */
-.semaine-anim {
+.semaine-centre {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -1241,6 +1315,32 @@ body {
   font-size: clamp(0.62rem, 2.4vh, 0.8rem);
   font-weight: 700;
   text-align: center;
+}
+
+/* Bandeau réduit/grisé des tuiles pendant le service (animation semaine + événements) :
+   juste un rappel visuel de l'équipe, non cliquable. */
+.tuiles-mini {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 10px;
+  flex-shrink: 0;
+}
+.tuile-mini {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--panneau-clair);
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+.tuile-mini-emoji {
+  font-size: 1rem;
+  line-height: 1;
 }
 .dot {
   position: absolute;

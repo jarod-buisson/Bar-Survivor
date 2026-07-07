@@ -14,6 +14,7 @@ export type Phase =
   | "accueil" // choix difficulté + offre
   | "presentation" // découverte du salarié de base (Antho)
   | "embauche" // on embauche jusqu'à 3 candidats aléatoires
+  | "lancement" // transition 2 s : les tuiles du hub s'aplatissent avant le service
   | "semaine" // animation de chargement : les 7 jours défilent
   | "evenement" // événement à choix pendant le service
   | "recapPopup" // pop-up de bilan de fin de semaine

@@ -5,11 +5,11 @@
 
 import type { GameState } from "../game/types";
 import { joursOuverture, statutNotif } from "../game/engine";
-import { barreStats, echap } from "./components";
+import { barreStats, enteteJeu } from "./components";
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
-const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean }[] = [
+export const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean }[] = [
   { id: "salaries", emoji: "👥", label: "Salariés" },
   { id: "cv", emoji: "📄", label: "CV" },
   { id: "stock", emoji: "📦", label: "Fournisseur & prix" },
@@ -20,6 +20,14 @@ const TUILES: { id: string; emoji: string; label: string; bientotDispo?: boolean
   { id: "historique", emoji: "📜", label: "Historique" },
   { id: "calendrier", emoji: "📅", label: "Calendrier" },
 ];
+
+/** Bandeau grisé/réduit des tuiles du hub — affiché pendant le service (animation
+ *  de la semaine, événements) pour rappeler l'équipe sans reprendre toute la place :
+ *  purement décoratif, pas cliquable (le hub n'est pas ouvert à ce moment-là). */
+export function bandeauTuilesReduites(): string {
+  const items = TUILES.map((t) => `<div class="tuile-mini"><span class="tuile-mini-emoji">${t.emoji}</span></div>`).join("");
+  return `<div class="tuiles-mini">${items}</div>`;
+}
 
 export function ecranHub(s: GameState): string {
   const tuiles = TUILES.map((t) => {
@@ -54,11 +62,7 @@ export function ecranHub(s: GameState): string {
 
   return `
     <div class="ecran jeu hub">
-      <header class="hub-header">
-        <button class="reglages-btn" data-action="ouvrirMenu" data-value="reglages" aria-label="Réglages">⚙</button>
-        <h1 class="jeu-titre">BAR SURVIVAL</h1>
-        <div class="jeu-bar">${echap(s.nomBar || "Avant d'ouvrir")}</div>
-      </header>
+      ${enteteJeu(s)}
       ${barreStats(s)}
       <div class="tuiles">${tuiles}</div>
       ${fermetureInfo}

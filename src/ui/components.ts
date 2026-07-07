@@ -56,6 +56,19 @@ export function badgesTraits(e: Employee): string {
 }
 
 /** Barre de stats du haut (budget / propreté / efficacité / notoriété / capacité / semaine), sur 2 lignes. */
+/** Bandeau de marque (titre + ⚙ réglages + nom du bar) — identique sur hub,
+ *  transition de lancement, animation de semaine et événements : reste en
+ *  place sans jamais disparaître pendant que le centre de l'écran change. */
+export function enteteJeu(s: GameState): string {
+  return `
+    <header class="hub-header">
+      <button class="reglages-btn" data-action="ouvrirMenu" data-value="reglages" aria-label="Réglages">⚙</button>
+      <h1 class="jeu-titre">BAR SURVIVAL</h1>
+      <div class="jeu-bar">${echap(s.nomBar || "Avant d'ouvrir")}</div>
+    </header>
+  `;
+}
+
 export function barreStats(s: GameState): string {
   return `
     <div class="stats">

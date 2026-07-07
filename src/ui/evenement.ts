@@ -15,7 +15,8 @@ import {
   TACOS_VIANDES,
 } from "../game/content";
 import { trait } from "../game/traits";
-import { barreStats } from "./components";
+import { barreStats, enteteJeu } from "./components";
+import { bandeauTuilesReduites } from "./hub";
 
 const JOURS_LONGS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
 
@@ -46,6 +47,7 @@ export function ecranEvenement(s: GameState): string {
 
   return `
     <div class="ecran jeu">
+      ${enteteJeu(s)}
       ${barreStats(s)}
       <div class="evenement">
         ${dernierRetour ? `<div class="retour">${dernierRetour}</div>` : ""}
@@ -59,6 +61,7 @@ export function ecranEvenement(s: GameState): string {
           ? `<p class="jour-ev">📅 ${JOURS_LONGS[s.jourAnim - 1]} — jour ${s.jourAnim}/7 de la semaine</p>`
           : ""
       }
+      ${bandeauTuilesReduites()}
     </div>
   `;
 }
