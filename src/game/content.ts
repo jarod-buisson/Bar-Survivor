@@ -14,6 +14,60 @@ function aucunRepos(): boolean[] {
   return [false, false, false, false, false, false, false];
 }
 
+// ---- Historique des versions (écran Réglages → Versions) ----
+export interface VersionInfo {
+  version: string;
+  titre: string;
+  resume: string;
+}
+
+/** Version courante affichée dans l'écran Réglages. */
+export const VERSION_ACTUELLE = "1.1";
+
+/** Petit résumé de chaque version, la plus récente en tête. */
+export const HISTORIQUE_VERSIONS: VersionInfo[] = [
+  {
+    version: "1.1",
+    titre: "Prix & saisons",
+    resume:
+      "Prix par ressource (petit/moyen/gros) et calendrier des 12 mois avec attente de prix secrète, salariés spéciaux (Mécano, Psychologue), Livret d'investissement, refonte des améliorations de machines (bonus de panier permanent), événement Brisco (tacos à cases), barre de stats sur 2 lignes avec propreté visible partout.",
+  },
+  {
+    version: "1.0",
+    titre: "Vers l'infini",
+    resume:
+      "Mode infini après remboursement de la dette, Travaux (plan du bar, 3 salles), rupture de stock partielle, auto-stock à seuil, vacances = repos total, sauvegarde locale, bouton Recommencer.",
+  },
+  {
+    version: "0.9",
+    titre: "Premiers pas",
+    resume:
+      "Onboarding en 4 cartes (nom du bar, emprunt au choix, Antho + traits), écran Banque (budget + emprunt), partenariat Amblam.",
+  },
+  {
+    version: "0.8",
+    titre: "Compétence",
+    resume:
+      "Salaire et compétence tirés au sort à chaque CV, panier boosté par la compétence des salariés présents, embauche uniquement via CV.",
+  },
+  {
+    version: "0.7",
+    titre: "Anti-plateau",
+    resume:
+      "Remboursement de la dette proportionnel au CA, loyer linéaire, notoriété jusqu'à ×1,5, tolérance aux refus avant perte de réputation.",
+  },
+  {
+    version: "0.6",
+    titre: "Équipe calibrée",
+    resume: "Capacité d'équipe calibrée sur la taille du local, propreté dynamique, traits équilibrés (16 forces / 13 faiblesses).",
+  },
+  {
+    version: "0.5",
+    titre: "Fondations",
+    resume: "Moteur de base (demande, capacité, stock, notoriété), premiers événements et traits.",
+  },
+];
+
 // ---- Catégories de stock (GDD §12) ----
 // Une seule source de vérité : ordre = volume de vente décroissant.
 //   conso  = points de stock consommés PAR client servi (bière = le plus vendu)

@@ -1894,7 +1894,7 @@ export function statutNotif(s: GameState, menu: string): Statut {
       return "gris"; // pas de notification sur ces cases
     case "calendrier": {
       const semaineDansMois = ((Math.max(1, s.semaine) - 1) % 4) + 1;
-      return semaineDansMois === 1 ? "vert" : "orange";
+      return semaineDansMois === 1 ? "vert" : "gris";
     }
     default:
       return "vert";

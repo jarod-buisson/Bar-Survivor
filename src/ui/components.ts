@@ -55,15 +55,20 @@ export function badgesTraits(e: Employee): string {
   return `<span class="traits">${tous}</span>`;
 }
 
-/** Barre de stats du haut (budget / efficacité / notoriété / capacité / semaine). */
+/** Barre de stats du haut (budget / propreté / efficacité / notoriété / capacité / semaine), sur 2 lignes. */
 export function barreStats(s: GameState): string {
   return `
     <div class="stats">
-      <div><span class="lbl">BUDGET</span><span class="val">${eur(s.budget)}</span></div>
-      <div data-tip="Indice d'efficacité : capacité de service de l'équipe et des machines (0-100)."><span class="lbl">⚙ EFFICACITÉ</span><span class="val">${Math.round(efficaciteActuelle(s))}%</span></div>
-      <div><span class="lbl">NOTORIÉTÉ</span><span class="val">${Math.round(s.notoriete)}%</span></div>
-      <div data-tip="Clients max par soir (taille du local). Agrandis le bar via la case Travaux."><span class="lbl">🪑 CAPACITÉ</span><span class="val">${capaciteLocale(s)}</span></div>
-      <div><span class="lbl">SEMAINE</span><span class="val">${s.semaine} ${moisAbrege(moisDeSemaine(s.semaine, s.moisDepart).nom)}</span></div>
+      <div class="stats-ligne">
+        <div><span class="lbl">BUDGET</span><span class="val">${eur(s.budget)}</span></div>
+        <div><span class="lbl">🧹 PROPRETÉ</span><span class="val">${Math.round(s.proprete)}%</span></div>
+        <div><span class="lbl">SEMAINE</span><span class="val">${s.semaine} ${moisAbrege(moisDeSemaine(s.semaine, s.moisDepart).nom)}</span></div>
+      </div>
+      <div class="stats-ligne">
+        <div data-tip="Indice d'efficacité : capacité de service de l'équipe et des machines (0-100)."><span class="lbl">⚙ EFFICACITÉ</span><span class="val">${Math.round(efficaciteActuelle(s))}%</span></div>
+        <div><span class="lbl">NOTORIÉTÉ</span><span class="val">${Math.round(s.notoriete)}%</span></div>
+        <div data-tip="Clients max par soir (taille du local). Agrandis le bar via la case Travaux."><span class="lbl">🪑 CAPACITÉ</span><span class="val">${capaciteLocale(s)}</span></div>
+      </div>
     </div>
   `;
 }

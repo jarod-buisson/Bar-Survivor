@@ -33,9 +33,9 @@ function fonctionInfo(f: Fonction): { label: string; passif: string } {
     ? { label: "🧠 Psychologue", passif: "Toute l'équipe ne fatigue plus jamais." }
     : { label: "🔧 Mécano", passif: "Plus aucune usure sur les machines." };
 }
-import { CATEGORIES_STOCK, MOIS_INFOS, moisIndex } from "../game/content";
+import { CATEGORIES_STOCK, HISTORIQUE_VERSIONS, MOIS_INFOS, VERSION_ACTUELLE, moisIndex } from "../game/content";
 import { NIVEAU_MAX, bonusPanierPct, coutAmelioration, coutReparation } from "../game/machines";
-import { badgeTrait, badgesTraits, echap, eur } from "./components";
+import { badgeTrait, badgesTraits, barreStats, echap, eur } from "./components";
 import { bilanDetail } from "./recap";
 
 function entete(titre: string): string {
@@ -405,6 +405,7 @@ function menuTravaux(s: GameState): string {
     ${entete("🏗 Travaux")}
     <div class="menu-corps">
       <div class="hint-small">Capacité de service actuelle : ~${capaciteBar(s)} clients/soir (équipe + machines, bridée par le local).</div>
+      <div class="hint-small">⚠️ Lancer des travaux ferme le bar pendant toute la semaine du chantier (0 CA, salaires/charges/dette dus quand même).</div>
       <div class="plan-bar">
         <div class="piece terrasse actif">
           <span class="piece-nom">Terrasse</span>
@@ -530,8 +531,32 @@ function menuReglages(s: GameState): string {
     ${entete("⚙ Réglages")}
     <div class="menu-corps">
       <div class="cal-now">${echap(s.nomBar || "Bar")} — Semaine <strong>${s.semaine}</strong></div>
+      <button class="secondaire" data-action="ouvrirMenu" data-value="versions">📋 Versions (v${VERSION_ACTUELLE})</button>
       <p class="hint-small">La partie est sauvegardée automatiquement. Recommencer efface définitivement la partie en cours.</p>
       <button class="principal danger" data-action="recommencer">🔄 Recommencer une partie</button>
+    </div>`;
+}
+
+// ---- Versions ----
+
+function menuVersions(_s: GameState): string {
+  const items = HISTORIQUE_VERSIONS.map(
+    (v, i) => `
+      <div class="version-item ${i === 0 ? "version-actuelle" : ""}">
+        <div class="version-tete">
+          <span class="version-num">v${v.version}</span>
+          ${i === 0 ? `<span class="version-badge">actuelle</span>` : ""}
+          <span class="version-titre">${v.titre}</span>
+        </div>
+        <p class="version-resume">${v.resume}</p>
+      </div>`,
+  ).join("");
+
+  return `
+    ${entete("📋 Versions")}
+    <div class="menu-corps">
+      <div class="cal-now">Version actuelle : <strong>v${VERSION_ACTUELLE}</strong></div>
+      <div class="versions-liste">${items}</div>
     </div>`;
 }
 
@@ -569,8 +594,11 @@ export function ecranMenu(s: GameState): string {
     case "reglages":
       corps = menuReglages(s);
       break;
+    case "versions":
+      corps = menuVersions(s);
+      break;
     default:
       corps = entete("Menu");
   }
-  return `<div class="ecran menu">${corps}</div>`;
+  return `<div class="ecran menu">${barreStats(s)}${corps}</div>`;
 }

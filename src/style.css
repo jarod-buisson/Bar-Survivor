@@ -456,12 +456,17 @@ body {
 /* ---- Barre de stats ---- */
 .stats {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap; /* 5 indicateurs : on replie proprement sur petit écran */
-  gap: 4px 10px;
+  flex-direction: column;
+  gap: 6px;
   background: var(--panneau);
   border-radius: 12px;
   padding: 10px 14px;
+}
+.stats-ligne {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* 3 indicateurs/ligne : on replie proprement sur petit écran */
+  gap: 4px 10px;
 }
 .stats .lbl {
   display: block;
@@ -1563,6 +1568,48 @@ body {
 .mois-tag {
   font-size: 0.68rem;
   opacity: 0.85;
+}
+
+/* Versions (écran Réglages) */
+.versions-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.version-item {
+  background: var(--panneau);
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.version-item.version-actuelle {
+  border-color: var(--ambre);
+}
+.version-tete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.version-num {
+  font-weight: 800;
+  color: var(--ambre-clair);
+}
+.version-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--ambre);
+  color: #2a1a05;
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.version-titre {
+  font-weight: 700;
+}
+.version-resume {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--texte-doux);
 }
 
 /* Travaux — plan du bar vu du dessus (agencement irrégulier, façon plan
