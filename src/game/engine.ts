@@ -173,6 +173,20 @@ const NIVEAU_RANG: Record<NiveauPrix, number> = { petit: 0, moyen: 1, gros: 2 };
 // vers ×1.30, celui qui se trompe vraiment plonge vers ×0.43.
 const MOIS_MIN = 0.43; // adéquation NULLE (prix à l'opposé de l'attente) → CA ×0.43
 const MOIS_MAX = 1.3; // adéquation PARFAITE (pile l'attente du mois) → CA ×1.30
+// Montée en puissance : le joueur débutant ne devrait pas être puni/récompensé à
+// plein régime avant d'avoir compris le système. 8 premières semaines (2 mois) :
+// effet à 25 % de son intensité. Puis rampe linéaire jusqu'à pleine intensité en
+// semaine 40, où ça se stabilise (le joueur est censé avoir compris le jeu).
+const RAMPE_MOIS_INTENSITE_DEBUT = 0.25;
+const RAMPE_MOIS_SEMAINE_DEBUT = 8;
+const RAMPE_MOIS_SEMAINE_FIN = 40;
+
+function rampeMoisIntensite(semaine: number): number {
+  if (semaine <= RAMPE_MOIS_SEMAINE_DEBUT) return RAMPE_MOIS_INTENSITE_DEBUT;
+  if (semaine >= RAMPE_MOIS_SEMAINE_FIN) return 1;
+  const t = (semaine - RAMPE_MOIS_SEMAINE_DEBUT) / (RAMPE_MOIS_SEMAINE_FIN - RAMPE_MOIS_SEMAINE_DEBUT);
+  return RAMPE_MOIS_INTENSITE_DEBUT + (1 - RAMPE_MOIS_INTENSITE_DEBUT) * t;
+}
 const SEUIL_STOCK_BAS = 30; // % en dessous duquel une catégorie commence à coûter du service
 const SENSIBILITE_STOCK_BAS = 0.35; // pire cas (toutes les catégories à sec) : -35 % de capacité
 // Un bar PLEIN ne plombe pas sa réputation : on tolère un vrai débordement
@@ -489,7 +503,8 @@ export function facteurMoisPrix(state: GameState): number {
     const ecart = Math.abs(NIVEAU_RANG[prixDe(state, c.id)] - NIVEAU_RANG[attente[c.id]]);
     a += (c.poids / totalPoids) * (1 - ecart / 2); // 1 parfait, 0.5 à un cran, 0 à l'opposé
   }
-  return MOIS_MIN + (MOIS_MAX - MOIS_MIN) * a;
+  const plein = MOIS_MIN + (MOIS_MAX - MOIS_MIN) * a;
+  return 1 + (plein - 1) * rampeMoisIntensite(state.semaine);
 }
 
 /** True si un salarié SPÉCIAL (fonction) actif et non démissionné est dans l'équipe. */

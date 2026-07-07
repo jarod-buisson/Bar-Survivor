@@ -123,18 +123,18 @@ const att = (
 // « moyen partout » reste ≈ neutre (×1.0) et que coller au mois soit un VRAI bonus.
 // Ordre des colonnes : bières, cocktails, repas, softs, boissons chaudes, vin.
 export const MOIS_INFOS: MoisInfo[] = [
-  { nom: "Septembre", indice: "C'est la rentrée, les étudiants arrivent en force !", attente: att("petit", "petit", "gros", "moyen", "gros", "moyen") },
-  { nom: "Octobre", indice: "L'Oktoberfest bat son plein, on picole sérieusement !", attente: att("gros", "moyen", "gros", "petit", "petit", "moyen") },
-  { nom: "Novembre", indice: "Les anciens commencent à avoir froid…", attente: att("petit", "moyen", "gros", "petit", "gros", "moyen") },
-  { nom: "Décembre", indice: "Bientôt Noël, plus personne n'a d'argent…", attente: att("petit", "petit", "moyen", "moyen", "gros", "gros") },
-  { nom: "Janvier", indice: "Tout le monde fait le Dry January ?!", attente: att("gros", "gros", "moyen", "petit", "petit", "moyen") },
-  { nom: "Février", indice: "C'est la Saint-Valentin tout le mois, il faut croire…", attente: att("petit", "gros", "moyen", "petit", "moyen", "gros") },
-  { nom: "Mars", indice: "Le soleil revient, les terrasses se remplissent !", attente: att("petit", "moyen", "gros", "petit", "moyen", "gros") },
+  { nom: "Septembre", indice: "C'est la rentrée, les étudiants arrivent en force !", attente: att("gros", "gros", "petit", "moyen", "petit", "moyen") },
+  { nom: "Octobre", indice: "L'Oktoberfest bat son plein, on picole sérieusement !", attente: att("gros", "moyen", "moyen", "petit", "petit", "moyen") },
+  { nom: "Novembre", indice: "Les anciens commencent à avoir froid…", attente: att("petit", "moyen", "gros", "moyen", "gros", "gros") },
+  { nom: "Décembre", indice: "Bientôt Noël, plus personne n'a d'argent…", attente: att("petit", "petit", "petit", "petit", "petit", "petit") },
+  { nom: "Janvier", indice: "Tout le monde fait le Dry January ?!", attente: att("petit", "petit", "moyen", "gros", "gros", "petit") },
+  { nom: "Février", indice: "C'est la Saint-Valentin tout le mois, il faut croire…", attente: att("petit", "gros", "gros", "petit", "moyen", "gros") },
+  { nom: "Mars", indice: "Le soleil revient, les terrasses se remplissent !", attente: att("gros", "gros", "gros", "moyen", "petit", "gros") },
   { nom: "Avril", indice: "Rien de spécial ce mois-ci… un mois tranquille.", attente: att("moyen", "moyen", "moyen", "moyen", "moyen", "moyen") },
-  { nom: "Mai", indice: "Il fait bon, c'est le moment de venir manger, non ?", attente: att("moyen", "petit", "gros", "moyen", "petit", "gros") },
-  { nom: "Juin", indice: "Fête de la musique tout le mois ! Qu'est-ce qu'on boit ?!", attente: att("petit", "petit", "gros", "moyen", "gros", "moyen") },
-  { nom: "Juillet", indice: "FOOOOOOTBAAAALL ! Qu'est-ce qu'on boit ?", attente: att("petit", "moyen", "gros", "petit", "gros", "moyen") },
-  { nom: "Août", indice: "La ville se vide… ça se voit que c'est les vacances…", attente: att("gros", "gros", "petit", "petit", "moyen", "moyen") },
+  { nom: "Mai", indice: "Il fait bon, c'est le moment de venir manger, non ?", attente: att("gros", "moyen", "gros", "gros", "petit", "gros") },
+  { nom: "Juin", indice: "Fête de la musique tout le mois ! Qu'est-ce qu'on boit ?!", attente: att("gros", "gros", "petit", "gros", "petit", "petit") },
+  { nom: "Juillet", indice: "FOOOOOOTBAAAALL ! Qu'est-ce qu'on boit ?", attente: att("gros", "petit", "gros", "petit", "petit", "gros") },
+  { nom: "Août", indice: "La ville se vide… ça se voit que c'est les vacances…", attente: att("petit", "petit", "petit", "petit", "petit", "petit") },
 ];
 
 /** Index du mois (0 = Septembre) pour une semaine donnée : 1 mois = 4 semaines.
