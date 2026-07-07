@@ -23,6 +23,8 @@ import type {
 import {
   CATEGORIES_STOCK,
   EVENEMENTS,
+  TACOS_SAUCE_CORRECTE,
+  TACOS_VIANDE_CORRECTE,
   equipeDeDepart,
   genererCV,
   genererCandidats,
@@ -39,6 +41,7 @@ import {
   coutAmelioration,
   coutReparation,
   machinesDeDepart,
+  panierBonusMachines,
   probaPanne,
   reparerMachine,
   userMachines,
@@ -253,6 +256,7 @@ export function creerPartie(difficulte: Difficulty, offre: OfferType): GameState
     offre,
     phase: "presentation",
     semaine: 1,
+    moisDepart: Math.floor(Math.random() * 12),
     budget: BUDGET_INITIAL[difficulte],
     nomBar: "",
     detteInitiale: DETTE_INITIALE,
@@ -476,7 +480,7 @@ function multsPrix(state: GameState): { demande: number; panier: number } {
 /** Facteur CA (1 = neutre) de l'adéquation entre les prix du joueur et l'attente
  *  SECRÈTE du mois en cours (calendrier). Pondéré par le poids de vente. */
 export function facteurMoisPrix(state: GameState): number {
-  const attente = moisDeSemaine(state.semaine).attente;
+  const attente = moisDeSemaine(state.semaine, state.moisDepart).attente;
   const totalPoids = CATEGORIES_STOCK.reduce((s, c) => s + c.poids, 0);
   let a = 0; // adéquation ∈ [0,1]
   for (const c of CATEGORIES_STOCK) {
@@ -780,6 +784,10 @@ export function appliquerEffet(
   if (effet.partenariatAmblam) {
     state.partenariatAmblam = { semainesRestantes: AMBLAM.duree, cumule: 0 };
   }
+  if (effet.promoLoyer) {
+    state.promoLoyerSemaines = effet.promoLoyer.semaines;
+    state.promoLoyerTaux = effet.promoLoyer.taux;
+  }
   if (effet.casseMachineAleatoire) {
     const enMarche = state.machines.filter((m) => m.etat === "marche");
     if (enMarche.length > 0) {
@@ -797,6 +805,35 @@ export function appliquerEffet(
     const resultat = gagne ? effet.tirage.succes : effet.tirage.echec;
     appliquerEffet(state, resultat, cibleId); // un éventuel tirage imbriqué reste aléatoire
   }
+}
+
+/** Résout la commande du tacos de Brisco (state.configTacos) : seule la viande
+ *  ET la sauce comptent (sauce fromagère/crudités = cosmétique). Les 2 bonnes
+ *  → loyer offert 4 semaines ; 1 bonne → loyer -50 % 4 semaines ; 0 → rien. */
+export function resoudreTacos(state: GameState): "parfait" | "partiel" | "rate" {
+  const config = state.configTacos;
+  state.configTacos = undefined;
+  if (!config) return "rate";
+  const bonnes =
+    Number(config.viande === TACOS_VIANDE_CORRECTE) + Number(config.sauce === TACOS_SAUCE_CORRECTE);
+  if (bonnes === 2) {
+    appliquerEffet(state, {
+      promoLoyer: { semaines: 4, taux: 0 },
+      note: "🌯 PARFAIT ! Brisco n'en revient pas : « C'est EXACTEMENT ça ! » En échange, il te fait sauter le loyer pendant 4 semaines.",
+    });
+    return "parfait";
+  }
+  if (bonnes === 1) {
+    appliquerEffet(state, {
+      promoLoyer: { semaines: 4, taux: 0.5 },
+      note: "🌯 Brisco fait la moue : « Ah, t'avais presque tout bon... En échange, -50 % sur ton loyer pendant 4 semaines, ça te va ? »",
+    });
+    return "partiel";
+  }
+  appliquerEffet(state, {
+    note: "🌯 Brisco secoue la tête, dépité : « Non... c'est pas ça du tout. » Il repart bredouille.",
+  });
+  return "rate";
 }
 
 /** Planifie les événements de la semaine : des jours (1-7) tirés parmi les
@@ -1011,7 +1048,10 @@ export function simulerSemaine(state: GameState): void {
   // 💲 Prix par ressource + 📅 attente du mois : constants sur toute la semaine.
   const multPrix = multsPrix(state); // { demande, panier } ≈ neutre par lui-même
   const facteurMois = facteurMoisPrix(state); // adéquation prix↔mois → 0.55 .. 1.30
-  const moisNom = moisDeSemaine(state.semaine).nom;
+  // 🔧 Améliorations machines : bonus de panier permanent, senti chaque soir
+  // qu'il y ait du monde ou pas (voir machines.ts:panierBonusMachines).
+  const machinesPanierF = panierBonusMachines(state.machines);
+  const moisNom = moisDeSemaine(state.semaine, state.moisDepart).nom;
 
   // Cumul Amblam en début de semaine : sert à chiffrer la perte de LA semaine.
   const amblamCumuleAvant = state.partenariatAmblam?.cumule ?? 0;
@@ -1135,6 +1175,7 @@ export function simulerSemaine(state: GameState): void {
       (1 + (Math.max(0, state.notoriete - 50) / 100) * PANIER_NOTOR) *
       (1 + (Math.random() * 2 - 1) * PANIER_VARIA) *
       (1 + bonusCA) *
+      (1 + machinesPanierF) * // 🔧 parc de machines amélioré = ticket moyen plus haut, tous les soirs
       multPrix.panier * // 💲 prix forts = ticket plus élevé, prix bas = ticket plus faible
       (state.drapeaux["prix_ami"] ? PRIX_AMI_PANIER : 1);
 
@@ -1323,7 +1364,9 @@ export function simulerSemaine(state: GameState): void {
   // Travailler fatigue ; au-delà de 5 jours = heures sup (le moral trinque) ;
   // le repos récupère fatigue ET moral. Un salarié épuisé peut claquer la porte.
   // Fermeture administrative : personne ne travaille ni ne se repose vraiment, on gèle les deux jauges.
-  // 🧠 Psychologue dans l'équipe : la fatigue de TOUTE l'équipe reste à 0.
+  // 🧠 Psychologue dans l'équipe : la fatigue de TOUTE l'équipe reste à 0,
+  // MAIS seulement pour ceux qui posent ≥2 jours de repos cette semaine — un
+  // salarié enchaîné 7/7 (ou 6/7) ne bénéficie plus du filet du psychologue.
   const psy = aFonction(state, "psychologue");
   for (const e of actifs(state)) {
     if (state.barFerme) continue;
@@ -1343,8 +1386,8 @@ export function simulerSemaine(state: GameState): void {
     // (fatigue = 0), quel que soit son niveau d'épuisement de départ. Coupe le
     // flood de re-demandes de vacances quand on a 3-4 salariés.
     if (e.vacances === "encours") e.fatigue = 0;
-    // 🧠 Psychologue : fatigue effacée en fin de semaine → plus jamais épuisé, plus de vacances.
-    if (psy) e.fatigue = 0;
+    // 🧠 Psychologue : fatigue effacée en fin de semaine, condition ≥2 jours de repos.
+    if (psy && repos >= 2) e.fatigue = 0;
     const heuresSup = travailles > 5 ? (travailles - 5) * MORAL_MALUS_HEURES_SUP : 0;
     const epuise = e.fatigue >= 80 ? MORAL_MALUS_EPUISE : 0;
     e.moral = borne(e.moral + repos * MORAL_JOUR_REPOS - heuresSup - epuise);
@@ -1490,7 +1533,16 @@ export function simulerSemaine(state: GameState): void {
   // Salaires (détail par salarié) + loyer + remboursement de prêt.
   const salairesDetail = actifs(state).map((e) => ({ nom: e.nom, montant: e.salaire }));
   const salaires = salairesDetail.reduce((s, l) => s + l.montant, 0);
-  const loyer = state.loyer;
+  // 🌯 Promo Brisco (tacos) : loyer réduit/offert pendant quelques semaines.
+  let loyer = state.loyer;
+  if ((state.promoLoyerSemaines ?? 0) > 0) {
+    loyer = Math.round(loyer * (state.promoLoyerTaux ?? 1));
+    state.promoLoyerSemaines = (state.promoLoyerSemaines ?? 0) - 1;
+    if (state.promoLoyerSemaines <= 0) {
+      state.promoLoyerSemaines = undefined;
+      state.promoLoyerTaux = undefined;
+    }
+  }
   const coutMascotte = Number(state.drapeaux.chien_cout_hebdo) > 0 ? Number(state.drapeaux.chien_cout_hebdo) : 0;
   const charges = CHARGES + coutMascotte;
 
@@ -1676,6 +1728,12 @@ export function preparerSemaineSuivante(state: GameState): void {
   state.semaine += 1;
   state.reparTentees = [];
 
+  // 🏗🚔 Bar fermé la semaine qui vient de s'écouler (travaux/police) : personne
+  // n'a travaillé, tout le monde a pu se reposer — fatigue remise à 0 pour la reprise.
+  if (state.barFerme) {
+    for (const e of actifs(state)) e.fatigue = 0;
+  }
+
   // Repère la semaine où l'équipe atteint 3 salariés pour la première fois
   // (fenêtre de déclenchement de l'événement vieux_manoir).
   if (state.semaineEquipe3 === undefined && actifs(state).length >= 3) {
@@ -1831,11 +1889,13 @@ export function statutNotif(s: GameState, menu: string): Statut {
       if (s.proprete < 60) return "orange";
       return s.proprete >= 90 ? "gris" : "vert"; // ≥ 90 : rien à faire, la case dort
     case "travaux":
-      // Le local bride la capacité de service : il est temps d'agrandir.
-      if (pointsEquipe(s) * CLIENTS_PAR_POINT > capaciteLocale(s)) return "orange";
-      return "vert";
     case "banque":
-      return s.budget < 10_000 ? "orange" : "vert";
+    case "historique":
+      return "gris"; // pas de notification sur ces cases
+    case "calendrier": {
+      const semaineDansMois = ((Math.max(1, s.semaine) - 1) % 4) + 1;
+      return semaineDansMois === 1 ? "vert" : "orange";
+    }
     default:
       return "vert";
   }

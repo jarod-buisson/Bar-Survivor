@@ -32,7 +32,6 @@ const POIDS_MACHINE: Record<string, number> = {
   cafe: 0.06,
 };
 const POIDS_DEFAUT = 0.1;
-const BONUS_RENDEMENT = 40; // points de bonusEfficacite qui valent +100 % de rendement
 
 // Usure hebdo de base PAR machine (points de HP/sem), du + fragile au + robuste.
 // Baissée ~30 % (v1.1) : les machines cassaient trop vite en milieu de partie.
@@ -47,7 +46,8 @@ const USURE_PAR_MACHINE: Record<string, number> = {
 const USURE_DEFAUT = 4; // usure d'une machine absente de la table
 const USURE_VARIA = 0.6; // marge de dommage aléatoire, tirée chaque soir (±60 %)
 
-/** Bonus d'efficacité gagné PAR NIVEAU d'amélioration, selon la machine. */
+/** Bonus de panier (en points de %) gagné PAR NIVEAU d'amélioration, selon la
+ *  machine — permanent, senti chaque soir (indépendant du monde ce soir-là). */
 const BONUS_PAR_NIVEAU: Record<string, number> = {
   laveverre: 2,
   caisse: 3,
@@ -101,15 +101,25 @@ export function poidsMachine(id: string): number {
   return POIDS_MACHINE[id] ?? POIDS_DEFAUT;
 }
 
-/** Rendement d'une machine : 0 en panne, 1 neuve, un peu plus si améliorée. */
+/** Rendement d'une machine : 0 en panne, 1 neuve, dégradé par l'usure.
+ *  Les améliorations n'agissent plus ici (voir panierBonusMachines) : elles ne
+ *  gonflent plus une capacité qui ne sert que les soirs de plein — elles paient
+ *  chaque soir, plein ou pas. */
 export function rendementMachine(m: Machine): number {
   if (m.etat !== "marche") return 0;
-  return facteurUsure(m.hp) + m.bonusEfficacite / BONUS_RENDEMENT;
+  return facteurUsure(m.hp);
 }
 
-/** Bonus de rendement (en %) apporté par les améliorations, pour l'affichage. */
-export function bonusRendementPct(m: Machine): number {
-  return Math.round((m.bonusEfficacite / BONUS_RENDEMENT) * 100);
+/** Bonus de panier (%) apporté par les améliorations d'UNE machine, pour l'affichage. */
+export function bonusPanierPct(m: Machine): number {
+  return m.bonusEfficacite;
+}
+
+/** Bonus de panier TOTAL (fraction, ex. 0.15 = +15 %) apporté par tout le parc
+ *  amélioré — appliqué directement au ticket moyen, chaque soir, quel que soit
+ *  le taux de remplissage : un gros prix qui rapporte vraiment. */
+export function panierBonusMachines(machines: Machine[]): number {
+  return machines.reduce((s, m) => s + m.bonusEfficacite, 0) / 100;
 }
 
 /** Multiplicateur appliqué à l'indice d'efficacité par l'état du parc.

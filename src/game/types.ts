@@ -133,7 +133,7 @@ export interface Machine {
   hp: number; // points de vie 0-100, baissent chaque semaine (pilote le risque de panne)
   etat: "marche" | "panne"; // en marche = compte dans l'efficacité ; en panne = à réparer
   niveau: number; // niveau d'amélioration (0 = de base)
-  bonusEfficacite: number; // points d'efficacité apportés par les améliorations
+  bonusEfficacite: number; // points de % de panier apportés par les améliorations (permanent, tous les soirs)
 }
 
 /** Un prêt bancaire en cours (voir GDD §4). */
@@ -181,6 +181,9 @@ export interface Effect {
   // semaine ; l'irrévocable (Antho) encaisse juste un coup de moral immédiat (voir state.demissionsForceesFin)
   ouvrirNegociationOlmo?: boolean; // marqueur intercepté par main.ts AVANT appliquerEffet : ouvre l'écran de
   // négociation à curseur (jamais résolu par le moteur directement, voir state.negociationOlmo)
+  ouvrirConfigTacos?: boolean; // marqueur intercepté par main.ts AVANT appliquerEffet : ouvre l'écran de
+  // configuration du tacos de Brisco (voir state.configTacos, engine.resoudreTacos)
+  promoLoyer?: { semaines: number; taux: number }; // loyer × taux pendant N semaines (0 = gratuit, 0.5 = -50 %)
   note?: string; // ligne ajoutée au journal (visible au récap)
   /** Pari : `proba` de déclencher `succes`, sinon `echec`. Permet les choix risqués.
    *  `risque: true` = la branche `succes` est une MAUVAISE nouvelle (racket, amende…) :
@@ -275,6 +278,7 @@ export interface GameState {
   phase: Phase;
 
   semaine: number;
+  moisDepart?: number; // mois tiré au hasard au lancement (0 = Septembre) — décale MOIS_INFOS ; optionnel = compat sauvegardes
   budget: number;
   nomBar: string; // choisi à l'onboarding, affiché en titre du hub
   detteInitiale: number; // emprunt choisi au départ (curseur de l'onboarding)
@@ -311,6 +315,11 @@ export interface GameState {
   /** Négociation en cours avec l'Olmo (curseur de contre-offre, voir "olmo_cut").
    *  plafondAccepte = 32 (40 avec un Mafieux dans l'équipe) ; au-delà, casse. */
   negociationOlmo?: { plafondAccepte: number; valeur: number };
+  /** Commande du tacos de Brisco en cours de configuration (voir "brisco_tacos").
+   *  Chaque valeur = index dans le tableau d'options correspondant (content.ts). */
+  configTacos?: { viande: number; sauceFromagere: number; sauce: number; crudites: number };
+  promoLoyerSemaines?: number; // semaines restantes de promo loyer (Brisco) ; 0/absent = pas de promo
+  promoLoyerTaux?: number; // multiplicateur appliqué au loyer pendant la promo (0 = gratuit, 0.5 = -50 %)
   semainesBudgetHaut: number; // semaines CONSÉCUTIVES avec budget > 20 000 € (déclenche Mr Breton à 4)
   /** Notoriété au lancement de la semaine : sert à afficher au bilan la variation
    *  TOTALE (les événements modifient la notoriété en direct pendant l'animation). */

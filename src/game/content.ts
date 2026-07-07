@@ -83,14 +83,35 @@ export const MOIS_INFOS: MoisInfo[] = [
   { nom: "Août", indice: "La ville se vide… ça se voit que c'est les vacances…", attente: att("gros", "gros", "petit", "petit", "moyen", "moyen") },
 ];
 
-/** Index du mois (0 = Septembre) pour une semaine donnée : 1 mois = 4 semaines. */
-export function moisIndex(semaine: number): number {
-  return Math.floor((Math.max(1, semaine) - 1) / 4) % 12;
+/** Index du mois (0 = Septembre) pour une semaine donnée : 1 mois = 4 semaines.
+ *  moisDepart décale le point de départ (mois aléatoire tiré à la création de la partie). */
+export function moisIndex(semaine: number, moisDepart = 0): number {
+  return (Math.floor((Math.max(1, semaine) - 1) / 4) + moisDepart) % 12;
 }
 
 /** Infos du mois en cours (nom, indice, attente de prix). */
-export function moisDeSemaine(semaine: number): MoisInfo {
-  return MOIS_INFOS[moisIndex(semaine)];
+export function moisDeSemaine(semaine: number, moisDepart = 0): MoisInfo {
+  return MOIS_INFOS[moisIndex(semaine, moisDepart)];
+}
+
+const MOIS_ABBR: Record<string, string> = {
+  Septembre: "SEP",
+  Octobre: "OCT",
+  Novembre: "NOV",
+  Décembre: "DEC",
+  Janvier: "JAN",
+  Février: "FEV",
+  Mars: "MAR",
+  Avril: "AVR",
+  Mai: "MAI",
+  Juin: "JUN",
+  Juillet: "JUL",
+  Août: "AOU",
+};
+
+/** Abréviation 3 lettres d'un nom de mois (pour la barre de stats). */
+export function moisAbrege(nom: string): string {
+  return MOIS_ABBR[nom] ?? nom.slice(0, 3).toUpperCase();
 }
 
 // ---- Le salarié de base : Antho ----
@@ -338,6 +359,16 @@ export function salarieVacancesProces(s: GameState): Employee | undefined {
   );
 }
 
+// ---- Le tacos de Brisco (config à 4 cases, voir "brisco_tacos") ----
+// Seules la viande et la sauce comptent pour la récompense ; sauce fromagère
+// et crudités sont purement cosmétiques (aucun effet sur le résultat).
+export const TACOS_VIANDES = ["Steak", "Kebab", "Cordon bleu", "Merguez"];
+export const TACOS_SAUCE_FROMAGERE = ["Avec", "Sans"];
+export const TACOS_SAUCES = ["Blanche", "Barbecue", "Algérienne", "Samouraï"];
+export const TACOS_CRUDITES = ["Tomate", "Salade", "Oignons", "Poivrons"];
+export const TACOS_VIANDE_CORRECTE = 2; // Cordon bleu
+export const TACOS_SAUCE_CORRECTE = 1; // Barbecue
+
 export const EVENEMENTS: GameEvent[] = [
   // ---- Bagarres (activent la force Musclé) ----
   {
@@ -345,7 +376,7 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Ça chauffe au comptoir !",
     texte:
       "Aujourd'hui, Lowen et Polo, deux habitués, en viennent aux mains pour une histoire de tournée. Les autres clients reculent, un tabouret vole…",
-    condition: (s) => !equipeA(s, "muscle"),
+    condition: (s) => !equipeA(s, "muscle") && s.semaine > (Number(s.drapeaux.protection_bagarre_fin) || 0),
     choix: [
       {
         label: "T'interposer toi-même",
@@ -372,7 +403,7 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Ça allait chauffer…",
     texte:
       "Lowen et Polo montent le ton, les poings se serrent — mais ton videur musclé pose une main sur chaque épaule. Tout le monde se rassoit.",
-    condition: (s) => equipeA(s, "muscle"),
+    condition: (s) => equipeA(s, "muscle") && s.semaine > (Number(s.drapeaux.protection_bagarre_fin) || 0),
     choix: [
       {
         label: "Offrir une tournée pour détendre",
@@ -388,20 +419,24 @@ export const EVENEMENTS: GameEvent[] = [
   // ---- Le « milieu » (active la force Mafieux) ----
   {
     id: "racket",
-    titre: "Le syndicat des bars",
+    titre: "Ruelle d'Olmo",
     texte:
-      "Aujourd'hui, Momo, un homme en costume trop large, propose une « assurance tranquillité » pour ton établissement. Son sourire ne rassure pas.",
+      "Aujourd'hui, Momo, un homme bien costaud entre dans le bar, propose une « assurance tranquillité » pour ton établissement. Son sourire ne rassure pas.",
     condition: (s) => !equipeA(s, "mafieux"),
-    choix: [
+    genererChoix: (s) => [
       {
         label: "Payer 600 € pour être tranquille",
-        effet: { budget: -600, note: "🤝 Tu as payé. Le mois sera calme… paraît-il." },
+        effet: {
+          budget: -600,
+          poseDrapeau: { cle: "protection_bagarre_fin", valeur: s.semaine + 4 },
+          note: "🤝 Tu as payé. Le quartier restera calme un moment (plus de bagarre pendant 4 semaines).",
+        },
       },
       {
         label: "Refuser poliment",
         effet: {
           tirage: {
-            proba: 0.35,
+            proba: 0.3,
             risque: true, // la zone = la menace de représailles
             succes: { casseMachineAleatoire: true, note: "💢 Représailles nocturnes : une machine a été sabotée." },
             echec: { note: "😮‍💨 Aucune représaille… cette fois." },
@@ -409,6 +444,7 @@ export const EVENEMENTS: GameEvent[] = [
         },
       },
     ],
+    choix: [], // remplacés au tirage par genererChoix
   },
   {
     id: "racket_mafieux",
@@ -416,16 +452,22 @@ export const EVENEMENTS: GameEvent[] = [
     texte:
       "Momo entre dans le bar et reconnaît un salarié : « T'es de la famille toi ? Ça va mon frère ?! »",
     condition: (s) => equipeA(s, "mafieux"),
-    choix: [
+    genererChoix: (s) => [
       {
         label: "Payer le « tarif ami » (200 €)",
-        effet: { budget: -200, notoriete: 2, note: "🤝 Protection au rabais. Le quartier sait que ton bar est intouchable." },
+        effet: {
+          budget: -200,
+          notoriete: 2,
+          poseDrapeau: { cle: "protection_bagarre_fin", valeur: s.semaine + 4 },
+          note: "🤝 Protection au rabais. Le quartier sait que ton bar est intouchable (plus de bagarre pendant 4 semaines).",
+        },
       },
       {
         label: "Décliner, entre gens de confiance",
         effet: { note: "🤝 Poignée de main, sourires. Personne ne touchera à ton bar." },
       },
     ],
+    choix: [], // remplacés au tirage par genererChoix
   },
 
   // ---- Farfelus & vie de quartier ----
@@ -505,46 +547,58 @@ export const EVENEMENTS: GameEvent[] = [
     texte:
       "Aujourd'hui, un rat obèse traverse tranquillement la salle en plein service, sous les yeux d'une tablée entière.",
     condition: (s) => s.proprete < 60, // un bar bien tenu n'a pas de rats
-    choix: [
-      {
-        label: "Appeler le dératiseur (350 €)",
-        effet: { budget: -350, proprete: 5, note: "🐀 Dératisation express. On n'en parle plus." },
-      },
-      {
-        label: "« C'est Rémy, notre mascotte ! »",
-        effet: {
-          tirage: {
-            proba: 0.4,
-            aide: "ambianceur",
-            succes: { notoriete: 3, note: "🐀 Les clients ont ri. Rémy a son hashtag." },
-            echec: { notoriete: -5, note: "🐀 Photo du rat sur les réseaux. Catastrophe d'image." },
+    genererChoix: (s) => {
+      const coutDeratiseur = coutAdaptatif(s, 0.03, 150, 1500);
+      return [
+        {
+          label: `Appeler le dératiseur (${coutDeratiseur} €)`,
+          effet: { budget: -coutDeratiseur, proprete: 5, note: "🐀 Dératisation express. On n'en parle plus." },
+        },
+        {
+          label: "« C'est Rémy, notre mascotte ! »",
+          effet: {
+            tirage: {
+              proba: 0.4,
+              aide: "ambianceur",
+              succes: { notoriete: 3, note: "🐀 Les clients ont ri. Rémy a son hashtag." },
+              echec: { notoriete: -5, note: "🐀 Photo du rat sur les réseaux. Catastrophe d'image." },
+            },
           },
         },
-      },
-    ],
+      ];
+    },
+    choix: [], // remplacés au tirage par genererChoix
   },
   {
     id: "loterie",
     titre: "Le ticket de Gégé",
     texte:
       "Aujourd'hui, Gégé, pilier de comptoir, te propose son ticket à gratter « porte-bonheur » contre 50 €. « J'te jure patron, j'le sens bien çui-là. »",
-    choix: [
-      {
-        label: "Acheter le ticket (50 €)",
-        effet: {
-          budget: -50,
-          tirage: {
-            proba: 0.12,
-            succes: { budget: 2000, note: "🎫 INCROYABLE. Le ticket de Gégé était gagnant : +2 000 € !" },
-            echec: { note: "🎫 Perdu, évidemment. Gégé est déjà reparti commander." },
+    genererChoix: (s) => {
+      const mise = Math.max(1, Math.round(s.budget * 0.05));
+      const gain = Math.max(1, Math.round(s.budget * 0.25));
+      return [
+        {
+          label: `Acheter le ticket (${mise.toLocaleString("fr-FR")} €)`,
+          effet: {
+            budget: -mise,
+            tirage: {
+              proba: 0.2,
+              succes: {
+                budget: gain,
+                note: `🎫 INCROYABLE. Le ticket de Gégé était gagnant : +${gain.toLocaleString("fr-FR")} € !`,
+              },
+              echec: { note: "🎫 Perdu, évidemment. Gégé est déjà reparti commander." },
+            },
           },
         },
-      },
-      {
-        label: "Décliner en souriant",
-        effet: { note: "🎫 Gégé a gratté son ticket au comptoir. Perdu. Comme toujours." },
-      },
-    ],
+        {
+          label: "Décliner en souriant",
+          effet: { note: "🎫 Gégé a gratté son ticket au comptoir. Perdu. Comme toujours." },
+        },
+      ];
+    },
+    choix: [], // remplacés au tirage par genererChoix
   },
   {
     id: "coupure_courant",
@@ -553,19 +607,19 @@ export const EVENEMENTS: GameEvent[] = [
       "Aujourd'hui, coupure de courant générale en pleine soirée. Frigos à l'arrêt, tireuse muette, clients dans le noir…",
     choix: [
       {
-        label: "Soirée aux bougies, service à l'ancienne",
+        label: "Service à l'ancienne",
         effet: {
           tirage: {
             proba: 0.5,
             aide: "ambianceur",
-            succes: { notoriete: 4, budget: -200, note: "🕯 Soirée aux bougies mémorable ! Les clients ont adoré (-200 € de pertes quand même)." },
-            echec: { budget: -600, note: "🕯 Sans musique ni pression, la salle s'est vidée (-600 €)." },
+            succes: { notoriete: 4, caSoirPourcent: -0.05, note: "🕯 Soirée aux bougies mémorable ! Les clients ont adoré (-5 % de CA ce soir quand même)." },
+            echec: { caSoirPourcent: -0.12, note: "🕯 Sans musique ni pression, la salle s'est vidée (-12 % de CA ce soir)." },
           },
         },
       },
       {
         label: "Fermer pour la soirée",
-        effet: { budget: -400, note: "🔌 Soirée perdue (-400 €), mais au moins personne n'est reparti fâché." },
+        effet: { caSoirPourcent: -0.12, note: "🔌 Soirée perdue (-12 % de CA ce soir), mais au moins personne n'est reparti fâché." },
       },
     ],
   },
@@ -615,12 +669,12 @@ export const EVENEMENTS: GameEvent[] = [
       "Aujourd'hui, un client veut privatiser le bar dimanche soir pour les 40 ans de sa femme. Il paie bien, mais ton équipe devra mettre les bouchées doubles.",
     choix: [
       {
-        label: "Accepter (+700 €)",
-        effet: { budget: 700, fatigueEquipe: 8, note: "🎂 Fête réussie, gros pourboire… et équipe sur les rotules." },
+        label: "Accepter (+20 % de CA ce soir)",
+        effet: { caSoirPourcent: 0.2, fatigueEquipe: 8, note: "🎂 Fête réussie, gros pourboire… et équipe sur les rotules." },
       },
       {
         label: "Refuser, le dimanche c'est sacré",
-        effet: { note: "🎂 Il ira au bar d'en face. Tant pis pour les 700 €." },
+        effet: { note: "🎂 Il ira au bar d'en face. Tant pis pour les 20 %." },
       },
     ],
   },
@@ -633,8 +687,8 @@ export const EVENEMENTS: GameEvent[] = [
       {
         label: "Lui laisser la main",
         effet: {
-          capaciteSoir: 2,
-          caSoirPourcent: 0.5,
+          capaciteSoir: 3,
+          caSoirPourcent: 0.8,
           fatiguePresentsJour: 6,
           note: "🎧 Yeda aux platines : le bar est bondé toute la soirée, mais l'équipe n'a pas chômé.",
         },
@@ -687,7 +741,7 @@ export const EVENEMENTS: GameEvent[] = [
     id: "corentin_verre",
     titre: "Corentin remet ça",
     texte:
-      "Corentin, un habitué, réclame un verre — et une nouvelle « sortie improvisée » avec un inconnu du quartier.",
+      "Coco sosie de mbappe, un habitué, réclame un verre — et une nouvelle « sortie improvisée » avec un inconnu du quartier.",
     condition: (s) => s.semaine >= 6,
     choix: [
       {
@@ -699,13 +753,13 @@ export const EVENEMENTS: GameEvent[] = [
             risque: true,
             succes: {
               notoriete: -5,
-              note: "🌃 Corentin a embarqué un client au hasard dans la ruelle pour une « expérience » entre habitués — ça jase dans le quartier.",
+              note: "🌃 Coco sosie de mbappe a embarqué un client au hasard dans la ruelle pour une « expérience » entre habitués — ça jase dans le quartier.",
             },
-            echec: { note: "🌃 Corentin s'est tenu tranquille cette fois, juste un verre entre habitués." },
+            echec: { note: "🌃 Coco sosie de mbappe s'est tenu tranquille cette fois, juste un verre entre habitués." },
           },
         },
       },
-      { label: "Refuser", effet: { note: "🌃 Corentin hausse les épaules et retourne à sa place." } },
+      { label: "Refuser", effet: { note: "🌃 Coco sosie de mbappe hausse les épaules et retourne à sa place." } },
     ],
   },
   {
@@ -1145,7 +1199,7 @@ export const EVENEMENTS: GameEvent[] = [
             proba: 0.5,
             risque: true, // la zone = la fatigue qui traîne
             succes: {
-              fatiguePresentsJour: 6,
+              fatiguePresentsJour: 4,
               note: "🪙 L'odeur et les chiens ont traîné un peu trop longtemps au comptoir : l'équipe présente ce soir en ressort fatiguée.",
             },
             echec: {
@@ -1194,7 +1248,7 @@ export const EVENEMENTS: GameEvent[] = [
     id: "client_mystere_ok",
     titre: "Le client mystère",
     texte:
-      "Aujourd'hui, tu reconnais le chroniqueur du journal local, attablé discrètement depuis une heure, carnet à la main. Son article sort demain… et ton bar est impeccable.",
+      "Aujourd'hui, tu reconnais le chroniqueur des Grenobleus, attablé discrètement depuis une heure, carnet à la main. Son article sort demain… et ton bar est impeccable.",
     condition: (s) => s.proprete >= 60,
     choix: [
       {
@@ -1531,5 +1585,23 @@ export const EVENEMENTS: GameEvent[] = [
       ];
     },
     choix: [], // remplacés au tirage
+  },
+  {
+    id: "brisco_tacos",
+    titre: "Brisco a la dalle !",
+    texte:
+      "Brisco, un habitué qui bosse dans l'immobilier, débarque affamé — mais il a complètement zappé la commande de son tacos, celui que tu lui avais préparé il y a un bail. « Steuplé, refais-le-moi comme la dernière fois, j'ai trop la dalle ! »",
+    unique: true,
+    condition: (s) => s.semaine >= 4,
+    choix: [
+      {
+        label: "Essayer de retrouver sa commande",
+        effet: { ouvrirConfigTacos: true },
+      },
+      {
+        label: "Lui avouer qu'on ne s'en souvient plus",
+        effet: { note: "🌯 Brisco hausse les épaules, un peu déçu, et commande autre chose." },
+      },
+    ],
   },
 ];

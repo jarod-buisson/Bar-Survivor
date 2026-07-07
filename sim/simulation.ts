@@ -160,6 +160,7 @@ function choisirChoixBot(s: GameState, choix: Choice[]): number {
   let meilleurScore = -Infinity;
   for (let i = 0; i < choix.length; i++) {
     if (choix[i].effet.ouvrirNegociationOlmo) continue; // pas résoluble sans curseur
+    if (choix[i].effet.ouvrirConfigTacos) continue; // pas résoluble sans l'écran de config
     const sc = scoreEffet(s, choix[i].effet);
     if (sc > meilleurScore) {
       meilleurScore = sc;

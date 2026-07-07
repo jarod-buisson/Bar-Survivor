@@ -1,7 +1,7 @@
 # Graph Report - Bar Survivor  (2026-07-07)
 
 ## Corpus Check
-- 24 files · ~45,032 words
+- 24 files · ~44,980 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

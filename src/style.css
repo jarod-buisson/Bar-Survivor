@@ -516,6 +516,47 @@ body {
   padding: 14px;
 }
 
+/* ---- Config du tacos de Brisco (4 cases à défiler) ---- */
+.config-tacos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.tacos-case {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--panneau-clair);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.tacos-nom {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.tacos-select {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tacos-val {
+  min-width: 90px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--ambre-clair);
+}
+.tacos-fleche {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+  background: var(--ambre);
+  color: #2a1a00;
+  font-size: 0.9rem;
+}
+
 /* ---- Tirage de chance : la pinte parfaite ---- */
 .pinte-zone {
   display: flex;

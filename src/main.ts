@@ -38,11 +38,13 @@ import {
   refuserCandidat,
   reparerIngenieur,
   reparerPro,
+  resoudreTacos,
   simulerSemaine,
   tirerEvenement,
   declencherEvenement,
   toggleRepos,
 } from "./game/engine";
+import { TACOS_CRUDITES, TACOS_SAUCES, TACOS_SAUCE_FROMAGERE, TACOS_VIANDES } from "./game/content";
 import {
   ecranAccueil,
   ecranAlerte,
@@ -319,6 +321,12 @@ app.addEventListener("click", (e) => {
           rendre();
           return;
         }
+        // Config du tacos de Brisco : ce choix n'applique rien lui-même, il ouvre les 4 cases.
+        if (choixEv?.effet.ouvrirConfigTacos) {
+          state.configTacos = { viande: 0, sauceFromagere: 0, sauce: 0, crudites: 0 };
+          rendre();
+          return;
+        }
         const tirage = choixEv?.effet.tirage;
         if (tirage && choixEv && !state.tirageEnCours) {
           // Aide assignée à CE choix (revalidée : salarié encore éligible) → proba boostée.
@@ -374,6 +382,29 @@ app.addEventListener("click", (e) => {
         appliquerEffet(state, effet);
         state.evenementsBudget += state.budget - budgetAvant;
         state.negociationOlmo = undefined;
+        state.evenementsJoues += 1;
+        reprendreApresEvenement();
+      }
+      return;
+    case "tacosCycle":
+      // value = "categorie:direction" (ex. "viande:1" ou "sauce:-1") : fait défiler la case.
+      if (state && state.configTacos && value) {
+        const [cat, dirStr] = value.split(":") as [keyof GameState["configTacos"] & string, string];
+        const longueurs: Record<string, number> = {
+          viande: TACOS_VIANDES.length,
+          sauceFromagere: TACOS_SAUCE_FROMAGERE.length,
+          sauce: TACOS_SAUCES.length,
+          crudites: TACOS_CRUDITES.length,
+        };
+        const len = longueurs[cat];
+        const config = state.configTacos as unknown as Record<string, number>;
+        config[cat] = (config[cat] + Number(dirStr) + len) % len;
+        rendre();
+      }
+      return;
+    case "validerTacos":
+      if (state && state.phase === "evenement" && state.configTacos) {
+        resoudreTacos(state);
         state.evenementsJoues += 1;
         reprendreApresEvenement();
       }

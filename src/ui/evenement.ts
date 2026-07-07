@@ -7,7 +7,13 @@
 
 import type { Choice, Effect, GameState } from "../game/types";
 import { aidesPourChoix, bonusChanceux, probaAvecAide } from "../game/engine";
-import { CATEGORIES_STOCK } from "../game/content";
+import {
+  CATEGORIES_STOCK,
+  TACOS_CRUDITES,
+  TACOS_SAUCES,
+  TACOS_SAUCE_FROMAGERE,
+  TACOS_VIANDES,
+} from "../game/content";
 import { trait } from "../game/traits";
 import { barreStats } from "./components";
 
@@ -34,7 +40,9 @@ export function ecranEvenement(s: GameState): string {
     ? zonePinte(s.tirageEnCours)
     : s.negociationOlmo
       ? zoneNegociationOlmo(s.negociationOlmo)
-      : `<div class="choix-zone">${boutons}</div>${zoneAide(s)}`;
+      : s.configTacos
+        ? zoneConfigTacos(s.configTacos)
+        : `<div class="choix-zone">${boutons}</div>${zoneAide(s)}`;
 
   return `
     <div class="ecran jeu">
@@ -63,9 +71,19 @@ function resumeEffet(e: Effect): string {
   if (e.notoriete) parts.push(`📣 ${signe(e.notoriete)} réputation`);
   if (e.proprete) parts.push(`🧹 ${signe(e.proprete)}`);
   if (e.moralEquipe) parts.push(`❤ équipe ${signe(e.moralEquipe)}`);
+  if (e.moralEquipePourcent) parts.push(`❤ équipe ${signe(Math.round(e.moralEquipePourcent * 100))} %`);
   if (e.fatigueEquipe) parts.push(`😮‍💨 équipe +${e.fatigueEquipe}`);
+  if (e.fatiguePresentsJour) parts.push(`😮‍💨 présents ce soir +${e.fatiguePresentsJour}`);
   if (e.moralCible) parts.push(`❤ ${signe(e.moralCible)}`);
   if (e.fatigueCible) parts.push(`😮‍💨 +${e.fatigueCible}`);
+  if (e.budgetPourcentage) parts.push(`💰 ${signe(Math.round(e.budgetPourcentage * 100))} % du budget`);
+  if (e.caSoirPourcent) parts.push(`💰 CA du soir ${signe(Math.round(e.caSoirPourcent * 100))} %`);
+  if (e.demissionCible) parts.push("🚪 démission");
+  if (e.declencherAmendePolice) {
+    parts.push(
+      `🚨 amende ${Math.round(e.declencherAmendePolice.pourcentage * 100)} % du CA${e.declencherAmendePolice.fermeture ? " + fermeture" : ""}`,
+    );
+  }
   if (e.stock) {
     for (const [cat, v] of Object.entries(e.stock)) {
       const c = CATEGORIES_STOCK.find((x) => x.id === cat);
@@ -196,6 +214,38 @@ function zoneNegociationOlmo(n: NonNullable<GameState["negociationOlmo"]>): stri
       </div>
       <p class="hint-small">Il acceptera jusqu'à ${n.plafondAccepte} % — au-delà, il pensera que tu te fous de lui.</p>
       <button class="principal" id="negociation-confirmer" data-action="confirmerNegociationOlmo">Proposer ${n.valeur} %</button>
+    </div>
+  `;
+}
+
+/** Configuration du tacos de Brisco : 4 cases empilées, flèches gauche/droite
+ *  pour faire défiler chaque option. Seules viande & sauce comptent (le joueur
+ *  ne le sait pas) — sauce fromagère/crudités sont là pour la forme. */
+function zoneConfigTacos(c: NonNullable<GameState["configTacos"]>): string {
+  const cases: { cat: string; emoji: string; nom: string; options: string[] }[] = [
+    { cat: "viande", emoji: "🥩", nom: "Viande", options: TACOS_VIANDES },
+    { cat: "sauceFromagere", emoji: "🧀", nom: "Sauce fromagère", options: TACOS_SAUCE_FROMAGERE },
+    { cat: "sauce", emoji: "🌶️", nom: "Sauce", options: TACOS_SAUCES },
+    { cat: "crudites", emoji: "🥗", nom: "Crudités", options: TACOS_CRUDITES },
+  ];
+  const lignes = cases
+    .map((x) => {
+      const valeur = (c as unknown as Record<string, number>)[x.cat];
+      return `
+      <div class="tacos-case">
+        <span class="tacos-nom">${x.emoji} ${x.nom}</span>
+        <div class="tacos-select">
+          <button class="mini tacos-fleche" data-action="tacosCycle" data-value="${x.cat}:-1">◀</button>
+          <span class="tacos-val">${x.options[valeur]}</span>
+          <button class="mini tacos-fleche" data-action="tacosCycle" data-value="${x.cat}:1">▶</button>
+        </div>
+      </div>`;
+    })
+    .join("");
+  return `
+    <div class="config-tacos">
+      ${lignes}
+      <button class="principal" data-action="validerTacos">🌯 Valider la commande</button>
     </div>
   `;
 }

@@ -34,7 +34,7 @@ function fonctionInfo(f: Fonction): { label: string; passif: string } {
     : { label: "🔧 Mécano", passif: "Plus aucune usure sur les machines." };
 }
 import { CATEGORIES_STOCK, MOIS_INFOS, moisIndex } from "../game/content";
-import { NIVEAU_MAX, bonusRendementPct, coutAmelioration, coutReparation } from "../game/machines";
+import { NIVEAU_MAX, bonusPanierPct, coutAmelioration, coutReparation } from "../game/machines";
 import { badgeTrait, badgesTraits, echap, eur } from "./components";
 import { bilanDetail } from "./recap";
 
@@ -269,7 +269,7 @@ function menuFournisseur(s: GameState): string {
         const dispo = s.budget >= c;
         return `
           <div class="machine-ligne">
-            <span>${m.emoji} ${m.nom} <small>niv.${m.niveau} · rendement +${bonusRendementPct(m)} %</small></span>
+            <span>${m.emoji} ${m.nom} <small>niv.${m.niveau} · panier +${bonusPanierPct(m)} %</small></span>
             <button class="mini ok" data-action="ameliorer" data-value="${m.id}" ${dispo ? "" : "disabled"}>Améliorer (${eur(c)})</button>
           </div>`;
       })
@@ -298,7 +298,8 @@ function menuFournisseur(s: GameState): string {
       <button class="principal" data-action="commander" id="btn-commander" disabled>
         Commander · <span id="cout-commande">0 €</span>
       </button>
-      <div class="bloc-titre">Améliorer le matériel (+ efficacité)</div>
+      <div class="bloc-titre">Améliorer le matériel (+ panier, permanent)</div>
+      <p class="hint-small">Chaque niveau ajoute un bonus de panier moyen qui compte TOUS les soirs, plein ou pas — contrairement à l'ancienne capacité, ce n'est jamais perdu.</p>
       ${ameliorations}
     </div>`;
 }
@@ -501,7 +502,7 @@ function menuHistorique(s: GameState): string {
 // ---- Calendrier ----
 
 function menuCalendrier(s: GameState): string {
-  const courant = moisIndex(s.semaine);
+  const courant = moisIndex(s.semaine, s.moisDepart);
   const semaineDansMois = ((Math.max(1, s.semaine) - 1) % 4) + 1; // 1..4
   const info = MOIS_INFOS[courant];
   const cases = MOIS_INFOS.map((m, i) => {
