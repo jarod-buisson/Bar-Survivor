@@ -1351,6 +1351,9 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "L'invasion étudiante",
     texte:
       "Aujourd'hui, le BDE Médecine débarque après les partiels : trente carabins assoiffés qui chantent déjà sur le trottoir.",
+    // Rentrée (Septembre) et reprise après le Nouvel An (Janvier) : les deux
+    // moments où les étudiants reviennent en masse après une coupure.
+    condition: (s) => [0, 4].includes(moisIndex(s.semaine, s.moisDepart)),
     choix: [
       {
         label: "Ouvrir grand les portes",
@@ -1382,6 +1385,8 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "Soir de match",
     texte:
       "Aujourd'hui, c'est LE match de la saison et ton bar n'a pas l'abonnement sport. Les clients scrutent l'écran éteint avec espoir.",
+    // Juillet = le mois football du calendrier (voir MOIS_INFOS).
+    condition: (s) => moisIndex(s.semaine, s.moisDepart) === 10,
     genererChoix: (s) => {
       const coutAbonnement = coutAdaptatif(s, 0.03, 150, 1500);
       return [
@@ -1456,7 +1461,8 @@ export const EVENEMENTS: GameEvent[] = [
     titre: "L'affaire du fournisseur",
     texte:
       "Aujourd'hui, ton fournisseur t'appelle : une commande annulée lui reste sur les bras. « Je te fais le lot à moitié prix, mais c'est maintenant. »",
-    condition: (s) => s.budget >= 300,
+    // Octobre = Oktoberfest (attente bières = gros) : stocker pas cher juste avant le pic.
+    condition: (s) => s.budget >= 300 && moisIndex(s.semaine, s.moisDepart) === 1,
     choix: [
       {
         label: "Acheter le lot (300 €)",
@@ -1673,6 +1679,85 @@ export const EVENEMENTS: GameEvent[] = [
       {
         label: "Lui avouer qu'on ne s'en souvient plus",
         effet: { note: "🌯 Brisco hausse les épaules, un peu déçu, et commande autre chose." },
+      },
+    ],
+  },
+
+  // ---- Événements calés sur le calendrier (voir MOIS_INFOS) ----
+  {
+    id: "marche_noel",
+    titre: "Le marché de Noël",
+    texte:
+      "Aujourd'hui, l'association du quartier installe son marché de Noël juste devant le bar et te propose de tenir un stand de vin chaud sous leur chapiteau.",
+    condition: (s) => moisIndex(s.semaine, s.moisDepart) === 3, // Décembre
+    choix: [
+      {
+        label: "Installer le stand de vin chaud",
+        effet: {
+          stock: { vin: -10, chaudes: -8 },
+          caSoirPourcent: 0.25,
+          note: "🎄 Stand de vin chaud dehors : ambiance de marché de Noël, la caisse en profite.",
+          tirage: {
+            proba: 0.6,
+            succes: { notoriete: 3, note: "❄️ Petite neige pile au bon moment : le stand devient LE spot photo du quartier." },
+            echec: { notoriete: -2, note: "🌧️ Pluie glaciale toute la soirée : le stand a fait pschitt, les passants ont zappé." },
+          },
+        },
+      },
+      {
+        label: "Décliner, rester au chaud à l'intérieur",
+        effet: { note: "🎄 Le marché de Noël s'installe sans toi. Un peu triste de rater ça." },
+      },
+    ],
+  },
+  {
+    id: "saint_valentin",
+    titre: "Soirée Saint-Valentin",
+    texte:
+      "Aujourd'hui, un client propose d'organiser une soirée spéciale Saint-Valentin : cocktails à deux, ambiance tamisée, il ne manque plus que ton feu vert.",
+    condition: (s) => moisIndex(s.semaine, s.moisDepart) === 5, // Février
+    choix: [
+      {
+        label: "Jouer le jeu (menu cocktails duo)",
+        effet: {
+          stock: { cocktails: -10 },
+          caSoirPourcent: 0.3,
+          fatigueEquipe: 4,
+          note: "💘 Salle pleine de couples, les cocktails duo cartonnent.",
+          tirage: {
+            proba: 0.25,
+            risque: true,
+            succes: { notoriete: -3, note: "💔 Une rupture en pleine soirée, table renversée — mauvaise ambiance pour les autres couples." },
+            echec: { note: "💘 Soirée sans accroc, tout le monde repart amoureux." },
+          },
+        },
+      },
+      {
+        label: "Rester classique, pas de menu spécial",
+        effet: { note: "💘 Pas de folie ce soir, une soirée normale… presque romantique quand même." },
+      },
+    ],
+  },
+  {
+    id: "bus_randonneurs",
+    titre: "Le bus de randonneurs",
+    texte:
+      "Aujourd'hui, un bus de randonneurs égarés s'arrête devant le bar — la ville est vide en plein mois d'août, ils cherchent de l'ombre et de quoi se désaltérer avant de repartir.",
+    condition: (s) => moisIndex(s.semaine, s.moisDepart) === 11, // Août
+    choix: [
+      {
+        label: "Les installer en terrasse",
+        effet: {
+          capaciteSoir: 1.3,
+          caSoirPourcent: 0.15,
+          fatigueEquipe: 5,
+          stock: { softs: -8, bieres: -6 },
+          note: "🥾 Le groupe débarque en terrasse, un peu de vie dans le quartier désert d'août.",
+        },
+      },
+      {
+        label: "Leur dire qu'on ferme bientôt",
+        effet: { note: "🥾 Le bus repart chercher de l'ombre ailleurs. La rue redevient silencieuse." },
       },
     ],
   },
