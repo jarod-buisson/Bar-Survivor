@@ -115,6 +115,11 @@ export function bonusPanierPct(m: Machine): number {
   return m.bonusEfficacite;
 }
 
+/** Bonus de panier (%) qu'aurait la machine au niveau suivant, pour l'affichage "avant → après". */
+export function bonusPanierPctProchain(m: Machine): number {
+  return (m.niveau + 1) * (BONUS_PAR_NIVEAU[m.id] ?? 0);
+}
+
 /** Bonus de panier TOTAL (fraction, ex. 0.15 = +15 %) apporté par tout le parc
  *  amélioré — appliqué directement au ticket moyen, chaque soir, quel que soit
  *  le taux de remplissage : un gros prix qui rapporte vraiment. */

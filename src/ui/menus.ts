@@ -5,10 +5,8 @@
 
 import type { CV, Employee, GameState, Machine } from "../game/types";
 import {
-  MENAGE,
   aIngenieur,
   ameliorationsDebloquees,
-  capaciteBar,
   capaciteLocale,
   coutAutoStock,
   coutLicenciement,
@@ -34,7 +32,13 @@ function fonctionInfo(f: Fonction): { label: string; passif: string } {
     : { label: "🔧 Mécano", passif: "Plus aucune usure sur les machines." };
 }
 import { CATEGORIES_STOCK, HISTORIQUE_VERSIONS, MOIS_INFOS, VERSION_ACTUELLE, moisIndex } from "../game/content";
-import { NIVEAU_MAX, bonusPanierPct, coutAmelioration, coutReparation } from "../game/machines";
+import {
+  NIVEAU_MAX,
+  bonusPanierPct,
+  bonusPanierPctProchain,
+  coutAmelioration,
+  coutReparation,
+} from "../game/machines";
 import { badgeTrait, badgesTraits, barreStats, echap, eur } from "./components";
 import { bilanDetail } from "./recap";
 
@@ -244,7 +248,7 @@ function menuFournisseur(s: GameState): string {
       <div class="four-ligne ${alerte}">
         <div class="four-tete">
           <span class="four-nom">${c.emoji} ${c.nom}</span>
-          <span class="four-val" data-cat-val="${c.id}">${val}%</span>
+          <span class="four-val" data-cat-val="${c.id}">Stock : ${val}%</span>
         </div>
         <div class="four-slider-wrap" style="--fill:${val}%">
           <div class="four-fill"></div>
@@ -260,7 +264,16 @@ function menuFournisseur(s: GameState): string {
   if (!ameliorationsDebloquees(s)) {
     ameliorations = `<p class="hint-small">🔒 Améliorations débloquées à la semaine 5 (actuellement semaine ${s.semaine}).</p>`;
   } else {
-    ameliorations = s.machines
+    const coutAS = coutAutoStock();
+    ameliorations = s.autoStockAchete
+      ? `<div class="machine-ligne">
+          <span>🤖 Auto-stock <small>règle le <b>seuil gris</b> de chaque produit ci-dessus : en fin de semaine, s'il est retombé sous le seuil, il est recomplété (plein tarif). « off » = désarmé.</small></span>
+        </div>`
+      : `<div class="machine-ligne">
+          <span>🤖 Auto-stock <small>ajoute un seuil de sécurité par produit : recomplété tout seul chaque fin de semaine (payant)</small></span>
+          <button class="mini ok" data-action="acheterAutoStock" ${s.budget >= coutAS ? "" : "disabled"}>Acheter (${eur(coutAS)})</button>
+        </div>`;
+    ameliorations += s.machines
       .map((m: Machine) => {
         if (m.niveau >= NIVEAU_MAX) {
           return `<div class="machine-ligne"><span>${m.emoji} ${m.nom}</span><span class="ok-txt">Niv. MAX</span></div>`;
@@ -269,37 +282,26 @@ function menuFournisseur(s: GameState): string {
         const dispo = s.budget >= c;
         return `
           <div class="machine-ligne">
-            <span>${m.emoji} ${m.nom} <small>niv.${m.niveau} · panier +${bonusPanierPct(m)} %</small></span>
+            <span>${m.emoji} ${m.nom} <small>niv.${m.niveau} · panier +${bonusPanierPct(m)} % -> niv.${m.niveau + 1} · +${bonusPanierPctProchain(m)} %</small></span>
             <button class="mini ok" data-action="ameliorer" data-value="${m.id}" ${dispo ? "" : "disabled"}>Améliorer (${eur(c)})</button>
           </div>`;
       })
       .join("");
-    const coutAS = coutAutoStock();
-    ameliorations += s.autoStockAchete
-      ? `<div class="machine-ligne">
-          <span>🤖 Auto-stock <small>règle le <b>seuil gris</b> de chaque produit ci-dessus : en fin de semaine, s'il est retombé sous le seuil, il est recomplété (plein tarif). « off » = désarmé.</small></span>
-        </div>`
-      : `<div class="machine-ligne">
-          <span>🤖 Auto-stock <small>ajoute un seuil de sécurité par produit : recomplété tout seul chaque fin de semaine (payant)</small></span>
-          <button class="mini ok" data-action="acheterAutoStock" ${s.budget >= coutAS ? "" : "disabled"}>Acheter (${eur(coutAS)})</button>
-        </div>`;
   }
 
   return `
     ${entete("📦 Fournisseur & prix")}
     <div class="menu-corps">
-      <p class="hint-small">Tire un curseur pour recommander (budget ${eur(s.budget)}). Tu peux ouvrir sans faire le plein.</p>
-      <p class="hint-small">💲 Choisis un tarif par produit. Prix bas = plus de clients, ticket plus faible ; gros prix = moins de clients, ticket plus haut. Le bon dosage dépend du mois (📅 Calendrier) !</p>
+      <p class="hint-small">Tire un curseur pour commander. Et défini ton prix de vente en selectionnant le prix que tu veux mettre à chaques articles ! refère toi au 📅 Calendrier pour deviner comment les ajuster ! (si tu ne sais pas laisse en "Prix moyen")</p>
       <div class="fournisseur">${curseurs}</div>
       <div class="preset-btns">
-        <button class="mini" data-action="presetStock" data-value="50">Tout à 50 %</button>
-        <button class="mini" data-action="presetStock" data-value="100">Tout à 100 %</button>
+        <button class="mini" data-action="presetStock" data-value="50">Tous les stocks à 50%</button>
+        <button class="mini" data-action="presetStock" data-value="100">Tous les stocks à 100%</button>
       </div>
       <button class="principal" data-action="commander" id="btn-commander" disabled>
         Commander · <span id="cout-commande">0 €</span>
       </button>
       <div class="bloc-titre">Améliorer le matériel (+ panier, permanent)</div>
-      <p class="hint-small">Chaque niveau ajoute un bonus de panier moyen qui compte TOUS les soirs, plein ou pas — contrairement à l'ancienne capacité, ce n'est jamais perdu.</p>
       ${ameliorations}
     </div>`;
 }
@@ -346,18 +348,18 @@ function menuMenage(s: GameState): string {
     <div class="menu-corps">
       <div class="cal-now">Propreté : <strong>${p}%</strong> — ${etat}</div>
       <div class="jauge-barre" style="margin:8px 0"><span class="jauge-fill" style="width:${p}%"></span></div>
-      <div class="hint-small">Chaque client salit un peu le bar. Un bar sale attire moins de monde (jusqu'à -20 % de clients), plombe la réputation sous 40… et attire des invités indésirables.</div>
+      <div class="hint-small">Un bar sale attire moins de monde, sauf les invités indésirables...</div>
       <div class="bloc-titre">Faire le ménage</div>
       <button class="principal" data-action="menageEquipe" ${nickel ? "disabled" : ""}>
-        🧽 Ménage d'équipe — gratuit (+${MENAGE.equipeProprete} propreté, fatigue +${MENAGE.equipeFatigue} pour tous)
+        Ménage d'équipe — Incomplet
       </button>
       <button class="principal" data-action="menagePro" ${nickel || s.budget < coutMenagePro(s) ? "disabled" : ""}>
-        ✨ Société de nettoyage — ${eur(coutMenagePro(s))} (propreté 100, zéro fatigue)
+        Société de nettoyage — ${eur(coutMenagePro(s))} Complet
       </button>
       ${
         nickel
           ? `<p class="hint-small">Le bar brille déjà, rien à nettoyer.</p>`
-          : `<p class="hint-small">La société facture selon l'état : ${eur(MENAGE.proBase)} de déplacement + ${MENAGE.proParPoint} €/point de propreté à remonter. Plus tu laisses pourrir, plus la facture grimpe.</p>`
+          : `<p class="hint-small">La société facture selon l'état : déplacement + niveau de propreté à remonter.</p>`
       }
     </div>`;
 }
@@ -404,8 +406,7 @@ function menuTravaux(s: GameState): string {
   return `
     ${entete("🏗 Travaux")}
     <div class="menu-corps">
-      <div class="hint-small">Capacité de service actuelle : ~${capaciteBar(s)} clients/soir (équipe + machines, bridée par le local).</div>
-      <div class="hint-small">⚠️ Lancer des travaux ferme le bar pendant toute la semaine du chantier (0 CA, salaires/charges/dette dus quand même).</div>
+      <div class="hint-small">⚠️ Lancer des travaux ferme le bar pendant toute la semaine du chantier.</div>
       <div class="plan-bar">
         <div class="piece terrasse actif">
           <span class="piece-nom">Terrasse</span>

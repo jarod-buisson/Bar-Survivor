@@ -533,7 +533,7 @@ function majCoutCommande(): void {
     if (wrap) wrap.style.setProperty("--fill", `${el.value}%`);
     cibles[el.dataset.cat as StockCategorie] = Number(el.value);
     const valLbl = app.querySelector(`[data-cat-val="${el.dataset.cat}"]`);
-    if (valLbl) valLbl.textContent = `${el.value}%`;
+    if (valLbl) valLbl.textContent = `Stock : ${el.value}%`;
   });
   const brut = coutCommandeBrut(state, cibles);
   const total = coutCommande(state, cibles);
