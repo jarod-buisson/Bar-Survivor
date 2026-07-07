@@ -443,12 +443,14 @@ function menuBanque(s: GameState): string {
         <div class="jauge-barre" style="margin:8px 0"><span class="jauge-fill" style="width:${pct}%"></span></div>
         <div class="hint-small">Remboursé ${eur(rembourse)} / ${eur(total)}</div>
         <div>Remboursement : <strong>${Math.round(tauxDette(s.semaine) * 100)} % du CA de chaque semaine</strong></div>
-        <div class="hint-small">Plus le bar tourne, plus la dette fond — une semaine creuse coûte peu. Le taux grimpe avec le temps : 15 % (sem. 1-10), 20 % (11-20), 35 % au-delà.</div>
+        <div class="hint-small">Plus le bar tourne, plus la dette fond !</div>
         ${s.dernierBilan ? `<div class="hint-small">Semaine dernière : ${eur(s.dernierBilan.detteRemboursement)} remboursés.</div>` : ""}`;
   const livret = Math.round(s.livret ?? 0);
   const gainHebdo = Math.round(livret * TAUX_LIVRET);
   const tauxPct = Math.round(TAUX_LIVRET * 100);
-  const investissements = `
+  const investissements = s.drapeaux["livret_arnaque"]
+    ? ""
+    : `
     <div class="bloc-titre">💰 Investissements</div>
     <div class="livret-bloc">
       <div class="four-tete">
@@ -456,7 +458,7 @@ function menuBanque(s: GameState): string {
         <span>Placé : <strong>${eur(livret)}</strong></span>
       </div>
       ${livret > 0 ? `<div class="hint-small pos">+${eur(gainHebdo)} versés chaque semaine (${tauxPct} %).</div>` : ""}
-      <p class="hint-small">Place une part de ton budget : la banque te reverse <strong>${tauxPct} %</strong> du livret chaque semaine. ⚠️ l'argent placé est <strong>définitivement bloqué</strong> (aucun retrait possible).</p>
+      <p class="hint-small">Place ton argent : la banque te reversera <strong>${tauxPct} %</strong> chaque semaine. ⚠️ aucun retrait possible.</p>
       <div class="four-slider-wrap" style="--fill:0%">
         <div class="four-fill"></div>
         <input type="range" id="livret-slider" class="livret-slider" data-budget="${Math.round(s.budget)}"

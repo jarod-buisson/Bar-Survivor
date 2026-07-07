@@ -156,6 +156,8 @@ const PENALITE_RUPTURE = 3.5; // pénalité de notoriété par point de "poids" 
 // catégorie (mêmes poids que la rupture totale). Pas besoin de tomber à 0 pour que ça compte.
 // 💰 Livret (menu Banque) : argent placé bloqué à vie, rapporte ce taux au budget CHAQUE semaine.
 export const TAUX_LIVRET = 0.02;
+/** Au-delà de ce montant placé, le banquier corrompu part avec la caisse (événement banque_arnaque). */
+export const LIVRET_SEUIL_ARNAQUE = 50_000;
 
 // 💲 Prix par ressource (menu Fournisseur & prix). Chaque niveau décale la DEMANDE
 // et le PANIER en sens inverse → ≈ neutre en CA par lui-même ; c'est l'ADÉQUATION
@@ -1595,7 +1597,9 @@ export function simulerSemaine(state: GameState): void {
   const evenements = state.evenementsBudget;
   // 💰 Intérêts du livret : vrai encaissement (pas un événement pré-payé), donc
   // compté dans le résultat ET crédité au budget ci-dessous.
-  const interetsLivret = Math.round((state.livret ?? 0) * TAUX_LIVRET);
+  const interetsLivret = state.drapeaux["livret_arnaque"]
+    ? 0
+    : Math.round((state.livret ?? 0) * TAUX_LIVRET);
   const resultat =
     caTotal -
     matieres -
@@ -1964,6 +1968,7 @@ export function investirLivret(state: GameState, montant: number): boolean {
   if (somme <= 0 || state.budget < somme) return false;
   state.budget -= somme;
   state.livret = (state.livret ?? 0) + somme;
+  if (state.livret > LIVRET_SEUIL_ARNAQUE) state.drapeaux["livret_arnaque_imminente"] = true;
   return true;
 }
 

@@ -1004,6 +1004,24 @@ export const EVENEMENTS: GameEvent[] = [
     ],
   },
   {
+    id: "banque_arnaque",
+    titre: "Arnaque de la banque !",
+    texte:
+      "Ton banquier était corrompu : tu lui avais confié tellement d'argent sur ton Livret qu'il a décidé de partir en vacances avec. Désolé, mais les intérêts ne sont plus disponibles pour toi…",
+    priorite: true,
+    unique: true,
+    condition: (s) => s.drapeaux["livret_arnaque_imminente"] === true,
+    choix: [
+      {
+        label: "Encaisser",
+        effet: {
+          poseDrapeau: { cle: "livret_arnaque", valeur: true },
+          note: "🏦 Le banquier s'est envolé avec la caisse : ton Livret ne rapporte plus rien.",
+        },
+      },
+    ],
+  },
+  {
     id: "critique",
     titre: "Le critique incognito",
     texte:
