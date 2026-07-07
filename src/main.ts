@@ -179,7 +179,7 @@ function rendreBrut(): void {
 
 /** Durée de la transition "ouverture du bar" avant le vrai début de semaine
  *  (voir ecranLancement + .lancement-tuiles/.lancement-intro dans style.css). */
-const LANCEMENT_MS = 2000;
+const LANCEMENT_MS = 1000;
 
 /** Démarre la semaine : d'abord la transition "les tuiles s'aplatissent" (2 s),
  *  puis l'animation des 7 jours et la simulation + récap. Des événements

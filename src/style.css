@@ -1117,8 +1117,8 @@ body {
   text-align: center;
   opacity: 0;
   transition:
-    flex-grow 1.6s ease 0.3s,
-    opacity 1.4s ease 0.5s;
+    flex-grow 0.8s ease 0.15s,
+    opacity 0.7s ease 0.25s;
 }
 .lancement-intro.visible {
   flex-grow: 1;
@@ -1130,8 +1130,8 @@ body {
   min-height: 0;
   overflow: hidden;
   transition:
-    flex-grow 2s ease,
-    gap 2s ease;
+    flex-grow 1s ease,
+    gap 1s ease;
 }
 .lancement-tuiles.reduites {
   flex-grow: 0;
@@ -1140,9 +1140,9 @@ body {
 .lancement-tuiles .tuile {
   cursor: default;
   transition:
-    padding 2s ease,
-    filter 2s ease,
-    opacity 2s ease;
+    padding 1s ease,
+    filter 1s ease,
+    opacity 1s ease;
 }
 .lancement-tuiles.reduites .tuile {
   padding: 3px 6px;
@@ -1150,16 +1150,16 @@ body {
   opacity: 0.5;
 }
 .lancement-tuiles .tuile-emoji {
-  transition: font-size 2s ease;
+  transition: font-size 1s ease;
 }
 .lancement-tuiles.reduites .tuile-emoji {
   font-size: 1.1rem;
 }
 .lancement-tuiles .tuile-label {
   transition:
-    font-size 1.4s ease,
-    opacity 1s ease,
-    margin 1.4s ease;
+    font-size 0.7s ease,
+    opacity 0.5s ease,
+    margin 0.7s ease;
 }
 .lancement-tuiles.reduites .tuile-label {
   font-size: 0;
