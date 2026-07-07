@@ -627,7 +627,11 @@ export const EVENEMENTS: GameEvent[] = [
     id: "loterie",
     titre: "Le ticket de Gégé",
     texte:
-      "Aujourd'hui, Gégé, pilier de comptoir, te propose son ticket à gratter « porte-bonheur » contre 50 €. « J'te jure patron, j'le sens bien çui-là. »",
+      "Aujourd'hui, Gégé, pilier de comptoir, te propose son ticket à gratter « porte-bonheur ». « J'te jure patron, j'le sens bien çui-là. »",
+    genererTexte: (s) => {
+      const mise = Math.max(1, Math.round(s.budget * 0.05));
+      return `Aujourd'hui, Gégé, pilier de comptoir, te propose son ticket à gratter « porte-bonheur » contre ${mise.toLocaleString("fr-FR")} €. « J'te jure patron, j'le sens bien çui-là. »`;
+    },
     genererChoix: (s) => {
       const mise = Math.max(1, Math.round(s.budget * 0.05));
       const gain = Math.max(1, Math.round(s.budget * 0.25));

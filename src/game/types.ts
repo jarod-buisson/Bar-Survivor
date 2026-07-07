@@ -222,6 +222,8 @@ export interface GameEvent {
   choisirCible?: (s: GameState) => string | undefined;
   /** Choix construits au moment du tirage (ex : un bouton par salarié). Prioritaire sur `choix`. */
   genererChoix?: (s: GameState, cibleId?: string) => Choice[];
+  /** Texte construit au moment du tirage (ex : montant annoncé cohérent avec `genererChoix`). Prioritaire sur `texte`. */
+  genererTexte?: (s: GameState) => string;
 }
 
 /** Le CA d'un soir : modèle clients servis × panier moyen. */

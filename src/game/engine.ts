@@ -641,6 +641,7 @@ export function tirerEvenement(state: GameState): void {
   state.evenementCourant = {
     ...ev,
     cibleId,
+    texte: ev.genererTexte ? ev.genererTexte(state) : ev.texte,
     choix: ev.genererChoix ? ev.genererChoix(state, cibleId) : ev.choix,
   };
   state.phase = "evenement";
@@ -658,7 +659,7 @@ export function declencherEvenement(state: GameState, id: string, texte?: string
   state.evenementCourant = {
     ...ev,
     cibleId,
-    texte: texte ?? ev.texte,
+    texte: texte ?? (ev.genererTexte ? ev.genererTexte(state) : ev.texte),
     choix: ev.genererChoix ? ev.genererChoix(state, cibleId) : ev.choix,
   };
   state.phase = "evenement";
