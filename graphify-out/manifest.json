@@ -5,13 +5,13 @@
     "semantic_hash": "3e42dab690eb05822eb33c0fd06c38e9"
   },
   "src/game/content.ts": {
-    "mtime": 1783392335.9675858,
-    "ast_hash": "a0f7f91d5f041f1265e07ec874357312",
+    "mtime": 1783425551.3426092,
+    "ast_hash": "fd07f3fb9f14ad10dcf4f63f72bec704",
     "semantic_hash": ""
   },
   "src/game/engine.ts": {
-    "mtime": 1783392952.4175591,
-    "ast_hash": "8cbe5b55ce6a84d4ab5442b0ec18b9ed",
+    "mtime": 1783394771.0511303,
+    "ast_hash": "84ab8e881e2053f571bb606d0ced9588",
     "semantic_hash": ""
   },
   "src/game/types.ts": {
@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main.ts": {
-    "mtime": 1783392420.4084325,
-    "ast_hash": "4e068c8ef77e869c6ea666a1a3ec1453",
+    "mtime": 1783427561.5475113,
+    "ast_hash": "f8f1d1d8d1861720907300ecbb7c1765",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -35,8 +35,8 @@
     "semantic_hash": "595efd2088693761d3017b23a8c17f54"
   },
   "CLAUDE.md": {
-    "mtime": 1783392967.0771127,
-    "ast_hash": "8856e10e292ad1239604899061ba5326",
+    "mtime": 1783425578.2423449,
+    "ast_hash": "cd455b55845104dcfc935ff2d212589e",
     "semantic_hash": ""
   },
   "README.md": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/game/machines.ts": {
-    "mtime": 1783391338.707571,
-    "ast_hash": "19fcfc23b03deb13f216399beff43763",
+    "mtime": 1783427752.1527352,
+    "ast_hash": "d35ae1020cb6f72bc5a4cf7ed338c9d7",
     "semantic_hash": ""
   },
   "src/ui/accueil.ts": {
@@ -60,13 +60,13 @@
     "semantic_hash": ""
   },
   "src/ui/components.ts": {
-    "mtime": 1783390420.1582596,
-    "ast_hash": "fccd6f6b293589d2b25290effbc7f189",
+    "mtime": 1783393537.9957662,
+    "ast_hash": "7f543802646de971c3042dc1c57431e7",
     "semantic_hash": ""
   },
   "src/ui/evenement.ts": {
-    "mtime": 1783392445.8789415,
-    "ast_hash": "b4a42e30ac0c3fe90430521fb6c2fbb2",
+    "mtime": 1783393143.125791,
+    "ast_hash": "1327fde6428a752d697162f68948d742",
     "semantic_hash": ""
   },
   "src/ui/fin.ts": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "src/ui/menus.ts": {
-    "mtime": 1783391394.81824,
-    "ast_hash": "bc386d7eca14d6f0999dc8037a0f9444",
+    "mtime": 1783427789.1269472,
+    "ast_hash": "47edfda152f0c8061fc0e4d0d5a37907",
     "semantic_hash": ""
   },
   "src/ui/onboarding.ts": {

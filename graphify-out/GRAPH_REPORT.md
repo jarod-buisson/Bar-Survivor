@@ -1,16 +1,16 @@
 # Graph Report - Bar Survivor  (2026-07-07)
 
 ## Corpus Check
-- 24 files · ~45,032 words
+- 24 files · ~46,072 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 354 nodes · 854 edges · 26 communities (17 shown, 9 thin omitted)
+- 358 nodes · 862 edges · 26 communities (17 shown, 9 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 2 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7513ead7`
+- Built from commit: `76f2ff1e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,24 +45,24 @@
 1. `simulerSemaine()` - 29 edges
 2. `eur()` - 24 edges
 3. `runHabile()` - 20 edges
-4. `ecranMenu()` - 15 edges
+4. `ecranMenu()` - 17 edges
 5. `compilerOptions` - 15 edges
 6. `Bar Survival — décisions de conception` - 15 edges
 7. `GameState` - 14 edges
 8. `actifs()` - 13 edges
-9. `rendreBrut()` - 12 edges
-10. `entete()` - 12 edges
+9. `entete()` - 13 edges
+10. `rendreBrut()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `#phone (simulation écran mobile)` --conceptually_related_to--> `🍺 Bar Survival`  [INFERRED]
   index.html → README.md
-- `resoudreUnPopup()` --calls--> `appliquerChoix()`  [EXTRACTED]
+- `equipeCibleLocal()` --calls--> `capaciteLocale()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
 - `gererSemaineCourante()` --calls--> `coutCommande()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
-- `gererSemaineCourante()` --calls--> `menageEquipe()`  [EXTRACTED]
-  sim/simulation.ts → src/game/engine.ts
 - `run()` --calls--> `creerPartie()`  [EXTRACTED]
+  sim/simulation.ts → src/game/engine.ts
+- `run()` --calls--> `preparerSemaineSuivante()`  [EXTRACTED]
   sim/simulation.ts → src/game/engine.ts
 
 ## Import Cycles
@@ -75,8 +75,8 @@
 ## Communities (26 total, 9 thin omitted)
 
 ### Community 0 - "Community 0"
-Cohesion: 0.12
-Nodes (33): actifsN(), choisirChoixBot(), coutSemaineFermee(), equipeCibleLocal(), evenementsDeLaSemaine, fixerGraine(), gererSemaineCourante(), graineCourante() (+25 more)
+Cohesion: 0.11
+Nodes (35): actifsN(), choisirChoixBot(), coutSemaineFermee(), equipeCibleLocal(), evenementsDeLaSemaine, fixerGraine(), gererSemaineCourante(), graineCourante() (+27 more)
 
 ### Community 1 - "UI & ecrans (rendu)"
 Cohesion: 0.29
@@ -96,7 +96,7 @@ Nodes (14): allowScripts, esbuild@0.25.12, description, devDependencies, typescr
 
 ### Community 5 - "Community 5"
 Cohesion: 0.12
-Nodes (13): CV_PROFILS, equipeA(), EVENEMENTS, ModeleCandidat, MOIS_ABBR, MOIS_INFOS, ProfilCV, ROSTER (+5 more)
+Nodes (12): CV_PROFILS, equipeA(), EVENEMENTS, HISTORIQUE_VERSIONS, ModeleCandidat, MOIS_ABBR, MOIS_INFOS, ProfilCV (+4 more)
 
 ### Community 6 - "Outillage graphify"
 Cohesion: 0.12
@@ -104,7 +104,7 @@ Nodes (16): Bar Survival — décisions de conception, Cadrage de la partie, gra
 
 ### Community 8 - "Community 8"
 Cohesion: 0.14
-Nodes (30): moisIndex(), aIngenieur(), coutAutoStock(), coutLicenciement(), coutMenagePro(), prixDe(), tauxDette(), bonusPanierPct() (+22 more)
+Nodes (31): moisIndex(), aIngenieur(), coutAutoStock(), coutLicenciement(), coutMenagePro(), tauxDette(), bonusPanierPct(), bonusPanierPctProchain() (+23 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.17
@@ -112,7 +112,7 @@ Nodes (17): TACOS_CRUDITES, TACOS_SAUCE_FROMAGERE, TACOS_SAUCES, TACOS_VIANDES, 
 
 ### Community 10 - "Community 10"
 Cohesion: 0.06
-Nodes (58): moisDeSemaine(), actifs(), AFFLUENCE_JOUR, aFonction(), AMBLAM, appliquerChoix(), appliquerEffet(), borne() (+50 more)
+Nodes (59): genererCV(), moisDeSemaine(), actifs(), AFFLUENCE_JOUR, aFonction(), AMBLAM, appliquerEffet(), arriveeCV() (+51 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.15
@@ -124,22 +124,22 @@ Nodes (20): acheterAutoStock(), coutCommande(), coutCommandeBrut(), definirEmpru
 
 ### Community 13 - "Community 13"
 Cohesion: 0.20
-Nodes (9): bonusPassif(), FAIBLESSES, FORCES, INCOMPATIBLES, PAR_ID, POIDS_RARETE, CibleEffet, Rarete (+1 more)
+Nodes (11): aucunRepos(), equipeDeDepart(), genererCandidats(), profilVersEmploye(), rand(), salairePourCompetence(), stocksPleins(), creerPartie() (+3 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.25
-Nodes (9): aucunRepos(), equipeDeDepart(), genererCV(), profilVersEmploye(), rand(), salairePourCompetence(), arriveeCV(), piocherPondere() (+1 more)
+Cohesion: 0.20
+Nodes (9): bonusPassif(), FAIBLESSES, FORCES, INCOMPATIBLES, PAR_ID, POIDS_RARETE, CibleEffet, Rarete (+1 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.50
 Nodes (4): CategorieStock, MoisInfo, NiveauPrix, StockCategorie
 
 ### Community 25 - "Community 25"
-Cohesion: 0.50
-Nodes (4): genererCandidats(), stocksPleins(), creerPartie(), machinesDeDepart()
+Cohesion: 0.67
+Nodes (3): salarieVacancesMenace(), salarieVacancesProces(), planifierEvenements()
 
 ## Knowledge Gaps
-- **98 isolated node(s):** `name`, `private`, `version`, `type`, `description` (+93 more)
+- **100 isolated node(s):** `name`, `private`, `version`, `type`, `description` (+95 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -148,12 +148,12 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `#app (point de montage)` connect `UI & ecrans (rendu)` to `Community 12`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `simulerSemaine()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`, `Community 8`, `Community 12`, `Community 13`?**
+- **Why does `simulerSemaine()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`, `Community 8`, `Community 12`, `Community 23`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _98 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _100 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10960960960960961 - nodes in this community are weakly interconnected._
 - **Should `Config TypeScript (tsconfig)` be split into smaller, more focused modules?**
   _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
